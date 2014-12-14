@@ -1,0 +1,23 @@
+<resources>
+
+    <string name="app_name">DirectCall Widget</string>
+    <string name="ad_unit_id">ca-app-pub-3590513204288443/1692612216</string>
+    <string name="test_device_id1">428A4689D57CB057A5176C414B7E90D4</string>
+    <string name="test_device_id2">F7A4857AACCF75C3A5141C6F90FE8DD8</string>
+
+    <!-- General purpose strings -->
+    <string name="ok">OK</string>
+    <string name="discard">Discard</string>
+    
+    <!-- Main activity -->
+    <string name="congrats">Congratulations!</string>
+    <string name="welcome">Your widget is now ready for use! Look for it under widgets and drag it to your home screen!</string>
+
+    <!-- Widget configuration -->
+    <string name="activity_config_title">Widget settings</string>
+    <string name="display_name_hint">Display name</string>
+    <string name="picture_from_camera">Take a photo</string>
+    <string name="picture_from_gallery">Use an existing photo</string>
+    <string name="customize">Customize</string>
+
+</resources>

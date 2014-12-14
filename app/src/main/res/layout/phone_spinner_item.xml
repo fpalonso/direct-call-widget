@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingEnd="@dimen/phone_item_padding_h"
+    android:paddingLeft="@dimen/phone_item_padding_h"
+    android:paddingRight="@dimen/phone_item_padding_h"
+    android:paddingStart="@dimen/phone_item_padding_h" >
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/phone_item_icon_margin_h"
+        android:layout_marginRight="@dimen/phone_item_icon_margin_h"
+        android:contentDescription="@null"
+        android:scaleType="matrix"
+        android:src="@drawable/ic_call_grey600_24dp" />
+
+    <TextView
+        android:id="@+id/phoneType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon"
+        android:text="@string/app_name"
+        android:textColor="@color/black_54pct"
+        android:textSize="@dimen/phone_item_type_font_size" />
+
+    <TextView
+        android:id="@+id/phoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/phoneType"
+        android:layout_alignStart="@+id/phoneType"
+        android:layout_below="@+id/phoneType"
+        android:text="@string/app_name"
+        android:textSize="@dimen/phone_item_number_font_size" />
+
+</RelativeLayout>

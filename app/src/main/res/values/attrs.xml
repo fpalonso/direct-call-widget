@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <attr name="sectionLabelStyle" format="reference" />
+    
+    <!-- Section label attributes -->
+    <declare-styleable name="SectionLabel">
+        <attr name="android:text" />
+        <attr name="expanded" format="boolean" />
+    </declare-styleable>
+
+</resources>

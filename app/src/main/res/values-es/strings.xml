@@ -1,0 +1,19 @@
+<resources>
+
+    <string name="app_name">DirectCall Widget</string>
+
+    <!-- General purpose strings -->
+    <string name="ok">OK</string>
+    <string name="discard">Descartar</string>
+
+    <!-- Main activity -->
+    <string name="congrats">¡Enhorabuena!</string>
+    <string name="welcome">¡Ya puedes usar tu widget! ¡Búscalo en la pestaña Widgets del dispositivo y arrástralo a la pantalla de inicio!</string>
+
+    <!-- Widget configuration -->
+    <string name="activity_config_title">Configuración</string>
+    <string name="display_name_hint">Nombre para mostrar</string>
+    <string name="picture_from_camera">Tomar una foto</string>
+    <string name="picture_from_gallery">Usar una foto existente</string>
+    <string name="customize">Personalizar</string>
+</resources>

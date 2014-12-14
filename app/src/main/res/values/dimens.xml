@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General-purpose dimensions -->
+    <dimen name="activity_default_padding">8dp</dimen>
+    <dimen name="general_section_padding">8dp</dimen>
+
+    <!-- General font sizes -->
+    <dimen name="font_subhead_size">16sp</dimen>
+    <dimen name="font_body1_size">14sp</dimen>
+
+    <!-- Widget configuration activity -->
+    <dimen name="activity_widget_config_photo_width">110dp</dimen>
+    <dimen name="activity_widget_config_photo_height">110dp</dimen>
+    <dimen name="activity_widget_config_photo_margin_h">16dp</dimen>
+    <dimen name="phone_item_padding_h">16dp</dimen>
+    <dimen name="phone_item_padding_v">8dp</dimen>
+    <dimen name="phone_item_icon_margin_h">16dp</dimen>
+    <dimen name="phone_item_type_font_size">14sp</dimen>
+    <dimen name="phone_item_number_font_size">16sp</dimen>
+
+    <!-- Widget dimensions -->
+    <dimen name="widget_1x1_width">40dp</dimen>
+    <dimen name="widget_1x1_height">40dp</dimen>
+    <dimen name="widget_2x2_width">110dp</dimen>
+    <dimen name="widget_2x2_height">110dp</dimen>
+    <dimen name="widget_2x2_padding">8dp</dimen>
+    <dimen name="widget_2x2_text_padding">8dp</dimen>
+
+</resources>
