@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/fromCamera"
-        android:title="@string/picture_from_camera"/>
+        android:title="@string/picture_from_camera" />
     <item
         android:id="@+id/fromGallery"
-        android:title="@string/picture_from_gallery"/>
+        android:title="@string/picture_from_gallery" />
 
 </menu>

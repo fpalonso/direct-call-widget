@@ -14,21 +14,21 @@ public class CustomizeWidgetFragment extends Fragment {
     private static final String TAG = "CustomizeWidget";
 
     public static CustomizeWidgetFragment findOrCreate(FragmentManager fragMngr) {
-	CustomizeWidgetFragment frag = (CustomizeWidgetFragment) fragMngr
-		.findFragmentByTag(TAG);
-	if (frag == null) {
-	    frag = new CustomizeWidgetFragment();
-	    // fragMngr.beginTransaction()
-	    // .add(R.id.customizeFragContainer, frag, TAG).commit();
-	}
-	return frag;
+        CustomizeWidgetFragment frag = (CustomizeWidgetFragment) fragMngr
+                .findFragmentByTag(TAG);
+        if (frag == null) {
+            frag = new CustomizeWidgetFragment();
+            // fragMngr.beginTransaction()
+            // .add(R.id.customizeFragContainer, frag, TAG).commit();
+        }
+        return frag;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	    Bundle savedInstanceState) {
-	View rootView = inflater.inflate(R.layout.fragment_customize_widget,
-		container, false);
-	return rootView;
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_customize_widget,
+                container, false);
+        return rootView;
     }
 }

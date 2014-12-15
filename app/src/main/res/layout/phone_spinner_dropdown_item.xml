@@ -3,11 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/phone_item_padding_v"
-    android:paddingTop="@dimen/phone_item_padding_v" >
+    android:paddingTop="@dimen/phone_item_padding_v">
 
     <include
+        layout="@layout/phone_spinner_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/phone_spinner_item" />
+        android:layout_height="match_parent" />
 
 </FrameLayout>

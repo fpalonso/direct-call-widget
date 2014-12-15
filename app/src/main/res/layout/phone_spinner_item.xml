@@ -5,7 +5,7 @@
     android:paddingEnd="@dimen/phone_item_padding_h"
     android:paddingLeft="@dimen/phone_item_padding_h"
     android:paddingRight="@dimen/phone_item_padding_h"
-    android:paddingStart="@dimen/phone_item_padding_h" >
+    android:paddingStart="@dimen/phone_item_padding_h">
 
     <ImageView
         android:id="@+id/icon"

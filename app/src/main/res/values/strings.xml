@@ -8,7 +8,7 @@
     <!-- General purpose strings -->
     <string name="ok">OK</string>
     <string name="discard">Discard</string>
-    
+
     <!-- Main activity -->
     <string name="congrats">Congratulations!</string>
     <string name="welcome">Your widget is now ready for use! Look for it under widgets and drag it to your home screen!</string>

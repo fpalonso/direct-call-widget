@@ -5,7 +5,7 @@
     android:divider="?android:attr/dividerVertical"
     android:dividerPadding="12dp"
     android:orientation="horizontal"
-    android:showDividers="end" >
+    android:showDividers="end">
 
     <include layout="@layout/done_button" />
 
