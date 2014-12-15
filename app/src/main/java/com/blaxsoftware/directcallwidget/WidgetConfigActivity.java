@@ -404,8 +404,10 @@ public class WidgetConfigActivity extends Activity implements
                 + mAppWidgetId, displayName);
         editor.putString(Constants.SHAREDPREF_WIDGET_PHONE + mAppWidgetId,
                 phoneNumber);
-        editor.putString(Constants.SHAREDPREF_WIDGET_PHOTO_URL + mAppWidgetId,
-                mPhotoUri.toString());
+        if (mPhotoUri != null) {
+            editor.putString(Constants.SHAREDPREF_WIDGET_PHOTO_URL + mAppWidgetId,
+                    mPhotoUri.toString());
+        }
         editor.apply();
 
         // Update the widget
