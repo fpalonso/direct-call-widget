@@ -408,7 +408,7 @@ public class WidgetConfigActivity extends Activity implements
             editor.putString(Constants.SHAREDPREF_WIDGET_PHOTO_URL + mAppWidgetId,
                     mPhotoUri.toString());
         }
-        editor.apply();
+        editor.commit();
 
         // Update the widget
         AppWidgetManager widgetMngr = AppWidgetManager.getInstance(this);
