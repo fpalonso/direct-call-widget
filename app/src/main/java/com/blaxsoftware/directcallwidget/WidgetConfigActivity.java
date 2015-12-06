@@ -1,8 +1,6 @@
 package com.blaxsoftware.directcallwidget;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -22,6 +20,8 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,7 +47,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class WidgetConfigActivity extends Activity implements
+public class WidgetConfigActivity extends AppCompatActivity implements
         LoaderCallbacks<Cursor>, OnClickListener {
 
     // intent request codes
@@ -94,7 +94,7 @@ public class WidgetConfigActivity extends Activity implements
                 AppWidgetManager.INVALID_APPWIDGET_ID);
 
         // action bar's custom view
-        LayoutInflater inflater = (LayoutInflater) getActionBar()
+        LayoutInflater inflater = (LayoutInflater) getSupportActionBar()
                 .getThemedContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View customActionBar = inflater.inflate(
                 R.layout.actionbar_custom_view_done, null);
@@ -102,11 +102,11 @@ public class WidgetConfigActivity extends Activity implements
         doneButton.setOnClickListener(this);
 
         // Set up the action bar
-        getActionBar().setDisplayOptions(
+        getSupportActionBar().setDisplayOptions(
                 ActionBar.DISPLAY_SHOW_CUSTOM,
                 ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
                         | ActionBar.DISPLAY_SHOW_TITLE);
-        getActionBar().setCustomView(
+        getSupportActionBar().setCustomView(
                 customActionBar,
                 new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
                         ActionBar.LayoutParams.MATCH_PARENT));
@@ -146,13 +146,15 @@ public class WidgetConfigActivity extends Activity implements
         adView.setAdUnitId(getString(R.string.ad_unit_id));
         adView.setAdSize(AdSize.BANNER);
 
-        LinearLayout adContainer = (LinearLayout) findViewById(R.id.adContainer);
-        adContainer.addView(adView);
+        if (!BuildConfig.DEBUG) {
+            LinearLayout adContainer = (LinearLayout) findViewById(R.id.adContainer);
+            adContainer.addView(adView);
 
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(getString(R.string.test_device_id1))
-                .addTestDevice(getString(R.string.test_device_id2)).build();
-        adView.loadAd(adRequest);
+            AdRequest adRequest = new AdRequest.Builder()
+                    .addTestDevice(getString(R.string.test_device_id1))
+                    .addTestDevice(getString(R.string.test_device_id2)).build();
+            adView.loadAd(adRequest);
+        }
     }
 
     @Override

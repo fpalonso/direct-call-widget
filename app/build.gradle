@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "com.blaxsoftware.directcallwidget"
-        minSdkVersion 16
-        targetSdkVersion 21
+        minSdkVersion 14
+        targetSdkVersion 23
     }
 
     buildTypes {
@@ -20,4 +20,6 @@ android {
 
 dependencies {
     compile 'com.google.android.gms:play-services:+'
+    compile 'com.android.support:support-v4:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.1.0'
 }
