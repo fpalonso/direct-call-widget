@@ -26,3 +26,4 @@ proguard/
 *.log
 
 .idea/
+app/manifest-merger-release-report.txt
