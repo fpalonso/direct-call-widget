@@ -8,6 +8,7 @@
     <!-- General purpose strings -->
     <string name="ok">OK</string>
     <string name="discard">Discard</string>
+    <string name="loading">Loading&#8230;</string>
 
     <!-- Main activity -->
     <string name="congrats">Congratulations!</string>

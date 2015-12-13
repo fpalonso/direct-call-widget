@@ -11,8 +11,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class ImageUtils {
+    private static MessageDigest md5;
 
     public static Bitmap loadSampledBitmap(Context context, String source,
                                            boolean fromContentProvider, int reqWidth, int reqHeight)

@@ -373,7 +373,8 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         }
     }
 
-    void setThumbnail(Bitmap thumbnail) {
+    void setThumbnail(String uri, Bitmap thumbnail) {
+        mPhotoUri = Uri.parse(uri);
         mThumbnail = thumbnail;
         mThumbnailView.setImageBitmap(thumbnail);
     }
@@ -501,15 +502,15 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                 mLoadImageTask.cancel(true);
             }
             mLoadImageTask = new LoadImageTask(getActivity()
-                    .getApplicationContext(), reqWidth, reqHeight);
+                    .getApplicationContext(), reqWidth, reqHeight, true);
             mLoadImageTask.setOnImageLoadedListener(this);
             mLoadImageTask.execute(uri);
         }
 
         @Override
-        public void onImageLoaded(Bitmap bitmap) {
+        public void onImageLoaded(String uri, Bitmap bitmap) {
             WidgetConfigActivity activity = (WidgetConfigActivity) getActivity();
-            activity.setThumbnail(bitmap);
+            activity.setThumbnail(uri, bitmap);
         }
     }
 }

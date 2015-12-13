@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
     android:id="@+id/widgetLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -10,7 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@null"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/loadingPicText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/loading"/>
 
     <TextView
         android:id="@+id/contactName"
@@ -19,8 +27,8 @@
         android:layout_gravity="bottom"
         android:background="@drawable/widget_text_background"
         android:padding="@dimen/widget_2x2_text_padding"
-        android:text="@android:string/unknownName"
+        android:text="@string/loading"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
 </FrameLayout>

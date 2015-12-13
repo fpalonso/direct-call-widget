@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import com.blaxsoftware.directcallwidget.Constants;
@@ -33,6 +33,7 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
 
         RemoteViews rViews = new RemoteViews(context.getPackageName(),
                 R.layout.widget_2x2);
+        rViews.setViewVisibility(R.id.loadingPicText, View.VISIBLE);
         rViews.setTextViewText(R.id.contactName, displayName);
         if (phoneNumber != null) {
             Uri callUri = Uri.parse("tel:" + phoneNumber);
@@ -41,13 +42,11 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
                     context, widgetId, callIntent, 0);
             rViews.setOnClickPendingIntent(R.id.widgetLayout, callPendingIntent);
         }
-        updatePhoto(context, widgetMngr, widgetId, DEFAULT_WIDTH,
-                DEFAULT_HEIGHT);
-
+        updatePhoto(context, rViews, widgetMngr, widgetId, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         widgetMngr.updateAppWidget(widgetId, rViews);
     }
 
-    private static void updatePhoto(Context context,
+    private static void updatePhoto(Context context, final RemoteViews remoteViews,
                                     final AppWidgetManager appWidgetManager, final int appWidgetId,
                                     int width, int height) {
         SharedPreferences pref = context.getSharedPreferences(
@@ -58,17 +57,16 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
                 : null;
 
         // Update the remote views
-        final RemoteViews rViews = new RemoteViews(context.getPackageName(),
-                R.layout.widget_2x2);
         if (photoUri != null) {
 
-            LoadImageTask imgLoader = new LoadImageTask(context, width, height);
+            LoadImageTask imgLoader = new LoadImageTask(context, width, height, false);
             imgLoader.setOnImageLoadedListener(new OnImageLoadedListener() {
 
                 @Override
-                public void onImageLoaded(Bitmap bitmap) {
-                    rViews.setImageViewBitmap(R.id.picture, bitmap);
-                    appWidgetManager.updateAppWidget(appWidgetId, rViews);
+                public void onImageLoaded(String uri, Bitmap bitmap) {
+                    remoteViews.setViewVisibility(R.id.loadingPicText, View.GONE);
+                    remoteViews.setImageViewBitmap(R.id.picture, bitmap);
+                    appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
                 }
             });
             imgLoader.execute(photoUri);
@@ -81,16 +79,5 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
         for (int widgetId : appWidgetIds) {
             updateWidget(context, appWidgetManager, widgetId);
         }
-    }
-
-    @Override
-    public void onAppWidgetOptionsChanged(Context context,
-                                          final AppWidgetManager appWidgetManager, final int appWidgetId,
-                                          Bundle newOptions) {
-        int widgetW = appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(
-                AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
-        int widgetH = appWidgetManager.getAppWidgetOptions(appWidgetId).getInt(
-                AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-        updatePhoto(context, appWidgetManager, appWidgetId, widgetW, widgetH);
     }
 }
