@@ -172,6 +172,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         adView.destroy();
+        mDisplayNameEditText.setCursorVisible(false);
         super.onDestroy();
     }
 
