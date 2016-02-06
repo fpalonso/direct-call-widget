@@ -206,15 +206,25 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                 break;
             case TAKE_PHOTO_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    mWorkerFragment.loadImage(mPhotoUri, mThumbnailView.getWidth(),
-                            mThumbnailView.getHeight());
+                    mThumbnailView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mWorkerFragment.loadImage(mPhotoUri, mThumbnailView.getWidth(),
+                                    mThumbnailView.getHeight());
+                        }
+                    });
                 }
                 break;
             case PICK_IMAGE_REQUEST:
                 if (resultCode == RESULT_OK) {
                     mPhotoUri = data.getData();
-                    mWorkerFragment.loadImage(mPhotoUri, mThumbnailView.getWidth(),
-                            mThumbnailView.getHeight());
+                    mThumbnailView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mWorkerFragment.loadImage(mPhotoUri, mThumbnailView.getWidth(),
+                                    mThumbnailView.getHeight());
+                        }
+                    });
                 }
                 break;
         }
