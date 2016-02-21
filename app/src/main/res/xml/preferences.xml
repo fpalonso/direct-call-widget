@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="@string/pref_onTap_default"
+        android:dialogTitle="@string/pref_onTap"
+        android:entries="@array/pref_onTap_entries"
+        android:entryValues="@array/pref_onTap_values"
+        android:key="@string/pref_onTap_key"
+        android:summary="@string/pref_onTap_value_call"
+        android:title="@string/pref_onTap"/>
+</PreferenceScreen>

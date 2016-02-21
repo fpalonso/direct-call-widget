@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="pref_onTap_entries">
+        <item>@string/pref_onTap_entry_dial</item>
+        <item>@string/pref_onTap_entry_call</item>
+    </array>
+    <array name="pref_onTap_values">
+        <item>@string/pref_onTap_value_dial</item>
+        <item>@string/pref_onTap_value_call</item>
+    </array>
+</resources>

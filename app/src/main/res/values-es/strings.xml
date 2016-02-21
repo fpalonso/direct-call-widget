@@ -21,4 +21,10 @@
     <string name="picture_from_gallery">Usar una foto existente</string>
     <string name="customize">Personalizar</string>
 
+    <!-- Settings -->
+    <string name="settings">Ajustes</string>
+    <string name="pref_onTap">Acción del widget</string>
+    <string name="pref_onTap_entry_dial">Marcar el número del contacto</string>
+    <string name="pref_onTap_entry_call">Llamar al contacto</string>
+
 </resources>

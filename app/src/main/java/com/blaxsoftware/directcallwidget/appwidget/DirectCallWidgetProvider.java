@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.blaxsoftware.directcallwidget.Constants;
+import com.blaxsoftware.directcallwidget.Intents;
 import com.blaxsoftware.directcallwidget.R;
+import com.blaxsoftware.directcallwidget.WidgetClickReceiver;
 import com.blaxsoftware.directcallwidget.image.LoadImageTask;
 import com.blaxsoftware.directcallwidget.image.LoadImageTask.OnImageLoadedListener;
 
@@ -37,8 +39,9 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
         rViews.setTextViewText(R.id.contactName, displayName);
         if (phoneNumber != null) {
             Uri callUri = Uri.parse("tel:" + phoneNumber);
-            Intent callIntent = new Intent(Intent.ACTION_CALL, callUri);
-            PendingIntent callPendingIntent = PendingIntent.getActivity(
+            Intent callIntent = new Intent(Intents.ACTION_WIDGET_CLICK, callUri);
+            callIntent.setClass(context, WidgetClickReceiver.class);
+            PendingIntent callPendingIntent = PendingIntent.getBroadcast(
                     context, widgetId, callIntent, 0);
             rViews.setOnClickPendingIntent(R.id.widgetLayout, callPendingIntent);
         }
