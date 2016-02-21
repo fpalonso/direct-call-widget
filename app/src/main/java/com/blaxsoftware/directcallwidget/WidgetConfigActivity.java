@@ -152,7 +152,8 @@ public class WidgetConfigActivity extends AppCompatActivity implements
 
             AdRequest adRequest = new AdRequest.Builder()
                     .addTestDevice(getString(R.string.test_device_id1))
-                    .addTestDevice(getString(R.string.test_device_id2)).build();
+                    .addTestDevice(getString(R.string.test_device_id2))
+                    .addTestDevice(getString(R.string.test_device_id3)).build();
             adView.loadAd(adRequest);
         }
     }
