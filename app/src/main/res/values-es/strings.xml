@@ -4,6 +4,7 @@
     <string name="ad_unit_id">ca-app-pub-3590513204288443/1692612216</string>
     <string name="test_device_id1">428A4689D57CB057A5176C414B7E90D4</string>
     <string name="test_device_id2">F7A4857AACCF75C3A5141C6F90FE8DD8</string>
+    <string name="test_device_id3">5EA1B0544CF3BCA7B9B5FBFB5E75557F</string>
 
     <!-- General purpose strings -->
     <string name="ok">OK</string>
@@ -24,7 +25,11 @@
     <!-- Settings -->
     <string name="settings">Ajustes</string>
     <string name="pref_onTap">Acción del widget</string>
+    <string name="pref_onTap_key">pref_onTap</string>
     <string name="pref_onTap_entry_dial">Marcar el número del contacto</string>
     <string name="pref_onTap_entry_call">Llamar al contacto</string>
+    <string name="pref_onTap_value_dial">"0"</string>
+    <string name="pref_onTap_value_call">"1"</string>
+    <string name="pref_onTap_default">@string/pref_onTap_value_call</string>
 
 </resources>
