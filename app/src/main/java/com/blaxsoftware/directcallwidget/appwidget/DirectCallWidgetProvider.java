@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -37,8 +38,10 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
                 R.layout.widget_2x2);
         rViews.setViewVisibility(R.id.loadingPicText, View.VISIBLE);
         rViews.setTextViewText(R.id.contactName, displayName);
+        rViews.setViewVisibility(R.id.contactName,
+                !TextUtils.isEmpty(displayName) ? View.VISIBLE : View.GONE);
         if (phoneNumber != null) {
-            Uri callUri = Uri.parse("tel:" + phoneNumber);
+            Uri callUri = Uri.parse("tel:" + Uri.encode(phoneNumber));
             Intent callIntent = new Intent(Intents.ACTION_WIDGET_CLICK, callUri);
             callIntent.setClass(context, WidgetClickReceiver.class);
             PendingIntent callPendingIntent = PendingIntent.getBroadcast(
