@@ -39,7 +39,7 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
         rViews.setViewVisibility(R.id.contactName,
                 !TextUtils.isEmpty(displayName) ? View.VISIBLE : View.GONE);
         if (phoneNumber != null) {
-            Uri callUri = Uri.parse("tel:" + phoneNumber);
+            Uri callUri = Uri.parse("tel:" + Uri.encode(phoneNumber));
             Intent callIntent = new Intent(Intent.ACTION_CALL, callUri);
             PendingIntent callPendingIntent = PendingIntent.getActivity(
                     context, widgetId, callIntent, 0);
