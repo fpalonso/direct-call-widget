@@ -29,6 +29,7 @@
         <receiver android:name="com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_DELETE" />
             </intent-filter>
 
             <meta-data

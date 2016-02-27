@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -18,6 +19,11 @@ import com.blaxsoftware.directcallwidget.R;
 import com.blaxsoftware.directcallwidget.WidgetClickReceiver;
 import com.blaxsoftware.directcallwidget.image.LoadImageTask;
 import com.blaxsoftware.directcallwidget.image.LoadImageTask.OnImageLoadedListener;
+
+import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DirectCallWidgetProvider extends AppWidgetProvider {
 
@@ -84,6 +90,48 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
                          int[] appWidgetIds) {
         for (int widgetId : appWidgetIds) {
             updateWidget(context, appWidgetManager, widgetId);
+        }
+    }
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        super.onDeleted(context, appWidgetIds);
+        List<URI> picturesToRemove = new ArrayList<>();
+        for (int id : appWidgetIds) {
+            // Add the picture to the list of pictures to remove
+            SharedPreferences sp = context
+                    .getSharedPreferences(Constants.SHAREDPREF_WIDGET, Context.MODE_PRIVATE);
+            String picUriStr = sp.getString(Constants.SHAREDPREF_WIDGET_PHOTO_URL + id, null);
+            if (picUriStr != null) {
+                try {
+                    picturesToRemove.add(URI.create(picUriStr));
+                } catch (IllegalArgumentException e) {}
+            }
+
+            // Remove the widget data from preferences
+            SharedPreferences.Editor spEditor = sp.edit();
+            spEditor.remove(Constants.SHAREDPREF_WIDGET_DISPLAY_NAME + id);
+            spEditor.remove(Constants.SHAREDPREF_WIDGET_PHONE + id);
+            spEditor.remove(Constants.SHAREDPREF_WIDGET_PHOTO_URL + id);
+            spEditor.apply();
+        }
+        if (!picturesToRemove.isEmpty()) {
+            URI[] picsToRemoveArray = picturesToRemove.toArray(new URI[picturesToRemove.size()]);
+            new RemovePictureTask().execute(picsToRemoveArray);
+        }
+    }
+
+    private class RemovePictureTask extends AsyncTask<URI, Void, Void> {
+
+        @Override
+        protected Void doInBackground(URI... uris) {
+            for (URI fileUri : uris) {
+                File pic = new File(fileUri);
+                if (pic.exists()) {
+                    pic.delete();
+                }
+            }
+            return null;
         }
     }
 }
