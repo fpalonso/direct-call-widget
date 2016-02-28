@@ -9,4 +9,7 @@
         <attr name="expanded" format="boolean" />
     </declare-styleable>
 
+    <!-- Padding for a view inside a dialog -->
+    <attr name="dialogViewPadding" format="dimension"/>
+
 </resources>

@@ -1,12 +1,15 @@
 package com.blaxsoftware.directcallwidget;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
@@ -20,8 +23,13 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,6 +75,8 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     private static final String STATE_CONTACT_URI = "contactUri";
     private static final String STATE_PHOTO_URI = "photoUri";
     private static final String STATE_THUMBNAIL = "thumbnail";
+
+    public static final int REQUEST_READ_CONTACTS_PERMISSION = 0;
 
     private int mAppWidgetId;
 
@@ -126,11 +136,20 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         setResult(RESULT_CANCELED);
 
         if (savedInstanceState == null) {
-            Intent pickContactIntent = new Intent(Intent.ACTION_PICK,
-                    ContactsContract.Contacts.CONTENT_URI);
-            pickContactIntent
-                    .setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-            startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                    == PackageManager.PERMISSION_GRANTED) {
+                listContacts();
+            } else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.READ_CONTACTS)) {
+                    new ReadContactsPermissionExplanation().show(getSupportFragmentManager(),
+                            "readContactsExplanation");
+                } else {
+                    ActivityCompat.requestPermissions(this,
+                            new String[] {Manifest.permission.READ_CONTACTS},
+                            REQUEST_READ_CONTACTS_PERMISSION);
+                }
+            }
         } else {
             mContactUri = savedInstanceState.getParcelable(STATE_CONTACT_URI);
             mPhotoUri = savedInstanceState.getParcelable(STATE_PHOTO_URI);
@@ -155,6 +174,28 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                     .addTestDevice(getString(R.string.test_device_id2))
                     .addTestDevice(getString(R.string.test_device_id3)).build();
             adView.loadAd(adRequest);
+        }
+    }
+
+    private void listContacts() {
+        Intent pickContactIntent = new Intent(Intent.ACTION_PICK,
+                ContactsContract.Contacts.CONTENT_URI);
+        pickContactIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+        startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_READ_CONTACTS_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    listContacts();
+                } else {
+                    finish();
+                }
+                break;
         }
     }
 
@@ -524,6 +565,30 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         public void onImageLoaded(String uri, Bitmap bitmap) {
             WidgetConfigActivity activity = (WidgetConfigActivity) getActivity();
             activity.setThumbnail(uri, bitmap);
+        }
+    }
+
+    /**
+     * A dialog informing the user why they need to grant the READ_CONTACT permission.
+     */
+    public static class ReadContactsPermissionExplanation extends DialogFragment {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            TextView view = (TextView) LayoutInflater.from(getActivity())
+                    .inflate(R.layout.dialog_text, null);
+            view.setText(getActivity()
+                    .getString(R.string.request_readContacts_permission_explanation));
+            return new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.AppTheme))
+                    .setView(view)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(getActivity(),
+                                    new String[] {Manifest.permission.READ_CONTACTS},
+                                    REQUEST_READ_CONTACTS_PERMISSION);
+                        }
+                    }).create();
         }
     }
 }

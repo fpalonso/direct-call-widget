@@ -105,7 +105,7 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
             if (picUriStr != null) {
                 try {
                     picturesToRemove.add(URI.create(picUriStr));
-                } catch (IllegalArgumentException e) {}
+                } catch (IllegalArgumentException e) { /* Nothing to do here */ }
             }
 
             // Remove the widget data from preferences
@@ -128,6 +128,7 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
             for (URI fileUri : uris) {
                 File pic = new File(fileUri);
                 if (pic.exists()) {
+                    //noinspection ResultOfMethodCallIgnored
                     pic.delete();
                 }
             }

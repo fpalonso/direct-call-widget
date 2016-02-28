@@ -32,4 +32,7 @@
     <string name="pref_onTap_value_call">"1"</string>
     <string name="pref_onTap_default">@string/pref_onTap_value_call</string>
 
+    <!-- Permissions -->
+    <string name="request_readContacts_permission_explanation">Direct Call Widget necesita permiso para mostrarte tus contactos.</string>
+
 </resources>
