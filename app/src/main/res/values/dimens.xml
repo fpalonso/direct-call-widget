@@ -2,8 +2,8 @@
 <resources>
 
     <!-- General-purpose dimensions -->
-    <dimen name="activity_default_padding">8dp</dimen>
-    <dimen name="general_section_padding">8dp</dimen>
+    <dimen name="activity_default_padding">16dp</dimen>
+    <dimen name="general_section_padding">16dp</dimen>
 
     <!-- General font sizes -->
     <dimen name="font_subhead_size">16sp</dimen>
