@@ -463,6 +463,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                             phoneType = cursor.getInt(columnIndex);
                             switch (phoneType) {
                                 case Phone.TYPE_MOBILE:
+                                case Phone.TYPE_WORK_MOBILE:
                                     ((ImageView) view)
                                             .setImageResource(R.drawable.ic_hardware_smartphone_24dp);
                                     break;
