@@ -318,9 +318,14 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                                 .getColumnIndex(Contacts.PHOTO_URI));
                         if (photoUriString != null) {
                             mPhotoUri = Uri.parse(photoUriString);
-                            mWorkerFragment.loadImage(mPhotoUri,
-                                    mThumbnailView.getWidth(),
-                                    mThumbnailView.getHeight());
+                            mThumbnailView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mWorkerFragment.loadImage(mPhotoUri,
+                                            mThumbnailView.getWidth(),
+                                            mThumbnailView.getHeight());
+                                }
+                            });
                         }
                     }
 
