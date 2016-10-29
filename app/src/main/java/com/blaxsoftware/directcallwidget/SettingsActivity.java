@@ -1,5 +1,7 @@
 package com.blaxsoftware.directcallwidget;
 
+import android.appwidget.AppWidgetManager;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -11,26 +13,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.blaxsoftware.directcallwidget.R;
+import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider;
 
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent updateWidget = new Intent(this, DirectCallWidgetProvider.class);
+        updateWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        sendBroadcast(updateWidget);
+
+        getSupportActionBar().setTitle(R.string.settings);
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public static class SettingsFragment extends PreferenceFragment

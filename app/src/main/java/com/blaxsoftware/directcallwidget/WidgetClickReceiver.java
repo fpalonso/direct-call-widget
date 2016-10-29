@@ -16,19 +16,18 @@ public class WidgetClickReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         String tapAction = pref.getString(PREF_ONTAP_KEY, PREF_ONTAP_CALL_VALUE);
-        String intentAction;
         switch (tapAction) {
             case PREF_ONTAP_DIAL_VALUE:
-                intentAction = Intent.ACTION_DIAL;
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL, intent.getData());
+                dialIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(dialIntent);
                 break;
             case PREF_ONTAP_CALL_VALUE:
-                intentAction = Intent.ACTION_CALL;
+                Intent callIntent = new Intent(context, CallActivity.class);
+                callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                callIntent.setData(intent.getData());
+                context.startActivity(callIntent);
                 break;
-            default:
-                return;
         }
-        Intent callIntent = new Intent(intentAction, intent.getData());
-        callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(callIntent);
     }
 }

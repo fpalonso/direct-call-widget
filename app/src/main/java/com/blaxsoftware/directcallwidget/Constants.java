@@ -9,4 +9,7 @@ public class Constants {
     public static final String SHAREDPREF_WIDGET_PHOTO_URL = "pic_";
 
     public static final String PICTURES_DIRECTORY = "pics";
+
+    public static final int REQUEST_READ_CONTACTS_PERMISSION = 0;
+    public static final int REQUEST_CALL_PERMISSION = 1;
 }
