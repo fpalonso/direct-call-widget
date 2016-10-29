@@ -23,6 +23,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -37,7 +38,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.SimpleCursorAdapter;
@@ -46,14 +46,9 @@ import android.widget.TextView;
 
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider;
 import com.blaxsoftware.directcallwidget.image.LoadImageTask;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class WidgetConfigActivity extends AppCompatActivity implements
         LoaderCallbacks<Cursor>, OnClickListener {
@@ -76,8 +71,6 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     private static final String STATE_PHOTO_URI = "photoUri";
     private static final String STATE_THUMBNAIL = "thumbnail";
 
-    public static final int REQUEST_READ_CONTACTS_PERMISSION = 0;
-
     private int mAppWidgetId;
 
     private Uri mContactUri;
@@ -87,11 +80,8 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     private WorkerFragment mWorkerFragment;
 
     private TextView mDisplayNameEditText;
-    private Spinner mPhoneNumberSpinner;
     private PhoneAdapter mPhoneNumberAdapter;
     private ImageView mThumbnailView;
-
-    private AdView adView;
 
     @SuppressLint("InflateParams")
     @Override
@@ -128,9 +118,9 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         mThumbnailView = (ImageView) findViewById(R.id.thumbnail);
         mThumbnailView.setOnClickListener(this);
 
-        mPhoneNumberSpinner = (Spinner) findViewById(R.id.phoneNumberSpinner);
+        Spinner phoneNumberSpinner = (Spinner) findViewById(R.id.phoneNumberSpinner);
         mPhoneNumberAdapter = new PhoneAdapter(this, null);
-        mPhoneNumberSpinner.setAdapter(mPhoneNumberAdapter);
+        phoneNumberSpinner.setAdapter(mPhoneNumberAdapter);
 
         // default result for the activity
         setResult(RESULT_CANCELED);
@@ -147,7 +137,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                 } else {
                     ActivityCompat.requestPermissions(this,
                             new String[] {Manifest.permission.READ_CONTACTS},
-                            REQUEST_READ_CONTACTS_PERMISSION);
+                            Constants.REQUEST_READ_CONTACTS_PERMISSION);
                 }
             }
         } else {
@@ -160,21 +150,6 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                 initContactLoader(mContactUri);
             }
         }
-
-        adView = new AdView(this);
-        adView.setAdUnitId(getString(R.string.ad_unit_id));
-        adView.setAdSize(AdSize.BANNER);
-
-        if (!BuildConfig.DEBUG) {
-            LinearLayout adContainer = (LinearLayout) findViewById(R.id.adContainer);
-            adContainer.addView(adView);
-
-            AdRequest adRequest = new AdRequest.Builder()
-                    .addTestDevice(getString(R.string.test_device_id1))
-                    .addTestDevice(getString(R.string.test_device_id2))
-                    .addTestDevice(getString(R.string.test_device_id3)).build();
-            adView.loadAd(adRequest);
-        }
     }
 
     private void listContacts() {
@@ -185,11 +160,11 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case REQUEST_READ_CONTACTS_PERMISSION:
+            case Constants.REQUEST_READ_CONTACTS_PERMISSION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     listContacts();
                 } else {
@@ -200,20 +175,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        adView.resume();
-    }
-
-    @Override
-    protected void onPause() {
-        adView.pause();
-        super.onPause();
-    }
-
-    @Override
     protected void onDestroy() {
-        adView.destroy();
         mDisplayNameEditText.setCursorVisible(false);
         super.onDestroy();
     }
@@ -420,9 +382,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
      * @return the file that has been created
      */
     private File createImageFile() {
-        String filename = new SimpleDateFormat("yyyyMMdd_HHmmss")
-                .format(new Date());
-        filename = "JPEG_" + filename;
+        String filename = "JPEG_" + System.currentTimeMillis();
         File fileDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         try {
             return File.createTempFile(filename, ".jpg", fileDir);
@@ -494,7 +454,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
 
         private Context mContext;
 
-        public PhoneAdapter(Context context, Cursor c) {
+        PhoneAdapter(Context context, Cursor c) {
             super(context, R.layout.phone_spinner_item, c, FROM, TO, 0);
             mContext = context;
             setDropDownViewResource(R.layout.phone_spinner_dropdown_item);
@@ -578,6 +538,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
      */
     public static class ReadContactsPermissionExplanation extends DialogFragment {
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             TextView view = (TextView) LayoutInflater.from(getActivity())
@@ -591,7 +552,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                         public void onClick(DialogInterface dialog, int which) {
                             ActivityCompat.requestPermissions(getActivity(),
                                     new String[] {Manifest.permission.READ_CONTACTS},
-                                    REQUEST_READ_CONTACTS_PERMISSION);
+                                    Constants.REQUEST_READ_CONTACTS_PERMISSION);
                         }
                     }).create();
         }

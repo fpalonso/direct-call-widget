@@ -15,9 +15,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent updateWidget = new Intent(this, DirectCallWidgetProvider.class);
-        updateWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        sendBroadcast(updateWidget);
     }
 
     @Override

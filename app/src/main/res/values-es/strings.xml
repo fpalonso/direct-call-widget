@@ -34,5 +34,6 @@
 
     <!-- Permissions -->
     <string name="request_readContacts_permission_explanation">Direct Call Widget necesita permiso para mostrarte tus contactos.</string>
+    <string name="request_call_permission_explanation">Direct Call Widget necesita permiso para llamar a este contacto.</string>
 
 </resources>
