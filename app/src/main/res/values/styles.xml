@@ -1,22 +1,11 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="sectionLabelStyle">@style/DCWSectionLabelStyle</item>
         <item name="dialogViewPadding">24dp</item>
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-    </style>
-
-    <style name="DCWSectionLabelStyle" parent="android:Widget.TextView">
-        <item name="android:padding">@dimen/general_section_padding</item>
-        <item name="android:drawablePadding">8dp</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/blue</item>
     </style>
 
 </resources>
