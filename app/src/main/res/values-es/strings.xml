@@ -11,10 +11,6 @@
     <string name="discard">Descartar</string>
     <string name="loading">Cargando&#8230;</string>
 
-    <!-- Main activity -->
-    <string name="congrats">¡Enhorabuena!</string>
-    <string name="welcome">¡Ya puedes usar tu widget! ¡Búscalo en la pestaña Widgets del dispositivo y arrástralo a la pantalla de inicio!</string>
-
     <!-- Widget configuration -->
     <string name="activity_config_title">Configuración</string>
     <string name="display_name_hint">Nombre para mostrar</string>
