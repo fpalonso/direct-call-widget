@@ -414,6 +414,10 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     private void accept() {
         String displayName = mDisplayNameEditText.getText().toString();
         Cursor phoneCursor = mPhoneNumberAdapter.getCursor();
+        if (phoneCursor == null) {
+            finish();
+            return;
+        }
         String phoneNumber = phoneCursor.getString(phoneCursor
                 .getColumnIndex(Phone.NUMBER));
 
