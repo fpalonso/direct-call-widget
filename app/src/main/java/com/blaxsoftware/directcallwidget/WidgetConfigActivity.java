@@ -171,6 +171,11 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                     finish();
                 }
                 break;
+            case Constants.REQUEST_EXTERNAL_STORAGE_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startPickImageIntent();
+                }
+                break;
         }
     }
 
@@ -371,9 +376,22 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     }
 
     private void startPickImageIntent() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            new ReadExternalStoragePermissionExplanation().show(getSupportFragmentManager(),
+                    "readExternalStorageExplanation");
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                    Constants.REQUEST_CALL_PERMISSION);
+        }
     }
 
     /**
@@ -557,6 +575,31 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                             ActivityCompat.requestPermissions(getActivity(),
                                     new String[] {Manifest.permission.READ_CONTACTS},
                                     Constants.REQUEST_READ_CONTACTS_PERMISSION);
+                        }
+                    }).create();
+        }
+    }
+
+    /**
+     * A dialog informing the user why they need to grant the READ_EXTERNAL_STORAGE permission.
+     */
+    public static class ReadExternalStoragePermissionExplanation extends DialogFragment {
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            TextView view = (TextView) LayoutInflater.from(getActivity())
+                    .inflate(R.layout.dialog_text, null);
+            view.setText(getActivity()
+                    .getString(R.string.request_external_storage_explanation));
+            return new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.AppTheme))
+                    .setView(view)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(getActivity(),
+                                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
+                                    Constants.REQUEST_EXTERNAL_STORAGE_PERMISSION);
                         }
                     }).create();
         }

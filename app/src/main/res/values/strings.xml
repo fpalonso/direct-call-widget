@@ -31,5 +31,6 @@
     <!-- Permissions -->
     <string name="request_readContacts_permission_explanation">Direct Call Widget needs permission for showing you your contacts.</string>
     <string name="request_call_permission_explanation">Direct Call Widget needs permission for calling this contact.</string>
+    <string name="request_external_storage_explanation">Direct Call Widget needs permission to show you your pictures.</string>
 
 </resources>
