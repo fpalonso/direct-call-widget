@@ -12,4 +12,5 @@ public class Constants {
 
     public static final int REQUEST_READ_CONTACTS_PERMISSION = 0;
     public static final int REQUEST_CALL_PERMISSION = 1;
+    public static final int REQUEST_EXTERNAL_STORAGE_PERMISSION = 2;
 }

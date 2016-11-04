@@ -11,10 +11,6 @@
     <string name="discard">Discard</string>
     <string name="loading">Loading&#8230;</string>
 
-    <!-- Main activity -->
-    <string name="congrats">Congratulations!</string>
-    <string name="welcome">Your widget is now ready for use! Look for it under widgets and drag it to your home screen!</string>
-
     <!-- Widget configuration -->
     <string name="activity_config_title">Widget settings</string>
     <string name="display_name_hint">Display name</string>
@@ -31,7 +27,10 @@
     <string name="pref_onTap_value_dial">"0"</string>
     <string name="pref_onTap_value_call">"1"</string>
     <string name="pref_onTap_default">@string/pref_onTap_value_call</string>
+
+    <!-- Permissions -->
     <string name="request_readContacts_permission_explanation">Direct Call Widget needs permission for showing you your contacts.</string>
     <string name="request_call_permission_explanation">Direct Call Widget needs permission for calling this contact.</string>
+    <string name="request_external_storage_explanation">Direct Call Widget needs permission to show you your pictures.</string>
 
 </resources>
