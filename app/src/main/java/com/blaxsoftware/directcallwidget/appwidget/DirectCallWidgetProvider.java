@@ -76,12 +76,14 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
 
                 @Override
                 public void onImageLoaded(String uri, Bitmap bitmap) {
-                    remoteViews.setViewVisibility(R.id.loadingPicText, View.GONE);
+                    remoteViews.setViewVisibility(R.id.loadingPicText, View.INVISIBLE);
                     remoteViews.setImageViewBitmap(R.id.picture, bitmap);
                     appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
                 }
             });
             imgLoader.execute(photoUri);
+        } else {
+            remoteViews.setViewVisibility(R.id.loadingPicText, View.INVISIBLE);
         }
     }
 
