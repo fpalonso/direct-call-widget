@@ -82,6 +82,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     private TextView mDisplayNameEditText;
     private PhoneAdapter mPhoneNumberAdapter;
     private ImageView mThumbnailView;
+    private View mDefaultPictureView;
 
     @SuppressLint("InflateParams")
     @Override
@@ -118,6 +119,8 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         mThumbnailView = (ImageView) findViewById(R.id.thumbnail);
         mThumbnailView.setOnClickListener(this);
 
+        mDefaultPictureView = findViewById(R.id.defaultPicture);
+
         Spinner phoneNumberSpinner = (Spinner) findViewById(R.id.phoneNumberSpinner);
         mPhoneNumberAdapter = new PhoneAdapter(this, null);
         phoneNumberSpinner.setAdapter(mPhoneNumberAdapter);
@@ -144,7 +147,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
             mContactUri = savedInstanceState.getParcelable(STATE_CONTACT_URI);
             mPhotoUri = savedInstanceState.getParcelable(STATE_PHOTO_URI);
             mThumbnail = savedInstanceState.getParcelable(STATE_THUMBNAIL);
-            mThumbnailView.setImageBitmap(mThumbnail);
+            setThumbnailBitmap(mThumbnail);
 
             if (mContactUri != null) {
                 initContactLoader(mContactUri);
@@ -317,7 +320,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
             case CONTACT_LOADER:
                 mDisplayNameEditText.setText(null);
                 mPhoneNumberAdapter.swapCursor(null);
-                mThumbnailView.setImageBitmap(null);
+                setThumbnailBitmap(null);
                 break;
             case PHONE_NUMBER_LOADER:
                 mPhoneNumberAdapter.swapCursor(null);
@@ -412,7 +415,12 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     void setThumbnail(String uri, Bitmap thumbnail) {
         mPhotoUri = Uri.parse(uri);
         mThumbnail = thumbnail;
+        setThumbnailBitmap(thumbnail);
+    }
+
+    private void setThumbnailBitmap(Bitmap thumbnail) {
         mThumbnailView.setImageBitmap(thumbnail);
+        mDefaultPictureView.setVisibility(thumbnail == null ? View.VISIBLE : View.GONE);
     }
 
     @Override
