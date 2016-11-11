@@ -42,7 +42,7 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
 
         RemoteViews rViews = new RemoteViews(context.getPackageName(),
                 R.layout.widget_2x2);
-        rViews.setViewVisibility(R.id.loadingPicText, View.VISIBLE);
+        rViews.setViewVisibility(R.id.defaultPicture, View.VISIBLE);
         rViews.setTextViewText(R.id.contactName, displayName);
         rViews.setViewVisibility(R.id.contactName,
                 !TextUtils.isEmpty(displayName) ? View.VISIBLE : View.GONE);
@@ -76,14 +76,14 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
 
                 @Override
                 public void onImageLoaded(String uri, Bitmap bitmap) {
-                    remoteViews.setViewVisibility(R.id.loadingPicText, View.INVISIBLE);
-                    remoteViews.setImageViewBitmap(R.id.picture, bitmap);
-                    appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+                    if (bitmap != null) {
+                        remoteViews.setViewVisibility(R.id.defaultPicture, View.INVISIBLE);
+                        remoteViews.setImageViewBitmap(R.id.picture, bitmap);
+                        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+                    }
                 }
             });
             imgLoader.execute(photoUri);
-        } else {
-            remoteViews.setViewVisibility(R.id.loadingPicText, View.INVISIBLE);
         }
     }
 
