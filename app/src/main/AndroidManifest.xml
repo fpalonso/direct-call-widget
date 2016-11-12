@@ -57,7 +57,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".CallActivity"/>
+        <activity android:name=".CallActivity"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
     </application>
 
 </manifest>
