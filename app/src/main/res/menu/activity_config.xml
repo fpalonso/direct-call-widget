@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/ok"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_ok"
+        android:title="@android:string/ok"/>
+    <item
         android:id="@+id/discard"
-        android:showAsAction="never"
-        android:title="@string/discard" />
+        app:showAsAction="never"
+        android:title="@string/discard"/>
 
 </menu>
