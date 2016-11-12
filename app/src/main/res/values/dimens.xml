@@ -10,8 +10,8 @@
     <dimen name="font_body1_size">14sp</dimen>
 
     <!-- Widget configuration activity -->
-    <dimen name="activity_widget_config_photo_width">200dp</dimen>
-    <dimen name="activity_widget_config_photo_height">200dp</dimen>
+    <dimen name="activity_widget_config_photo_width">110dp</dimen>
+    <dimen name="activity_widget_config_photo_height">110dp</dimen>
     <dimen name="activity_widget_config_photo_margin_h">16dp</dimen>
     <dimen name="phone_item_padding_h">16dp</dimen>
     <dimen name="phone_item_padding_v">8dp</dimen>
