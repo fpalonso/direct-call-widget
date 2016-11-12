@@ -6,6 +6,7 @@ public class Constants {
     public static final String SHAREDPREF_WIDGET = "widget_data";
     public static final String SHAREDPREF_WIDGET_DISPLAY_NAME = "name_";
     public static final String SHAREDPREF_WIDGET_PHONE = "phone_";
+    public static final String SHAREDPREF_WIDGET_PHONE_TYPE = "phone_type_";
     public static final String SHAREDPREF_WIDGET_PHOTO_URL = "pic_";
 
     public static final String PICTURES_DIRECTORY = "pics";
