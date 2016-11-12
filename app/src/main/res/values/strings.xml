@@ -16,7 +16,7 @@
     <string name="display_name_hint">Display name</string>
     <string name="picture_from_camera">Take a photo</string>
     <string name="picture_from_gallery">Use an existing photo</string>
-    <string name="customize">Customize</string>
+    <string name="error_using_camera">Oops! The camera cannot be used at this moment.</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>

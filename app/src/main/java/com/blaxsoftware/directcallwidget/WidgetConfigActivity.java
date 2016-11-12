@@ -43,6 +43,7 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider;
 import com.blaxsoftware.directcallwidget.image.LoadImageTask;
@@ -356,7 +357,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraOutput));
             startActivityForResult(intent, TAKE_PHOTO_REQUEST);
         } else {
-            // TODO show an error
+            Toast.makeText(this, R.string.error_using_camera, Toast.LENGTH_LONG).show();
         }
     }
 
