@@ -94,24 +94,6 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
 
-        // action bar's custom view
-        LayoutInflater inflater = (LayoutInflater) getSupportActionBar()
-                .getThemedContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View customActionBar = inflater.inflate(
-                R.layout.actionbar_custom_view_done, null);
-        View doneButton = customActionBar.findViewById(R.id.done);
-        doneButton.setOnClickListener(this);
-
-        // Set up the action bar
-        getSupportActionBar().setDisplayOptions(
-                ActionBar.DISPLAY_SHOW_CUSTOM,
-                ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
-                        | ActionBar.DISPLAY_SHOW_TITLE);
-        getSupportActionBar().setCustomView(
-                customActionBar,
-                new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
-                        ActionBar.LayoutParams.MATCH_PARENT));
-
         mWorkerFragment = WorkerFragment.findOrCreate(getFragmentManager());
 
         mDisplayNameEditText = (EditText) findViewById(R.id.displayName);
@@ -197,6 +179,10 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.ok:
+                accept();
+                finish();
+                return true;
             case R.id.discard:
                 setResult(RESULT_CANCELED);
                 finish();
@@ -331,10 +317,6 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.done:
-                accept();
-                finish();
-                break;
             case R.id.thumbnail:
                 if (getPackageManager().hasSystemFeature(
                         PackageManager.FEATURE_CAMERA)) {
