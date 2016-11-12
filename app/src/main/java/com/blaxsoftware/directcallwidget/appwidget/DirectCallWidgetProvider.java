@@ -114,6 +114,7 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
             SharedPreferences.Editor spEditor = sp.edit();
             spEditor.remove(Constants.SHAREDPREF_WIDGET_DISPLAY_NAME + id);
             spEditor.remove(Constants.SHAREDPREF_WIDGET_PHONE + id);
+            spEditor.remove(Constants.SHAREDPREF_WIDGET_PHONE_TYPE + id);
             spEditor.remove(Constants.SHAREDPREF_WIDGET_PHOTO_URL + id);
             spEditor.apply();
         }
