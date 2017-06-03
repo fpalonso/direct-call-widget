@@ -449,7 +449,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
 
         // Update the widget
         AppWidgetManager widgetMngr = AppWidgetManager.getInstance(this);
-        DirectCallWidgetProvider.updateWidget(getApplicationContext(),
+        DirectCallWidgetProvider.Companion.updateWidget(getApplicationContext(),
                 widgetMngr, mAppWidgetId);
 
         Intent acceptIntent = new Intent();
