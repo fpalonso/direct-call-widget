@@ -27,7 +27,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
@@ -36,19 +35,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider;
 import com.blaxsoftware.directcallwidget.image.LoadImageTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WidgetConfigActivity extends AppCompatActivity implements
         LoaderCallbacks<Cursor>, OnClickListener {
@@ -82,6 +85,8 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     private TextView mDisplayNameEditText;
     private PhoneAdapter mPhoneNumberAdapter;
     private ImageView mThumbnailView;
+    private View mDefaultPictureView;
+    private Spinner mPhoneNumberSpinner;
 
     @SuppressLint("InflateParams")
     @Override
@@ -93,24 +98,6 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
 
-        // action bar's custom view
-        LayoutInflater inflater = (LayoutInflater) getSupportActionBar()
-                .getThemedContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View customActionBar = inflater.inflate(
-                R.layout.actionbar_custom_view_done, null);
-        View doneButton = customActionBar.findViewById(R.id.done);
-        doneButton.setOnClickListener(this);
-
-        // Set up the action bar
-        getSupportActionBar().setDisplayOptions(
-                ActionBar.DISPLAY_SHOW_CUSTOM,
-                ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME
-                        | ActionBar.DISPLAY_SHOW_TITLE);
-        getSupportActionBar().setCustomView(
-                customActionBar,
-                new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
-                        ActionBar.LayoutParams.MATCH_PARENT));
-
         mWorkerFragment = WorkerFragment.findOrCreate(getFragmentManager());
 
         mDisplayNameEditText = (EditText) findViewById(R.id.displayName);
@@ -118,9 +105,11 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         mThumbnailView = (ImageView) findViewById(R.id.thumbnail);
         mThumbnailView.setOnClickListener(this);
 
-        Spinner phoneNumberSpinner = (Spinner) findViewById(R.id.phoneNumberSpinner);
+        mDefaultPictureView = findViewById(R.id.defaultPicture);
+
         mPhoneNumberAdapter = new PhoneAdapter(this, null);
-        phoneNumberSpinner.setAdapter(mPhoneNumberAdapter);
+        mPhoneNumberSpinner = (Spinner) findViewById(R.id.phoneNumberSpinner);
+        mPhoneNumberSpinner.setAdapter(mPhoneNumberAdapter);
 
         // default result for the activity
         setResult(RESULT_CANCELED);
@@ -144,7 +133,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
             mContactUri = savedInstanceState.getParcelable(STATE_CONTACT_URI);
             mPhotoUri = savedInstanceState.getParcelable(STATE_PHOTO_URI);
             mThumbnail = savedInstanceState.getParcelable(STATE_THUMBNAIL);
-            mThumbnailView.setImageBitmap(mThumbnail);
+            setThumbnailBitmap(mThumbnail);
 
             if (mContactUri != null) {
                 initContactLoader(mContactUri);
@@ -194,6 +183,10 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.ok:
+                accept();
+                finish();
+                return true;
             case R.id.discard:
                 setResult(RESULT_CANCELED);
                 finish();
@@ -306,7 +299,8 @@ public class WidgetConfigActivity extends AppCompatActivity implements
                 }
                 break;
             case PHONE_NUMBER_LOADER:
-                mPhoneNumberAdapter.swapCursor(data);
+                mPhoneNumberAdapter.setData(data);
+                mPhoneNumberAdapter.notifyDataSetChanged();
                 break;
         }
     }
@@ -316,11 +310,13 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         switch (loader.getId()) {
             case CONTACT_LOADER:
                 mDisplayNameEditText.setText(null);
-                mPhoneNumberAdapter.swapCursor(null);
-                mThumbnailView.setImageBitmap(null);
+                mPhoneNumberAdapter.setData(null);
+                mPhoneNumberAdapter.notifyDataSetChanged();
+                setThumbnailBitmap(null);
                 break;
             case PHONE_NUMBER_LOADER:
-                mPhoneNumberAdapter.swapCursor(null);
+                mPhoneNumberAdapter.setData(null);
+                mPhoneNumberAdapter.notifyDataSetChanged();
                 break;
         }
     }
@@ -328,10 +324,6 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.done:
-                accept();
-                finish();
-                break;
             case R.id.thumbnail:
                 if (getPackageManager().hasSystemFeature(
                         PackageManager.FEATURE_CAMERA)) {
@@ -371,7 +363,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraOutput));
             startActivityForResult(intent, TAKE_PHOTO_REQUEST);
         } else {
-            // TODO show an error
+            Toast.makeText(this, R.string.error_using_camera, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -412,7 +404,12 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     void setThumbnail(String uri, Bitmap thumbnail) {
         mPhotoUri = Uri.parse(uri);
         mThumbnail = thumbnail;
+        setThumbnailBitmap(thumbnail);
+    }
+
+    private void setThumbnailBitmap(Bitmap thumbnail) {
         mThumbnailView.setImageBitmap(thumbnail);
+        mDefaultPictureView.setVisibility(thumbnail == null ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -429,15 +426,10 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
     }
 
+    @SuppressLint("CommitPrefEdits")
     private void accept() {
         String displayName = mDisplayNameEditText.getText().toString();
-        Cursor phoneCursor = mPhoneNumberAdapter.getCursor();
-        if (phoneCursor == null) {
-            finish();
-            return;
-        }
-        String phoneNumber = phoneCursor.getString(phoneCursor
-                .getColumnIndex(Phone.NUMBER));
+        PhoneNumber selectedNumber = (PhoneNumber) mPhoneNumberSpinner.getSelectedItem();
 
         // Save the data
         SharedPreferences pref = getSharedPreferences(
@@ -446,7 +438,9 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         editor.putString(Constants.SHAREDPREF_WIDGET_DISPLAY_NAME
                 + mAppWidgetId, displayName);
         editor.putString(Constants.SHAREDPREF_WIDGET_PHONE + mAppWidgetId,
-                phoneNumber);
+                selectedNumber.getNumber());
+        editor.putInt(Constants.SHAREDPREF_WIDGET_PHONE_TYPE + mAppWidgetId,
+                selectedNumber.getType());
         if (mPhotoUri != null) {
             editor.putString(Constants.SHAREDPREF_WIDGET_PHOTO_URL + mAppWidgetId,
                     mPhotoUri.toString());
@@ -467,53 +461,138 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     /**
      * An {@code adapter} for the phone number spinner
      */
-    private static class PhoneAdapter extends SimpleCursorAdapter {
+    private class PhoneAdapter extends BaseAdapter {
 
-        private final static String[] FROM = {Phone.TYPE, Phone.TYPE,
-                Phone.NUMBER};
-        private final static int[] TO = {R.id.icon, R.id.phoneType,
-                R.id.phoneNumber};
+        private LayoutInflater mLayoutInflater;
+        private List<PhoneNumber> mPhoneNumbers;
 
-        private Context mContext;
+        PhoneAdapter(Context context, Cursor phoneCursor) {
+            mLayoutInflater = LayoutInflater.from(context);
+            setData(phoneCursor);
+        }
 
-        PhoneAdapter(Context context, Cursor c) {
-            super(context, R.layout.phone_spinner_item, c, FROM, TO, 0);
-            mContext = context;
-            setDropDownViewResource(R.layout.phone_spinner_dropdown_item);
-            setViewBinder(new ViewBinder() {
-
-                @Override
-                public boolean setViewValue(View view, Cursor cursor,
-                                            int columnIndex) {
-                    int phoneType;
-                    switch (view.getId()) {
-                        case R.id.icon:
-                            phoneType = cursor.getInt(columnIndex);
-                            switch (phoneType) {
-                                case Phone.TYPE_MOBILE:
-                                case Phone.TYPE_WORK_MOBILE:
-                                    ((ImageView) view)
-                                            .setImageResource(R.drawable.ic_hardware_smartphone_24dp);
-                                    break;
-                                default:
-                                    ((ImageView) view)
-                                            .setImageResource(R.drawable.ic_call_grey600_24dp);
-                            }
-                            break;
-                        case R.id.phoneType:
-                            phoneType = cursor.getInt(columnIndex);
-                            CharSequence phoneTypeLabel = Phone.getTypeLabel(
-                                    mContext.getResources(), phoneType, "");
-                            ((TextView) view).setText(phoneTypeLabel);
-                            break;
-                        case R.id.phoneNumber:
-                            String phoneNumber = cursor.getString(columnIndex);
-                            ((TextView) view).setText(phoneNumber);
-                            break;
+        void setData(Cursor cursor) {
+            if (mPhoneNumbers == null) {
+                mPhoneNumbers = new ArrayList<>();
+            } else {
+                mPhoneNumbers.clear();
+            }
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    int type = cursor.getInt(cursor.getColumnIndex(Phone.TYPE));
+                    String number = cursor.getString(cursor.getColumnIndex(Phone.NUMBER));
+                    PhoneNumber item = new PhoneNumber(type, number);
+                    if (!mPhoneNumbers.contains(item)) {
+                        mPhoneNumbers.add(item);
                     }
+                } while (cursor.moveToNext());
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return mPhoneNumbers != null ? mPhoneNumbers.size() : 0;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return mPhoneNumbers != null ? mPhoneNumbers.get(i) : null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            ViewHolder viewHolder;
+            if (view == null) {
+                view = mLayoutInflater.inflate(R.layout.phone_spinner_item, viewGroup, false);
+                viewHolder = new ViewHolder();
+                viewHolder.iconView = (ImageView) view.findViewById(R.id.icon);
+                viewHolder.typeView = (TextView) view.findViewById(R.id.phoneType);
+                viewHolder.numberView = (TextView) view.findViewById(R.id.phoneNumber);
+                view.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) view.getTag();
+            }
+
+            // Get the item
+            PhoneNumber number = (PhoneNumber) getItem(i);
+
+            // Set the view
+            viewHolder.iconView.setImageResource(iconFor(number));
+            viewHolder.typeView.setText(typeNameFor(viewGroup.getContext(), number));
+            viewHolder.numberView.setText(number.getNumber());
+
+            return view;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = mLayoutInflater.inflate(R.layout.phone_spinner_dropdown_item, parent,
+                        false);
+            }
+            PhoneNumber number = (PhoneNumber) getItem(position);
+            ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(iconFor(number));
+            ((TextView) convertView.findViewById(R.id.phoneType))
+                    .setText(typeNameFor(parent.getContext(), number));
+            ((TextView) convertView.findViewById(R.id.phoneNumber)).setText(number.getNumber());
+            return convertView;
+        }
+
+        private int iconFor(PhoneNumber number) {
+            switch (number.getType()) {
+                case Phone.TYPE_MOBILE:
+                case Phone.TYPE_WORK_MOBILE:
+                    return R.drawable.ic_hardware_smartphone_24dp;
+                default:
+                    return R.drawable.ic_call_grey600_24dp;
+            }
+        }
+
+        private CharSequence typeNameFor(Context context, PhoneNumber number) {
+            return Phone.getTypeLabel(context.getResources(), number.getType(), "");
+        }
+
+        private class ViewHolder {
+
+            ImageView iconView;
+            TextView typeView;
+            TextView numberView;
+        }
+    }
+
+    private class PhoneNumber {
+
+        private int mType;
+        private String mNumber;
+
+        PhoneNumber(int type, String number) {
+            mType = type;
+            mNumber = number;
+        }
+
+        int getType() {
+            return mType;
+        }
+
+        String getNumber() {
+            return mNumber;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof PhoneNumber) {
+                PhoneNumber otherNumber = (PhoneNumber) obj;
+                if (mNumber != null
+                        && mNumber.equals(otherNumber.getNumber())) {
                     return true;
                 }
-            });
+            }
+            return super.equals(obj);
         }
     }
 
@@ -563,6 +642,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            @SuppressLint("InflateParams")
             TextView view = (TextView) LayoutInflater.from(getActivity())
                     .inflate(R.layout.dialog_text, null);
             view.setText(getActivity()
@@ -588,6 +668,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            @SuppressLint("InflateParams")
             TextView view = (TextView) LayoutInflater.from(getActivity())
                     .inflate(R.layout.dialog_text, null);
             view.setText(getActivity()

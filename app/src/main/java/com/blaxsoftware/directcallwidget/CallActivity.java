@@ -1,26 +1,23 @@
 package com.blaxsoftware.directcallwidget;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-public class CallActivity extends AppCompatActivity {
+public class CallActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +32,7 @@ public class CallActivity extends AppCompatActivity {
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.CALL_PHONE)) {
-                new CallPermissionExplanation().show(getSupportFragmentManager(),
+                new CallPermissionExplanation().show(getFragmentManager(),
                         "callExplanation");
             } else {
                 ActivityCompat.requestPermissions(this,
@@ -78,12 +75,9 @@ public class CallActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            TextView view = (TextView) LayoutInflater.from(getActivity())
-                    .inflate(R.layout.dialog_text, null);
-            view.setText(getActivity()
-                    .getString(R.string.request_call_permission_explanation));
             return new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.AppTheme))
-                    .setView(view)
+                    .setMessage(getActivity()
+                            .getString(R.string.request_call_permission_explanation))
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -92,6 +86,12 @@ public class CallActivity extends AppCompatActivity {
                                     Constants.REQUEST_CALL_PERMISSION);
                         }
                     }).create();
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            setCancelable(false);
         }
     }
 }
