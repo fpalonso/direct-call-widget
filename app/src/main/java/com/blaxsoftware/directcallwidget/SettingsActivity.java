@@ -8,11 +8,9 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
+import androidx.core.app.NavUtils;
+import androidx.appcompat.app.AppCompatActivity;
 
-import com.blaxsoftware.directcallwidget.R;
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider;
 
 public class SettingsActivity extends AppCompatActivity {
