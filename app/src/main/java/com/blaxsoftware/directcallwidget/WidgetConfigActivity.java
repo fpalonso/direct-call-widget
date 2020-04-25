@@ -43,6 +43,7 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
@@ -216,6 +217,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case PICK_CONTACT_REQUEST:
                 if (resultCode == RESULT_OK) {
@@ -343,8 +345,7 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.thumbnail:
-                if (getPackageManager().hasSystemFeature(
-                        PackageManager.FEATURE_CAMERA)) {
+                if (Device.canUseCamera(this)) {
                     PopupMenu changePhotoPopupMenu = new PopupMenu(
                             WidgetConfigActivity.this, mThumbnailView);
                     changePhotoPopupMenu.getMenuInflater().inflate(
@@ -378,7 +379,9 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         if (cameraOutput != null) {
             mPhotoUri = Uri.fromFile(cameraOutput);
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraOutput));
+            Uri outputFileUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".fileprovider", cameraOutput);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
             startActivityForResult(intent, TAKE_PHOTO_REQUEST);
         } else {
             Toast.makeText(this, R.string.error_using_camera, Toast.LENGTH_LONG).show();
