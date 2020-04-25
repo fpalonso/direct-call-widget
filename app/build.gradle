@@ -20,7 +20,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "25.0.3"
+    buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.blaxsoftware.directcallwidget"
@@ -29,6 +29,7 @@ android {
     }
 
     buildTypes {
+        debug {}
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
