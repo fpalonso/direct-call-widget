@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2019 Fer P. A.
+ * Copyright (C) 2020 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,19 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "25.0.3"
+    buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.blaxsoftware.directcallwidget"
         minSdkVersion 16
         targetSdkVersion 29
+        versionCode 14
+        versionName "1.2.4"
     }
 
     buildTypes {
@@ -34,9 +38,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    android.sourceSets["main"].java.srcDirs += "src/main/kotlin"
 }
 
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
