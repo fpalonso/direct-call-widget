@@ -35,8 +35,6 @@ import com.blaxsoftware.directcallwidget.Constants;
 import com.blaxsoftware.directcallwidget.Intents;
 import com.blaxsoftware.directcallwidget.R;
 import com.blaxsoftware.directcallwidget.WidgetClickReceiver;
-import com.blaxsoftware.directcallwidget.data.WidgetData;
-import com.blaxsoftware.directcallwidget.data.source.WidgetDataRepository;
 import com.blaxsoftware.directcallwidget.image.LoadImageTask;
 import com.blaxsoftware.directcallwidget.image.LoadImageTask.OnImageLoadedListener;
 
@@ -52,38 +50,30 @@ public class DirectCallWidgetProvider extends AppWidgetProvider {
 
     public static void updateWidget(Context context,
                                     AppWidgetManager widgetMngr, int widgetId) {
-        WidgetData widgetData = getWidgetData(context, widgetId);
-        PendingIntent callPendingIntent = getPendingIntent(context, widgetId, widgetData);
-        RemoteViews rViews = getRemoteViews(context, widgetData, callPendingIntent);
-        updatePhoto(context, rViews, widgetMngr, widgetId, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        widgetMngr.updateAppWidget(widgetId, rViews);
-    }
-
-    private static WidgetData getWidgetData(Context context, int widgetId) {
-        SharedPreferences widgetSharedPreferences = context.getSharedPreferences(
+        // Get widget data
+        SharedPreferences pref = context.getSharedPreferences(
                 Constants.SHAREDPREF_WIDGET, Context.MODE_PRIVATE);
-        WidgetDataRepository widgetDataRepository = new WidgetDataRepository(widgetSharedPreferences);
-        return widgetDataRepository.getByWidgetId(widgetId);
-    }
+        String displayName = pref.getString(
+                Constants.SHAREDPREF_WIDGET_DISPLAY_NAME + widgetId, null);
+        String phoneNumber = pref.getString(Constants.SHAREDPREF_WIDGET_PHONE
+                + widgetId, null);
 
-    private static PendingIntent getPendingIntent(Context context, int widgetId, WidgetData widgetData) {
-        Uri callUri = Uri.parse("tel:" + Uri.encode(widgetData.getPhone()));
-        Intent callIntent = new Intent(Intents.ACTION_WIDGET_CLICK, callUri);
-        callIntent.setClass(context, WidgetClickReceiver.class);
-        return PendingIntent.getBroadcast(
-                context, widgetId, callIntent, 0);
-    }
-
-    private static RemoteViews getRemoteViews(Context context, WidgetData widgetData, PendingIntent callPendingIntent) {
-        RemoteViews rViews = new RemoteViews(context.getPackageName(), R.layout.widget_2x2);
+        RemoteViews rViews = new RemoteViews(context.getPackageName(),
+                R.layout.widget_2x2);
         rViews.setViewVisibility(R.id.defaultPicture, View.VISIBLE);
-        rViews.setTextViewText(R.id.contactName, widgetData.getDisplayName());
+        rViews.setTextViewText(R.id.contactName, displayName);
         rViews.setViewVisibility(R.id.contactName,
-                !TextUtils.isEmpty(widgetData.getDisplayName()) ? View.VISIBLE : View.GONE);
-        if (widgetData.getPhone() != null) {
+                !TextUtils.isEmpty(displayName) ? View.VISIBLE : View.GONE);
+        if (phoneNumber != null) {
+            Uri callUri = Uri.parse("tel:" + Uri.encode(phoneNumber));
+            Intent callIntent = new Intent(Intents.ACTION_WIDGET_CLICK, callUri);
+            callIntent.setClass(context, WidgetClickReceiver.class);
+            PendingIntent callPendingIntent = PendingIntent.getBroadcast(
+                    context, widgetId, callIntent, 0);
             rViews.setOnClickPendingIntent(R.id.widgetLayout, callPendingIntent);
         }
-        return rViews;
+        updatePhoto(context, rViews, widgetMngr, widgetId, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        widgetMngr.updateAppWidget(widgetId, rViews);
     }
 
     private static void updatePhoto(Context context, final RemoteViews remoteViews,
