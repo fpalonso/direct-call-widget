@@ -91,7 +91,6 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     // activity state
     private static final String STATE_CONTACT_URI = "contactUri";
     private static final String STATE_PHOTO_URI = "photoUri";
-    private static final String STATE_THUMBNAIL = "thumbnail";
 
     private int mAppWidgetId;
 
@@ -151,8 +150,14 @@ public class WidgetConfigActivity extends AppCompatActivity implements
         } else {
             mContactUri = savedInstanceState.getParcelable(STATE_CONTACT_URI);
             mPhotoUri = savedInstanceState.getParcelable(STATE_PHOTO_URI);
-            mThumbnail = savedInstanceState.getParcelable(STATE_THUMBNAIL);
-            setThumbnailBitmap(mThumbnail);
+            if (mPhotoUri != null) {
+                mThumbnailView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWorkerFragment.loadImage(mPhotoUri, mThumbnailView.getWidth(), mThumbnailView.getHeight());
+                    }
+                });
+            }
 
             if (mContactUri != null) {
                 initContactLoader(mContactUri);
@@ -443,7 +448,6 @@ public class WidgetConfigActivity extends AppCompatActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(STATE_CONTACT_URI, mContactUri);
         outState.putParcelable(STATE_PHOTO_URI, mPhotoUri);
-        outState.putParcelable(STATE_THUMBNAIL, mThumbnail);
         super.onSaveInstanceState(outState);
     }
 
