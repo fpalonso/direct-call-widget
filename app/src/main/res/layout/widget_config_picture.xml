@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="picUri"
+            type="android.net.Uri" />
+    </data>
+
+    <merge>
+
+        <com.blaxsoftware.directcallwidget.ui.view.RatioImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?picPlaceholderBackground"
+            android:layout_margin="@dimen/padding_default"
+            app:heightFactor="1.0"
+            app:srcCompat="@drawable/ic_person"
+            app:tint="?attr/picPlaceholderForegroundTint"
+            app:uri="@{picUri}"/>
+    </merge>
+</layout>

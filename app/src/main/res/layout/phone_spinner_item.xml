@@ -47,7 +47,7 @@
         android:textSize="@dimen/phone_item_type_font_size" />
 
     <TextView
-        android:id="@+id/phoneNumber"
+        android:id="@+id/phoneNumberView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/phoneType"

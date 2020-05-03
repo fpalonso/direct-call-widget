@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Direct Call Widget - The widget that makes contacts accessible
   ~ Copyright (C) 2020 Fer P. A.
   ~
@@ -28,6 +27,19 @@
     </declare-styleable>
 
     <!-- Padding for a view inside a dialog -->
-    <attr name="dialogViewPadding" format="dimension"/>
+    <attr name="dialogViewPadding" format="dimension" />
+
+    <declare-styleable name="RatioImageView">
+        <attr name="widthFactor" format="float" />
+        <attr name="heightFactor" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="MenuItemWithIcon">
+        <attr name="icon" format="reference" />
+        <attr name="android:text" />
+    </declare-styleable>
+
+    <attr name="picPlaceholderBackground" format="color" />
+    <attr name="picPlaceholderForegroundTint" format="color" />
 
 </resources>

@@ -18,12 +18,40 @@
 
 <resources>
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppBaseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="dialogViewPadding">24dp</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="tint">?attr/colorControlNormal</item>
+        <item name="colorOnSecondary">@color/secondaryTextColor</item>
+        <item name="picPlaceholderBackground">@color/pic_placeholder_background</item>
+        <item name="picPlaceholderForegroundTint">@color/pic_placeholder_foreground_tint</item>
+
+        <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.App.BottomSheetDialog</item>
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+    </style>
+
+    <style name="Theme.App.BottomSheetDialog" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.App.BottomSheet.Modal</item>
+    </style>
+
+    <style name="Widget.App.BottomSheet.Modal" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_dialog</item>
+    </style>
+    
+    <style name="Widget.App.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Toolbar" parent="">
+        <item name="tint">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
 </resources>

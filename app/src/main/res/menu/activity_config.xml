@@ -25,9 +25,5 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_ok"
         android:title="@android:string/ok"/>
-    <item
-        android:id="@+id/discard"
-        app:showAsAction="never"
-        android:title="@string/discard"/>
 
 </menu>

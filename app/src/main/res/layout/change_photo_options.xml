@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:text="@string/change_picture"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry"
+        tools:layout_editor_absoluteX="152dp" />
+
+    <com.blaxsoftware.directcallwidget.ui.view.MenuItemWithIcon
+        android:id="@+id/takePicture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/picture_from_camera"
+        app:icon="@drawable/ic_camera"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <com.blaxsoftware.directcallwidget.ui.view.MenuItemWithIcon
+        android:id="@+id/pickFromGallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/picture_from_gallery"
+        app:icon="@drawable/ic_gallery"
+        app:layout_constraintTop_toBottomOf="@+id/takePicture" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

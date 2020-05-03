@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="primaryColor">#ffffff</color>
+    <color name="primaryLightColor">#ffffff</color>
+    <color name="primaryDarkColor">#000000</color>
+
+    <color name="pic_placeholder_background">#333333</color>
+    <color name="pic_placeholder_foreground_tint">#8a8a8a</color>
+    <color name="bottom_sheet_background">#333333</color>
+
+</resources>

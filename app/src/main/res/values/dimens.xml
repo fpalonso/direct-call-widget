@@ -44,5 +44,6 @@
     <dimen name="widget_2x2_height">110dp</dimen>
     <dimen name="widget_2x2_padding">8dp</dimen>
     <dimen name="widget_2x2_text_padding">8dp</dimen>
+    <dimen name="padding_default">16dp</dimen>
 
 </resources>

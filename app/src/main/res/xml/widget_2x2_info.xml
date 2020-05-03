@@ -18,7 +18,6 @@
   -->
 
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="com.blaxsoftware.directcallwidget.WidgetConfigActivity"
     android:initialLayout="@layout/widget_2x2"
     android:minHeight="@dimen/widget_2x2_height"
     android:minResizeHeight="@dimen/widget_1x1_height"
