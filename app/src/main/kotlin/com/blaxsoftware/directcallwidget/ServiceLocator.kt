@@ -40,7 +40,7 @@ class DefaultServiceLocator(private val context: Context) : ServiceLocator {
     override val widgetPicDataSource: WidgetPicDataSource by lazy {
         WidgetPicRepository(
                 context.contentResolver,
-                picsDir = File(context.filesDir, "Pictures")
+                picsDir = File(context.filesDir, "pics")
         )
     }
 }
