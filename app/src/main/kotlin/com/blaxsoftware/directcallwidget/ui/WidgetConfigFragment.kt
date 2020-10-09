@@ -18,12 +18,10 @@
 
 package com.blaxsoftware.directcallwidget.ui
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -37,10 +35,6 @@ class WidgetConfigFragment : Fragment() {
 
     private val viewModel by activityViewModels<WidgetConfigViewModel> {
         ViewModelFactory(requireContext().applicationContext)
-    }
-
-    private val pickImage = registerForActivityResult(GetContent()) { uri: Uri? ->
-        viewModel.onPictureSelected(uri)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,10 +64,18 @@ class WidgetConfigFragment : Fragment() {
             }
 
             changePictureButton.setOnClickListener {
-                pickImage.launch("image/*")
+                (activity as? OnChangePictureButtonClickListener)?.onChangePictureButtonClick()
             }
 
             return root
         }
+    }
+
+    interface OnChangePictureButtonClickListener {
+        fun onChangePictureButtonClick()
+    }
+
+    companion object {
+        const val TAG = "WidgetConfigFragment"
     }
 }

@@ -25,6 +25,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.PickContact
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.viewModels
@@ -38,24 +40,34 @@ import com.blaxsoftware.directcallwidget.viewmodel.ViewModelFactory
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
 
 class WidgetConfigActivity2 : AppCompatActivity(),
-        ReadContactsPermissionExplanationDialog.Callback {
+        ReadContactsPermissionExplanationDialog.Callback,
+        ReadExternalStoragePermissionExplanationDialog.Callback,
+        WidgetConfigFragment.OnChangePictureButtonClickListener {
 
     private val viewModel by viewModels<WidgetConfigViewModel> {
         ViewModelFactory(applicationContext)
     }
 
-    private val requestContactPermission = registerForActivityResult(RequestPermission()) { isGranted: Boolean? ->
-        if (isGranted == true) {
+    private val requestContactPermission = registerForActivityResult(RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
             pickContact.launch(null)
-        } else {
-            finish()
         }
     }
 
     private val pickContact = registerForActivityResult(PickContact()) { contactUri: Uri? ->
         contactUri?.let {
             viewModel.loadContact(it)
-        } ?: finish()
+        }
+    }
+
+    private val requestReadStoragePermission = registerForActivityResult(RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
+            pickImage.launch("image/*")
+        }
+    }
+
+    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        viewModel.onPictureSelected(uri)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,9 +82,15 @@ class WidgetConfigActivity2 : AppCompatActivity(),
         setResult(Activity.RESULT_CANCELED)
         if (savedInstanceState != null) return
 
+        pickContact()
+    }
+
+    private fun pickContact() {
         when {
-            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
-                    == PackageManager.PERMISSION_GRANTED -> {
+            ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_CONTACTS
+            ) == PackageManager.PERMISSION_GRANTED -> {
                 pickContact.launch(null)
             }
             shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS) -> {
@@ -81,8 +99,29 @@ class WidgetConfigActivity2 : AppCompatActivity(),
                         "readContactsPermissionExplanation"
                 )
             }
+            else -> requestContactPermission.launch(Manifest.permission.READ_CONTACTS)
+        }
+    }
+
+    override fun onChangePictureButtonClick() {
+        when {
+            ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                Log.d(TAG, "onChangePictureButtonClick: Permission granted, picking image")
+                pickImage.launch("image/*")
+            }
+            shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+                Log.d(TAG, "onChangePictureButtonClick: Showing permission rationale")
+                ReadExternalStoragePermissionExplanationDialog().show(
+                        supportFragmentManager,
+                        "readExternalStoragePermissionExplanation"
+                )
+            }
             else -> {
-                requestContactPermission.launch(Manifest.permission.READ_CONTACTS)
+                Log.d(TAG, "onChangePictureButtonClick: Requesting permission")
+                requestReadStoragePermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             }
         }
     }
@@ -92,6 +131,7 @@ class WidgetConfigActivity2 : AppCompatActivity(),
 
         viewModel.result.observe(this, Observer { result ->
             if (result.accepted) {
+                // TODO move this to the view model
                 result.widgetData?.let { widgetData ->
                     DirectCallWidgetProvider.setWidgetData(
                             applicationContext,
@@ -112,5 +152,13 @@ class WidgetConfigActivity2 : AppCompatActivity(),
 
     override fun onReadContactExplanationClosed() {
         requestContactPermission.launch(Manifest.permission.READ_CONTACTS)
+    }
+
+    override fun onReadExternalStorageExplanationClosed() {
+        requestReadStoragePermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+
+    companion object {
+        const val TAG = "WidgetConfigActivity2"
     }
 }
