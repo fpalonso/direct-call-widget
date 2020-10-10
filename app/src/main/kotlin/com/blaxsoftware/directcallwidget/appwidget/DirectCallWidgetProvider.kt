@@ -36,7 +36,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.AppWidgetTarget
 import java.util.*
 
-class DirectCallWidgetProvider : AppWidgetProvider() {
+open class DirectCallWidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager,
                           appWidgetIds: IntArray) {
