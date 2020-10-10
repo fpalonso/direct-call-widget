@@ -34,6 +34,7 @@ import com.blaxsoftware.directcallwidget.ui.WidgetConfigActivity2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.AppWidgetTarget
+import java.util.*
 
 class DirectCallWidgetProvider : AppWidgetProvider() {
 
@@ -61,6 +62,7 @@ class DirectCallWidgetProvider : AppWidgetProvider() {
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         super.onDeleted(context, appWidgetIds)
+        Log.d(TAG, "onDeleted: Deleting widget ids: ${appWidgetIds.contentToString()}")
         appWidgetIds.forEach { id ->
             context.widgetRepository.getWidgetDataById(id)?.let { widgetData ->
                 widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { uri ->

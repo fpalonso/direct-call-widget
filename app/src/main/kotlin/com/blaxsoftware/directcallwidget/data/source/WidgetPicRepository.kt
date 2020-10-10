@@ -20,7 +20,6 @@ package com.blaxsoftware.directcallwidget.data.source
 
 import android.content.ContentResolver
 import android.net.Uri
-import androidx.core.os.bundleOf
 import com.blaxsoftware.directcallwidget.file.Files
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -60,8 +59,10 @@ class WidgetPicRepository(
 
     @Throws(IOException::class)
     override fun delete(uri: Uri) {
-        GlobalScope.launch(Dispatchers.IO) {
-            contentResolver.delete(uri, null, null)
+        uri.path?.let { picPath ->
+            GlobalScope.launch(Dispatchers.IO) {
+                File(picPath).delete()
+            }
         }
     }
 }

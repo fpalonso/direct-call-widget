@@ -88,19 +88,19 @@ class WidgetConfigViewModel(
     }
 
     fun onAccept() {
-        copyPictureToInternalFolder()
-        saveWidgetData()
+        viewModelScope.launch {
+            copyPictureToInternalFolder()
+            saveWidgetData()
+        }
     }
 
-    private fun copyPictureToInternalFolder() {
+    private suspend fun copyPictureToInternalFolder() {
         _picUri.value?.let { picUri ->
-            viewModelScope.launch {
-                try {
-                    val internalFile = widgetPicDataSource.insertFromUri(picUri)
-                    _picUri.value = Uri.fromFile(internalFile)
-                } catch (e: Throwable) {
-                    e.printStackTrace()
-                }
+            try {
+                val internalFile = widgetPicDataSource.insertFromUri(picUri)
+                _picUri.value = Uri.fromFile(internalFile)
+            } catch (e: Throwable) {
+                e.printStackTrace()
             }
         }
     }
