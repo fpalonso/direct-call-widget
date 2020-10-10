@@ -26,24 +26,28 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.contract.ActivityResultContracts.PickContact
-import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
+import com.blaxsoftware.directcallwidget.file.Files
 import com.blaxsoftware.directcallwidget.viewmodel.ConfigResult
 import com.blaxsoftware.directcallwidget.viewmodel.ViewModelFactory
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
+import kotlinx.coroutines.launch
+import java.io.IOException
 
 class WidgetConfigActivity2 : AppCompatActivity(),
         ReadContactsPermissionExplanationDialog.Callback,
         ReadExternalStoragePermissionExplanationDialog.Callback,
-        WidgetConfigFragment.OnChangePictureButtonClickListener {
+        ChangePictureOptionsDialog.ChangePictureListener {
 
     private val viewModel by viewModels<WidgetConfigViewModel> {
         ViewModelFactory(applicationContext)
@@ -67,9 +71,17 @@ class WidgetConfigActivity2 : AppCompatActivity(),
         }
     }
 
-    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    private val pickImage = registerForActivityResult(GetContent()) { uri: Uri? ->
         viewModel.onPictureSelected(uri)
     }
+
+    private val takePicture = registerForActivityResult(TakePicture()) { result: Boolean ->
+        if (result) {
+            viewModel.onPictureSelected(cameraOutputUri)
+        }
+    }
+
+    private var cameraOutputUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +96,16 @@ class WidgetConfigActivity2 : AppCompatActivity(),
         if (savedInstanceState != null) return
 
         pickContact()
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        cameraOutputUri = savedInstanceState.getParcelable(STATE_CAMERA_OUTPUT_URI)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable(STATE_CAMERA_OUTPUT_URI, cameraOutputUri)
+        super.onSaveInstanceState(outState)
     }
 
     private fun pickContact() {
@@ -104,7 +126,33 @@ class WidgetConfigActivity2 : AppCompatActivity(),
         }
     }
 
-    override fun onChangePictureButtonClick() {
+    @Suppress("BlockingMethodInNonBlockingContext")
+    override fun onTakePictureClick() {
+        lifecycleScope.launch {
+            try {
+                val outputFile = Files.createCameraOutputFile(this@WidgetConfigActivity2)
+                outputFile?.let {
+                    cameraOutputUri = FileProvider.getUriForFile(
+                            this@WidgetConfigActivity2,
+                            "$packageName.fileprovider",
+                            outputFile
+                    )
+                    cameraOutputUri?.let {
+                        takePicture.launch(it)
+                    }
+                }
+            } catch (e: IOException) {
+                Toast.makeText(
+                        this@WidgetConfigActivity2,
+                        R.string.error_using_camera,
+                        Toast.LENGTH_SHORT
+                ).show()
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun onPickImageFromGalleryClick() {
         when {
             ContextCompat.checkSelfPermission(
                     this,
@@ -164,5 +212,6 @@ class WidgetConfigActivity2 : AppCompatActivity(),
 
     companion object {
         const val TAG = "WidgetConfigActivity2"
+        const val STATE_CAMERA_OUTPUT_URI = "cameraOutputUri"
     }
 }

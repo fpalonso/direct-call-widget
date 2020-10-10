@@ -30,6 +30,10 @@
     <string name="display_name_hint">Display name</string>
     <string name="picture_from_camera">Take a photo</string>
     <string name="picture_from_gallery">Pick an image from the gallery</string>
+    <string-array name="change_picture_options">
+        <item>@string/picture_from_camera</item>
+        <item>@string/picture_from_gallery</item>
+    </string-array>
     <string name="error_using_camera">Oops! The camera cannot be used at this moment.</string>
     <string name="phone_name_home">Home</string>
     <string name="phone_name_mobile">Mobile</string>

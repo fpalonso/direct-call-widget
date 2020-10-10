@@ -18,17 +18,20 @@
 
 package com.blaxsoftware.directcallwidget.ui
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.databinding.FragmentWidgetConfigBinding
 import com.blaxsoftware.directcallwidget.viewmodel.ViewModelFactory
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 @Suppress("unused")
 class WidgetConfigFragment : Fragment() {
@@ -64,18 +67,41 @@ class WidgetConfigFragment : Fragment() {
             }
 
             changePictureButton.setOnClickListener {
-                (activity as? OnChangePictureButtonClickListener)?.onChangePictureButtonClick()
+                ChangePictureOptionsDialog().show(parentFragmentManager, "changePictureOptions")
             }
 
             return root
         }
     }
 
-    interface OnChangePictureButtonClickListener {
-        fun onChangePictureButtonClick()
+    companion object {
+        const val TAG = "WidgetConfigFragment"
+    }
+}
+
+class ChangePictureOptionsDialog : DialogFragment() {
+
+    interface ChangePictureListener {
+        fun onTakePictureClick()
+        fun onPickImageFromGalleryClick()
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.change_picture)
+                .setItems(R.array.change_picture_options) { _, which ->
+                    (activity as? ChangePictureListener)?.let {
+                        when (which) {
+                            TAKE_PICTURE_INDEX -> it.onTakePictureClick()
+                            PICK_FROM_GALLERY_INDEX -> it.onPickImageFromGalleryClick()
+                        }
+                    }
+                }
+                .create()
     }
 
     companion object {
-        const val TAG = "WidgetConfigFragment"
+        const val TAKE_PICTURE_INDEX = 0
+        const val PICK_FROM_GALLERY_INDEX = 1
     }
 }
