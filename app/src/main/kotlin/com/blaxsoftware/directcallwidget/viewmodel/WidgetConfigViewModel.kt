@@ -84,14 +84,20 @@ class WidgetConfigViewModel(
     }
 
     fun onPictureSelected(pictureUri: Uri?) {
-        pictureUri?.let { uri ->
+        _picUri.value = pictureUri
+    }
+
+    fun onAccept() {
+        copyPictureToInternalFolder()
+        saveWidgetData()
+    }
+
+    private fun copyPictureToInternalFolder() {
+        _picUri.value?.let { picUri ->
             viewModelScope.launch {
                 try {
-                    widgetPicDataSource.insertFromUri(uri)?.let { file ->
-                        // Uri.fromFile() is valid here because the resulting file
-                        // is local to the app.
-                        _picUri.value = Uri.fromFile(file)
-                    }
+                    val internalFile = widgetPicDataSource.insertFromUri(picUri)
+                    _picUri.value = Uri.fromFile(internalFile)
                 } catch (e: Throwable) {
                     e.printStackTrace()
                 }
@@ -99,18 +105,17 @@ class WidgetConfigViewModel(
         }
     }
 
-    fun onAccept() {
+    private fun saveWidgetData() {
         widgetId?.let { widgetId ->
-            WidgetData(
+            val widgetData = WidgetData(
                     widgetId,
                     displayName.value,
                     phoneNumber.value ?: "",
                     0, // FIXME this property is no longer valid
                     picUri.value?.toString()
-            ).also {
-                widgetDataSource.insertWidgetData(it)
-            }
-            widgetDataSource.getWidgetDataById(widgetId)?.let { widgetData ->
+            )
+            with(widgetDataSource) {
+                insertWidgetData(widgetData)
                 _result.value = ConfigResult(accepted = true, widgetData = widgetData)
             }
         }

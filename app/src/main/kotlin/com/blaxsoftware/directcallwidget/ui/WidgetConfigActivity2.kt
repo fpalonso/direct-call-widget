@@ -36,6 +36,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
+import com.blaxsoftware.directcallwidget.viewmodel.ConfigResult
 import com.blaxsoftware.directcallwidget.viewmodel.ViewModelFactory
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
 
@@ -131,15 +132,7 @@ class WidgetConfigActivity2 : AppCompatActivity(),
 
         viewModel.result.observe(this, Observer { result ->
             if (result.accepted) {
-                // TODO move this to the view model
-                result.widgetData?.let { widgetData ->
-                    DirectCallWidgetProvider.setWidgetData(
-                            applicationContext,
-                            AppWidgetManager.getInstance(this),
-                            widgetData.widgetId,
-                            widgetData
-                    )
-                }
+                updateWidget(result)
                 viewModel.widgetId?.let { widgetId ->
                     Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId).also { data ->
                         setResult(Activity.RESULT_OK, data)
@@ -148,6 +141,17 @@ class WidgetConfigActivity2 : AppCompatActivity(),
             }
             finish()
         })
+    }
+
+    private fun updateWidget(result: ConfigResult) {
+        result.widgetData?.let { widgetData ->
+            DirectCallWidgetProvider.setWidgetData(
+                    applicationContext,
+                    AppWidgetManager.getInstance(this),
+                    widgetData.widgetId,
+                    widgetData
+            )
+        }
     }
 
     override fun onReadContactExplanationClosed() {
