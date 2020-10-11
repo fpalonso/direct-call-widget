@@ -1,8 +1,8 @@
 # Direct Call Widget
-A widget that makes it easier for people with vision problems to call their contacts.
+An Android widget that makes it easier for people with vision problems to call their contacts.
 
 # Why is it useful?
-Direct Call Widget is an app intended to let users call their favorite contacts by clicking their pictures on the home screen. This is particuparly useful for people with vision issues or who cannot read (though they will need help for setting up the widgets).
+Direct Call Widget is an Android app intended to let users call their favorite contacts by clicking their pictures on the home screen. This is particuparly useful for people with vision issues or who cannot read (though they will need help for setting up the widgets).
 
 The widgets may be scaled up or down, depending on the user's needs.
 
