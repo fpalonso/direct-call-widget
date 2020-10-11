@@ -26,11 +26,18 @@
     <string name="loading">Cargando&#8230;</string>
 
     <!-- Widget configuration -->
-    <string name="activity_config_title">Configuración</string>
+    <string name="activity_config_title">Configurar widget</string>
     <string name="display_name_hint">Nombre para mostrar</string>
+    <string name="change_picture">Cambiar foto</string>
     <string name="picture_from_camera">Tomar una foto</string>
     <string name="picture_from_gallery">Usar una foto existente</string>
     <string name="error_using_camera">¡Vaya! Parece que no se puede usar la cámara en este momento.</string>
+    <string name="phone">Teléfono</string>
+    <string name="phone_name_home">Casa</string>
+    <string name="phone_name_mobile">Móvil</string>
+    <string name="phone_name_work">Trabajo</string>
+    <string name="phone_name_other">Teléfono</string>
+    <string name="choose_contact">Seleccionar contacto</string>
 
     <!-- Settings -->
     <string name="settings">Ajustes</string>

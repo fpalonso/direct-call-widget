@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Direct Call Widget - The widget that makes contacts accessible
   ~ Copyright (C) 2020 Fer P. A.
   ~
@@ -18,11 +17,11 @@
   -->
 
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="com.blaxsoftware.directcallwidget.WidgetConfigActivity"
+    android:configure="com.blaxsoftware.directcallwidget.ui.WidgetConfigActivity2"
     android:initialLayout="@layout/widget_2x2"
-    android:minHeight="@dimen/widget_2x2_height"
-    android:minResizeHeight="@dimen/widget_1x1_height"
-    android:minResizeWidth="@dimen/widget_1x1_width"
     android:minWidth="@dimen/widget_2x2_width"
+    android:minHeight="@dimen/widget_2x2_height"
+    android:minResizeWidth="@dimen/widget_1x1_width"
+    android:minResizeHeight="@dimen/widget_1x1_height"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="@integer/widget_2x2_upm" />

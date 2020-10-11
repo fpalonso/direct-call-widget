@@ -26,11 +26,20 @@
     <string name="loading">Loading&#8230;</string>
 
     <!-- Widget configuration -->
-    <string name="activity_config_title">Widget settings</string>
+    <string name="activity_config_title">Configure widget</string>
     <string name="display_name_hint">Display name</string>
     <string name="picture_from_camera">Take a photo</string>
-    <string name="picture_from_gallery">Use an existing photo</string>
+    <string name="picture_from_gallery">Pick an image from the gallery</string>
+    <string-array name="change_picture_options">
+        <item>@string/picture_from_camera</item>
+        <item>@string/picture_from_gallery</item>
+    </string-array>
     <string name="error_using_camera">Oops! The camera cannot be used at this moment.</string>
+    <string name="phone_name_home">Home</string>
+    <string name="phone_name_mobile">Mobile</string>
+    <string name="phone_name_work">Work</string>
+    <string name="phone_name_other">Phone</string>
+    <string name="choose_contact">Choose contact</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>
@@ -46,5 +55,7 @@
     <string name="request_readContacts_permission_explanation">Direct Call Widget needs permission for showing you your contacts.</string>
     <string name="request_call_permission_explanation">Direct Call Widget needs permission for calling this contact.</string>
     <string name="request_external_storage_explanation">Direct Call Widget needs permission to show you your pictures.</string>
+    <string name="change_picture">Change picture</string>
+    <string name="phone">Phone</string>
 
 </resources>

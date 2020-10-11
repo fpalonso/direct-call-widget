@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Direct Call Widget - The widget that makes contacts accessible
   ~ Copyright (C) 2020 Fer P. A.
   ~
@@ -23,5 +22,18 @@
     <color name="gray">#CCC</color>
     <color name="blue">#2196F3</color>
     <color name="default_background">#AA607D8B</color>
+
+    <color name="primaryColor">#512da8</color>
+    <color name="primaryLightColor">#8559da</color>
+    <color name="primaryDarkColor">#140078</color>
+    <color name="secondaryColor">#00aa00</color>
+    <color name="secondaryLightColor">#00ff00</color>
+    <color name="secondaryDarkColor">#007700</color>
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#ffffff</color>
+
+    <color name="pic_placeholder_background">#cccccc</color>
+    <color name="pic_placeholder_foreground_tint">#8a8a8a</color>
+    <color name="bottom_sheet_background">@android:color/white</color>
 
 </resources>

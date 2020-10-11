@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Direct Call Widget - The widget that makes contacts accessible
+  ~ Copyright (C) 2020 Fer P. A.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:text="@string/change_picture"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry"
+        tools:layout_editor_absoluteX="152dp" />
+
+    <com.blaxsoftware.directcallwidget.ui.view.MenuItemWithIcon
+        android:id="@+id/takePicture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/picture_from_camera"
+        app:icon="@drawable/ic_camera"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <com.blaxsoftware.directcallwidget.ui.view.MenuItemWithIcon
+        android:id="@+id/pickFromGallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/picture_from_gallery"
+        app:icon="@drawable/ic_gallery"
+        app:layout_constraintTop_toBottomOf="@+id/takePicture" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
