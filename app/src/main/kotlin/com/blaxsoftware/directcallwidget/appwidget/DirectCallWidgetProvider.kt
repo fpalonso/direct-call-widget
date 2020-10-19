@@ -31,10 +31,10 @@ import android.widget.RemoteViews
 import com.blaxsoftware.directcallwidget.*
 import com.blaxsoftware.directcallwidget.data.model.WidgetData
 import com.blaxsoftware.directcallwidget.ui.WidgetConfigActivity2
+import com.blaxsoftware.directcallwidget.ui.toPx
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.AppWidgetTarget
-import java.util.*
 
 open class DirectCallWidgetProvider : AppWidgetProvider() {
 
@@ -52,7 +52,6 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager,
                                            appWidgetId: Int, newOptions: Bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
-        Log.d(TAG, "onAppWidgetOptionsChanged")
         val w = newOptions.getInt(OPTION_APPWIDGET_MAX_WIDTH)
         val h = newOptions.getInt(OPTION_APPWIDGET_MAX_HEIGHT)
         RemoteViews(context.packageName, R.layout.widget_2x2).also { rViews ->
@@ -109,15 +108,18 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
         }
 
         private fun updatePhoto(context: Context, remoteViews: RemoteViews,
-                                appWidgetId: Int, width: Int, height: Int) {
+                                appWidgetId: Int, widthDp: Int, heightDp: Int) {
             context.widgetRepository.getWidgetDataById(appWidgetId)?.let { widgetData ->
                 widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { picUri ->
                     AppWidgetTarget(context, R.id.picture, remoteViews, appWidgetId).also { target ->
-                        val options = RequestOptions().override(width, height)
+                        val widthPx = context.toPx(widthDp)
+                        val heightPx = context.toPx(heightDp)
+                        val options = RequestOptions().override(widthPx, heightPx)
                                 .placeholder(R.drawable.ic_default_picture)
                         Glide.with(context.applicationContext)
                                 .asBitmap()
                                 .load(picUri)
+                                .centerCrop()
                                 .apply(options)
                                 .into(target)
                     }
