@@ -82,7 +82,8 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                 setTextViewText(R.id.contactName, widgetData.displayName)
                 setViewVisibility(R.id.contactName,
                         if (widgetData.hasDisplayName) View.VISIBLE else View.INVISIBLE)
-                setViewVisibility(R.id.addPerson, View.INVISIBLE)
+                setViewVisibility(R.id.placeholder,
+                        if (widgetData.hasPicture) View.INVISIBLE else View.VISIBLE)
                 setOnClickPendingIntent(R.id.widgetLayout,
                         callContactIntent(context, widgetData.phoneNumber, widgetId))
             }.also {
@@ -131,7 +132,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
             RemoteViews(context.packageName, R.layout.widget_2x2).apply {
                 setViewVisibility(R.id.picture, View.INVISIBLE)
                 setViewVisibility(R.id.contactName, View.INVISIBLE)
-                setViewVisibility(R.id.addPerson, View.VISIBLE)
+                setViewVisibility(R.id.placeholder, View.VISIBLE)
                 setOnClickPendingIntent(R.id.widgetLayout,
                         startConfigActivityIntent(context, widgetId))
             }.also { appWidgetManager.updateAppWidget(widgetId, it) }

@@ -27,4 +27,7 @@ data class WidgetData(
 ) {
     val hasDisplayName: Boolean
         get() = displayName?.isNotEmpty() == true
+
+    val hasPicture: Boolean
+        get() = pictureUri != null
 }
