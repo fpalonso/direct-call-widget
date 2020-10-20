@@ -116,13 +116,12 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                     AppWidgetTarget(context, R.id.picture, remoteViews, appWidgetId).also { target ->
                         val widthPx = context.xdpToPx(widthDp)
                         val heightPx = context.ydpToPx(heightDp)
-                        val maxSizePx = maxOf(widthPx, heightPx)
-                        val options = RequestOptions().override(maxSizePx, maxSizePx)
+                        val options = RequestOptions().override(widthPx, heightPx)
                                 .placeholder(R.drawable.ic_default_picture)
                         Glide.with(context.applicationContext)
                                 .asBitmap()
                                 .load(picUri)
-                                .centerCrop()
+                                .centerInside()
                                 .apply(options)
                                 .into(target)
                     }
