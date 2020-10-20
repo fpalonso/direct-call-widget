@@ -20,7 +20,12 @@ package com.blaxsoftware.directcallwidget.ui
 
 import android.content.Context
 
-fun Context.toPx(dp: Int): Int {
-    val scale = resources.displayMetrics.density
-    return (dp * scale).toInt()
+fun Context.xdpToPx(xdp: Int): Int {
+    val scale: Float = resources.displayMetrics.xdpi / 160;
+    return (xdp * scale).toInt()
+}
+
+fun Context.ydpToPx(ydp: Int): Int {
+    val scale: Float = resources.displayMetrics.ydpi / 160;
+    return (ydp * scale).toInt()
 }

@@ -31,7 +31,8 @@ import android.widget.RemoteViews
 import com.blaxsoftware.directcallwidget.*
 import com.blaxsoftware.directcallwidget.data.model.WidgetData
 import com.blaxsoftware.directcallwidget.ui.WidgetConfigActivity2
-import com.blaxsoftware.directcallwidget.ui.toPx
+import com.blaxsoftware.directcallwidget.ui.xdpToPx
+import com.blaxsoftware.directcallwidget.ui.ydpToPx
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.AppWidgetTarget
@@ -113,9 +114,10 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
             context.widgetRepository.getWidgetDataById(appWidgetId)?.let { widgetData ->
                 widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { picUri ->
                     AppWidgetTarget(context, R.id.picture, remoteViews, appWidgetId).also { target ->
-                        val widthPx = context.toPx(widthDp)
-                        val heightPx = context.toPx(heightDp)
-                        val options = RequestOptions().override(widthPx, heightPx)
+                        val widthPx = context.xdpToPx(widthDp)
+                        val heightPx = context.ydpToPx(heightDp)
+                        val maxSizePx = maxOf(widthPx, heightPx)
+                        val options = RequestOptions().override(maxSizePx, maxSizePx)
                                 .placeholder(R.drawable.ic_default_picture)
                         Glide.with(context.applicationContext)
                                 .asBitmap()
