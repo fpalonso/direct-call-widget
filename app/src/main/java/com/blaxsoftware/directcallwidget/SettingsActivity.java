@@ -21,6 +21,7 @@ package com.blaxsoftware.directcallwidget;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,16 +34,22 @@ import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private static final String KEY_SUPPORT = "pref_support";
+    private static final String KEY_BETA = "pref_btester";
+    private static final String KEY_CONTRIBUTE = "pref_contribute";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
+        setSupportActionBar(findViewById(R.id.topAppBar));
 
         Intent updateWidget = new Intent(this, DirectCallWidgetProvider.class);
         updateWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         sendBroadcast(updateWidget);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment())
+                .replace(R.id.fragContainer, new SettingsFragment())
                 .commit();
     }
 
@@ -60,6 +67,30 @@ public class SettingsActivity extends AppCompatActivity {
             super.onResume();
             getPreferenceScreen().getSharedPreferences()
                     .registerOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public boolean onPreferenceTreeClick(Preference preference) {
+            switch (preference.getKey()) {
+                case KEY_SUPPORT:
+                    final String subject = getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME;
+                    final Uri supportUri = Uri.parse("mailto:blax.software@gmail.com?subject=" + subject /* Necessary for GMail */);
+                    final Intent supportIntent = new Intent(Intent.ACTION_SENDTO, supportUri)
+                            .putExtra(Intent.EXTRA_SUBJECT, subject);
+                    startActivity(supportIntent);
+                    break;
+                case KEY_BETA:
+                    final Uri joinBetaUri = Uri.parse("https://play.google.com/apps/testing/com.blaxsoftware.directcallwidget");
+                    final Intent joinBetaIntent = new Intent(Intent.ACTION_VIEW, joinBetaUri);
+                    startActivity(joinBetaIntent);
+                    break;
+                case KEY_CONTRIBUTE:
+                    final Uri gitHubUri = Uri.parse("https://github.com/fpalonso/direct-call-widget");
+                    final Intent gitHubIntent = new Intent(Intent.ACTION_VIEW, gitHubUri);
+                    startActivity(gitHubIntent);
+                    break;
+            }
+            return super.onPreferenceTreeClick(preference);
         }
 
         @Override

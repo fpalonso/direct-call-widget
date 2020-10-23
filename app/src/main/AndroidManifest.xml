@@ -36,7 +36,8 @@
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name="androidx.multidex.MultiDexApplication">
 
         <activity android:name=".ui.WidgetConfigActivity2"
             android:screenOrientation="portrait">
@@ -70,8 +71,7 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

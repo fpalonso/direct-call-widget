@@ -40,14 +40,20 @@
     <string name="choose_contact">Seleccionar contacto</string>
 
     <!-- Settings -->
-    <string name="settings">Ajustes</string>
+    <string name="pref_cat_settings">Ajustes</string>
     <string name="pref_onTap">Acción del widget</string>
-    <string name="pref_onTap_key">pref_onTap</string>
     <string name="pref_onTap_entry_dial">Marcar el número del contacto</string>
     <string name="pref_onTap_entry_call">Llamar al contacto</string>
     <string name="pref_onTap_value_dial">"0"</string>
     <string name="pref_onTap_value_call">"1"</string>
+    <string name="pref_cat_about">Acerca de la app</string>
     <string name="pref_onTap_default">@string/pref_onTap_value_call</string>
+    <string name="pref_support_title">¿Necesitas ayuda?</string>
+    <string name="pref_support_summary">Resuelve tus dudas o informa de un bug</string>
+    <string name="pref_become_btester_title">Quiero ser beta tester</string>
+    <string name="pref_become_btester_summary">¿Quieres ser el primero en recibir las actualizaciones? ¡Conviértete en beta tester!</string>
+    <string name="pref_contribute_title">Colaborar</string>
+    <string name="pref_contribute_summary">Este es un proyecto de código abierto. ¿Te gustaría colaborar o simplemente echar un ojo al código?</string>
 
     <!-- Permissions -->
     <string name="request_readContacts_permission_explanation">Direct Call Widget necesita permiso para mostrarte tus contactos.</string>
