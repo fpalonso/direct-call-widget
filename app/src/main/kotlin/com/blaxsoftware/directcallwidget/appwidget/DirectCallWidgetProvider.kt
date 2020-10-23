@@ -46,7 +46,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
         appWidgetIds.forEach { id ->
             context.widgetRepository.getWidgetDataById(id)?.let { widgetData ->
                 setWidgetData(context, appWidgetManager, id, widgetData)
-            } ?: clearWidgetData(context, appWidgetManager, id)
+            }
         }
     }
 
@@ -127,16 +127,6 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                     }
                 }
             }
-        }
-
-        fun clearWidgetData(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int) {
-            RemoteViews(context.packageName, R.layout.widget_2x2).apply {
-                setViewVisibility(R.id.picture, View.INVISIBLE)
-                setViewVisibility(R.id.contactName, View.INVISIBLE)
-                setViewVisibility(R.id.placeholder, View.VISIBLE)
-                setOnClickPendingIntent(R.id.widgetLayout,
-                        startConfigActivityIntent(context, widgetId))
-            }.also { appWidgetManager.updateAppWidget(widgetId, it) }
         }
 
         private fun startConfigActivityIntent(context: Context, widgetId: Int): PendingIntent {
