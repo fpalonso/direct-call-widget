@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "672496972397",
+    "firebase_url": "https://direct-call-widget.firebaseio.com",
+    "project_id": "direct-call-widget",
+    "storage_bucket": "direct-call-widget.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672496972397:android:731c97b70ede2d016b8564",
+        "android_client_info": {
+          "package_name": "com.blaxsoftware.directcallwidget"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "672496972397-olcfu13u4lc3psboedfsbrktrrckjnps.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.blaxsoftware.directcallwidget",
+            "certificate_hash": "f74cf2fec0a93c36e0efb287c201eb78603685f4"
+          }
+        },
+        {
+          "client_id": "672496972397-b0bk7difj2efqjno2m3duehs9hopt12d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9Vc0l8KhURRYe__pJnGuzfvhodtrsEHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "672496972397-b0bk7difj2efqjno2m3duehs9hopt12d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
