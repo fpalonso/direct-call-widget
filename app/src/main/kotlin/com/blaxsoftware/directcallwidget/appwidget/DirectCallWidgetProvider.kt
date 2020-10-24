@@ -21,6 +21,7 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetManager.*
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -44,6 +45,10 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager,
                           appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
+        val existingWidgetIds = appWidgetManager
+                .getAppWidgetIds(ComponentName(context, DirectCallWidgetProvider::class.java))
+        FirebaseCrashlytics.getInstance().setCustomKey("existingWidgetIds", existingWidgetIds?.contentToString() ?: "None")
+        FirebaseCrashlytics.getInstance().log("onUpdate: appWidgetIds=${appWidgetIds.contentToString()}")
         appWidgetIds.forEach { id ->
             context.widgetRepository.getWidgetDataById(id)?.let { widgetData ->
                 FirebaseCrashlytics.getInstance().log("onUpdate: hasPicture=${widgetData.hasPicture}, hasDisplayName=${widgetData.hasDisplayName}")
