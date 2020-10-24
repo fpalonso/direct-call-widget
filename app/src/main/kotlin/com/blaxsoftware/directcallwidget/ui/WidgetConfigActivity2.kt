@@ -41,6 +41,7 @@ import com.blaxsoftware.directcallwidget.file.Files
 import com.blaxsoftware.directcallwidget.viewmodel.ConfigResult
 import com.blaxsoftware.directcallwidget.viewmodel.ViewModelFactory
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -193,6 +194,7 @@ class WidgetConfigActivity2 : AppCompatActivity(),
 
     private fun updateWidget(result: ConfigResult) {
         result.widgetData?.let { widgetData ->
+            FirebaseCrashlytics.getInstance().log("Widget data accepted from WidgetConfigActivity2")
             DirectCallWidgetProvider.setWidgetData(
                     applicationContext,
                     AppWidgetManager.getInstance(this),
