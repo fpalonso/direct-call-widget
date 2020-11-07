@@ -21,10 +21,34 @@ platform :android do
     gradle(task: "test")
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
+  desc "Submit a new internal build to Google Play"
+  lane :internal do
+    gradle(task: "clean assembleRelease")
+    upload_to_play_store(
+      track: 'internal'
+    )
+  end
+
+  desc "Promote an internal build to beta"
+  lane :promote_internal_to_beta do
+    supply(
+      package_name: "com.blaxsoftware.directcallwidget",
+      track: "internal",
+      track_promote_to: "beta",
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+
+  desc "Submit a new Beta Build to Google Play"
   lane :beta do
     gradle(task: "clean assembleRelease")
-    crashlytics
+    upload_to_play_store(
+      track: 'beta'
+    )
+    # crashlytics
   
     # sh "your_script.sh"
     # You can also use other beta testing services here
@@ -33,8 +57,6 @@ platform :android do
   desc "Deploy a new version to the Google Play"
   lane :deploy do
     gradle(task: "clean assembleRelease")
-    upload_to_play_store(
-      track: 'internal'
-    )
+    upload_to_play_store
   end
 end
