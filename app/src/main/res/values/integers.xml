@@ -20,6 +20,6 @@
 <resources>
 
     <!-- Update period, in milliseconds, for the 2x2 widget -->
-    <integer name="widget_2x2_upm">30000</integer>
+    <integer name="widget_2x2_upm">0</integer>
 
 </resources>
