@@ -25,19 +25,16 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import com.blaxsoftware.directcallwidget.*
 import com.blaxsoftware.directcallwidget.data.model.WidgetData
-import com.blaxsoftware.directcallwidget.ui.WidgetConfigActivity2
 import com.blaxsoftware.directcallwidget.ui.xdpToPx
 import com.blaxsoftware.directcallwidget.ui.ydpToPx
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import java.lang.RuntimeException
 
 open class DirectCallWidgetProvider : AppWidgetProvider() {
 
@@ -45,21 +42,19 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                           appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         appWidgetIds.forEach { id ->
-            context.widgetRepository.getWidgetDataById(id)?.let { widgetData ->
-                FirebaseCrashlytics.getInstance().log("onUpdate: hasPicture=${widgetData.hasPicture}, hasDisplayName=${widgetData.hasDisplayName}")
-                setWidgetData(context, appWidgetManager, id, widgetData)
-            } ?: FirebaseCrashlytics.getInstance().recordException(IllegalStateException("onUpdate: Widget data for widget id $id not found!"))
+            updateWidget(context, appWidgetManager, id)
         }
     }
 
     override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager,
                                            appWidgetId: Int, newOptions: Bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
-        val w = newOptions.getInt(OPTION_APPWIDGET_MAX_WIDTH)
-        val h = newOptions.getInt(OPTION_APPWIDGET_MAX_HEIGHT)
-        FirebaseCrashlytics.getInstance().log("onAppWidgetOptionsChanged: Widget with id $appWidgetId resized to ${w}dp x ${h}dp")
-        RemoteViews(context.packageName, R.layout.widget_2x2).also { rViews ->
-            updatePhoto(context, rViews, appWidgetId, w, h)
+        updateWidget(context, appWidgetManager, appWidgetId)
+    }
+
+    private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, id: Int) {
+        context.widgetRepository.getWidgetDataById(id)?.let { widgetData ->
+            setWidgetData(context, appWidgetManager, id, widgetData)
         }
     }
 
@@ -76,7 +71,6 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
-        const val TAG = "WidgetProvider"
 
         fun setWidgetData(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int,
                           widgetData: WidgetData) {
@@ -92,7 +86,6 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                         callContactIntent(context, widgetData.phoneNumber, widgetId))
             }.also {
                 updatePhoto(context, appWidgetManager, it, widgetId)
-                appWidgetManager.updateAppWidget(widgetId, it)
             }
         }
 
