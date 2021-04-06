@@ -86,7 +86,11 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                 setOnClickPendingIntent(R.id.widgetLayout,
                         callContactIntent(context, widgetData.phoneNumber, widgetId))
             }.also {
-                updatePhoto(context, appWidgetManager, it, widgetId)
+                if (widgetData.hasPicture) {
+                    setWidgetDataWithPic(context, appWidgetManager, it, widgetId)
+                } else {
+                    appWidgetManager.updateAppWidget(widgetId, it)
+                }
             }
         }
 
@@ -98,17 +102,17 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
             return PendingIntent.getBroadcast(context, widgetId, callIntent, 0)
         }
 
-        private fun updatePhoto(context: Context, awm: AppWidgetManager,
-                                remoteViews: RemoteViews, appWidgetId: Int) {
+        private fun setWidgetDataWithPic(context: Context, awm: AppWidgetManager,
+                                         remoteViews: RemoteViews, appWidgetId: Int) {
             val options = awm.getAppWidgetOptions(appWidgetId)
             val w = options.getInt(OPTION_APPWIDGET_MAX_WIDTH)
             val h = options.getInt(OPTION_APPWIDGET_MAX_HEIGHT)
             FirebaseCrashlytics.getInstance().log("updatePhoto: Updating photo for widget with id $appWidgetId")
-            updatePhoto(context, remoteViews, appWidgetId, w, h)
+            setWidgetDataWithPic(context, remoteViews, appWidgetId, w, h)
         }
 
-        private fun updatePhoto(context: Context, remoteViews: RemoteViews,
-                                appWidgetId: Int, widthDp: Int, heightDp: Int) {
+        private fun setWidgetDataWithPic(context: Context, remoteViews: RemoteViews,
+                                         appWidgetId: Int, widthDp: Int, heightDp: Int) {
             FirebaseCrashlytics.getInstance().setCustomKey("scr_width_px", context.resources.displayMetrics.widthPixels)
             FirebaseCrashlytics.getInstance().setCustomKey("scr_height_px", context.resources.displayMetrics.heightPixels)
             FirebaseCrashlytics.getInstance().setCustomKey("scr_density", context.resources.displayMetrics.density)
