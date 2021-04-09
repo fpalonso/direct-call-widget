@@ -19,52 +19,43 @@ package com.blaxsoftware.directcallwidget.appwidget
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
-import android.appwidget.AppWidgetManager.*
+import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT
+import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH
 import android.appwidget.AppWidgetProvider
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import com.blaxsoftware.directcallwidget.*
 import com.blaxsoftware.directcallwidget.data.model.WidgetData
-import com.blaxsoftware.directcallwidget.ui.WidgetConfigActivity2
 import com.blaxsoftware.directcallwidget.ui.xdpToPx
 import com.blaxsoftware.directcallwidget.ui.ydpToPx
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import java.lang.RuntimeException
 
 open class DirectCallWidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager,
                           appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
-        val existingWidgetIds = appWidgetManager
-                .getAppWidgetIds(ComponentName(context, DirectCallWidgetProvider::class.java))
-        FirebaseCrashlytics.getInstance().setCustomKey("existingWidgetIds", existingWidgetIds?.contentToString() ?: "None")
-        FirebaseCrashlytics.getInstance().log("onUpdate: appWidgetIds=${appWidgetIds.contentToString()}")
         appWidgetIds.forEach { id ->
-            context.widgetRepository.getWidgetDataById(id)?.let { widgetData ->
-                FirebaseCrashlytics.getInstance().log("onUpdate: hasPicture=${widgetData.hasPicture}, hasDisplayName=${widgetData.hasDisplayName}")
-                setWidgetData(context, appWidgetManager, id, widgetData)
-            } ?: FirebaseCrashlytics.getInstance().recordException(IllegalStateException("onUpdate: Widget data for widget id $id not found!"))
+            updateWidget(context, appWidgetManager, id)
         }
     }
 
     override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager,
                                            appWidgetId: Int, newOptions: Bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
-        val w = newOptions.getInt(OPTION_APPWIDGET_MAX_WIDTH)
-        val h = newOptions.getInt(OPTION_APPWIDGET_MAX_HEIGHT)
-        FirebaseCrashlytics.getInstance().log("onAppWidgetOptionsChanged: Widget with id $appWidgetId resized to ${w}dp x ${h}dp")
-        RemoteViews(context.packageName, R.layout.widget_2x2).also { rViews ->
-            updatePhoto(context, rViews, appWidgetId, w, h)
+        updateWidget(context, appWidgetManager, appWidgetId)
+    }
+
+    private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, id: Int) {
+        context.widgetRepository.getWidgetDataById(id)?.let { widgetData ->
+            setWidgetData(context, appWidgetManager, id, widgetData)
         }
     }
 
@@ -81,7 +72,6 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
-        const val TAG = "WidgetProvider"
 
         fun setWidgetData(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int,
                           widgetData: WidgetData) {
@@ -96,8 +86,11 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                 setOnClickPendingIntent(R.id.widgetLayout,
                         callContactIntent(context, widgetData.phoneNumber, widgetId))
             }.also {
-                updatePhoto(context, appWidgetManager, it, widgetId)
-                appWidgetManager.updateAppWidget(widgetId, it)
+                if (widgetData.hasPicture) {
+                    setWidgetDataWithPic(context, appWidgetManager, it, widgetId)
+                } else {
+                    appWidgetManager.updateAppWidget(widgetId, it)
+                }
             }
         }
 
@@ -109,17 +102,17 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
             return PendingIntent.getBroadcast(context, widgetId, callIntent, 0)
         }
 
-        private fun updatePhoto(context: Context, awm: AppWidgetManager,
-                                remoteViews: RemoteViews, appWidgetId: Int) {
+        private fun setWidgetDataWithPic(context: Context, awm: AppWidgetManager,
+                                         remoteViews: RemoteViews, appWidgetId: Int) {
             val options = awm.getAppWidgetOptions(appWidgetId)
             val w = options.getInt(OPTION_APPWIDGET_MAX_WIDTH)
             val h = options.getInt(OPTION_APPWIDGET_MAX_HEIGHT)
             FirebaseCrashlytics.getInstance().log("updatePhoto: Updating photo for widget with id $appWidgetId")
-            updatePhoto(context, remoteViews, appWidgetId, w, h)
+            setWidgetDataWithPic(context, remoteViews, appWidgetId, w, h)
         }
 
-        private fun updatePhoto(context: Context, remoteViews: RemoteViews,
-                                appWidgetId: Int, widthDp: Int, heightDp: Int) {
+        private fun setWidgetDataWithPic(context: Context, remoteViews: RemoteViews,
+                                         appWidgetId: Int, widthDp: Int, heightDp: Int) {
             FirebaseCrashlytics.getInstance().setCustomKey("scr_width_px", context.resources.displayMetrics.widthPixels)
             FirebaseCrashlytics.getInstance().setCustomKey("scr_height_px", context.resources.displayMetrics.heightPixels)
             FirebaseCrashlytics.getInstance().setCustomKey("scr_density", context.resources.displayMetrics.density)
