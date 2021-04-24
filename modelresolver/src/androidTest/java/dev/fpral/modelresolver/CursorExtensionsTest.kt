@@ -26,7 +26,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class CursorExtTest {
+class CursorExtensionsTest {
 
     private val testObjectCursor = MatrixCursor(arrayOf(
             "STRING", "INT", "DOUBLE", "FLOAT", "LONG", "SHORT"
