@@ -18,6 +18,8 @@
 
 package com.blaxsoftware.directcallwidget.viewmodel
 
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.annotation.UiThread
 import androidx.databinding.Bindable
@@ -27,6 +29,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.blaxsoftware.directcallwidget.data.model.AppInfo
 import com.blaxsoftware.directcallwidget.data.model.Phone
 import com.blaxsoftware.directcallwidget.data.model.WidgetData
 import com.blaxsoftware.directcallwidget.data.source.ContactDataSource
@@ -36,11 +39,13 @@ import kotlinx.coroutines.launch
 
 @UiThread
 class WidgetConfigViewModel(
-        private val contactDataSource: ContactDataSource,
-        private val widgetDataSource: WidgetDataSource,
-        private val widgetPicDataSource: WidgetPicDataSource
+    private val contactDataSource: ContactDataSource,
+    private val widgetDataSource: WidgetDataSource,
+    private val widgetPicDataSource: WidgetPicDataSource,
+    context: android.content.Context
 ) : ViewModel(), Observable {
 
+    private val context by lazy { context }
     private val callbacks: PropertyChangeRegistry = PropertyChangeRegistry()
 
     var widgetId: Int? = null
@@ -52,12 +57,25 @@ class WidgetConfigViewModel(
     @Bindable
     val displayName = MutableLiveData<String?>()
 
+    private var _appList: ArrayList<AppInfo> = mutableListOf(
+        AppInfo(
+            null,
+            "Default Call App"
+        )
+    ) as ArrayList<AppInfo>
+
+    var appList: ArrayList<AppInfo> = _appList
+        get() = _appList
+
     private val _phoneList = MutableLiveData<List<Phone>?>()
     val phoneList: LiveData<List<Phone>?>
         get() = _phoneList
 
     @Bindable
     val phoneNumber = MutableLiveData<String?>()
+
+    @Bindable
+    val selectedApp = MutableLiveData<String?>("Default Call App")
 
     private val _result = MutableLiveData<ConfigResult>()
     val result: LiveData<ConfigResult> = _result
@@ -72,6 +90,22 @@ class WidgetConfigViewModel(
 
     fun loadContact(contactUri: Uri) {
         viewModelScope.launch {
+            selectedApp.value = "Default Call App"
+            appList.clear();
+            appList.add(
+                AppInfo(
+                    packageName = null,
+                    appName = "Default Call App"
+                )
+            )
+            if(isAppInstalled("com.whatsapp")){
+                appList.add(
+                    AppInfo(
+                        packageName = "com.whatsapp",
+                        appName = "WhatsApp"
+                    )
+                )
+            }
             contactDataSource.getContactByUri(contactUri)?.let { contact ->
                 _picUri.value = contact.photoUri
                 displayName.value = contact.displayName
@@ -112,7 +146,9 @@ class WidgetConfigViewModel(
                     displayName.value,
                     phoneNumber.value ?: "",
                     0, // FIXME this property is no longer valid
-                    picUri.value?.toString()
+                    picUri.value?.toString(),
+                getSelectedPackageName()
+//                selectedApp.value?.packageName
             )
             with(widgetDataSource) {
                 insertWidgetData(widgetData)
@@ -124,9 +160,49 @@ class WidgetConfigViewModel(
     fun onCancel() {
         _result.value = ConfigResult(accepted = false)
     }
+
+    private fun getSelectedPackageName() : String? {
+        var selectedPackageName: String? = null
+        for(app in appList)
+        {
+            if(app.appName == selectedApp.value){
+                selectedPackageName = app.packageName
+                break
+            }
+        }
+
+        return selectedPackageName
+    }
+
+    private fun isAppInstalled(packageName: String): Boolean {
+        return try {
+            context.packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
+            true
+        } catch (ignored: PackageManager.NameNotFoundException) {
+            false
+        }
+    }
 }
 
 data class ConfigResult(
         val accepted: Boolean,
         val widgetData: WidgetData? = null
 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

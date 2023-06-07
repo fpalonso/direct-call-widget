@@ -48,4 +48,10 @@ public class WidgetClickReceiver extends BroadcastReceiver {
                 break;
         }
     }
+
+
+    public void parseCall(Intent intent) {
+
+
+    }
 }

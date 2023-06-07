@@ -60,4 +60,6 @@
     <string name="request_call_permission_explanation">Direct Call Widget necesita permiso para llamar a este contacto.</string>
     <string name="request_external_storage_explanation">Direct Call Widget necesita permiso para mostrarte tus fotos.</string>
 
+    <string name="app_action">Llamar Con</string>
+
 </resources>

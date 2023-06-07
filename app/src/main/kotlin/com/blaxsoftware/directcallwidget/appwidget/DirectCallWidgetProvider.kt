@@ -18,6 +18,7 @@
 package com.blaxsoftware.directcallwidget.appwidget
 
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT
 import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH
@@ -25,9 +26,11 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
+import androidx.annotation.RequiresApi
 import com.blaxsoftware.directcallwidget.*
 import com.blaxsoftware.directcallwidget.data.model.WidgetData
 import com.blaxsoftware.directcallwidget.ui.xdpToPx
@@ -84,7 +87,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                 setViewVisibility(R.id.placeholder,
                         if (widgetData.hasPicture) View.INVISIBLE else View.VISIBLE)
                 setOnClickPendingIntent(R.id.widgetLayout,
-                        callContactIntent(context, widgetData.phoneNumber, widgetId))
+                        callContactIntent(context, widgetData.phoneNumber, widgetId, widgetData.selectedApp))
             }.also {
                 if (widgetData.hasPicture) {
                     setWidgetDataWithPic(context, appWidgetManager, it, widgetId)
@@ -94,12 +97,28 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
             }
         }
 
+//        @RequiresApi(Build.VERSION_CODES.M)
         private fun callContactIntent(context: Context, phoneNumber: String,
-                                      widgetId: Int): PendingIntent {
-            val callUri = Uri.parse("tel:" + Uri.encode(phoneNumber))
-            val callIntent = Intent(Intents.ACTION_WIDGET_CLICK, callUri)
+                                      widgetId: Int, desiredApp: String?): PendingIntent {
+//            val callUri = Uri.parse("tel:" + Uri.encode(phoneNumber))
+            val callIntent = Intent()
+//            val callIntent = Intent(Intents.ACTION_WIDGET_CLICK, callUri)
+    when (desiredApp){
+        "com.whatsapp" -> {
+            callIntent.action = Intents.ACTION_WIDGET_CLICK;
+            callIntent.data = Uri.parse("callto:" + Uri.encode(phoneNumber))
+            callIntent.setPackage("com.whatsapp")
+        }
+        else -> {
+            callIntent.action = Intents.ACTION_WIDGET_CLICK;
+            callIntent.data = Uri.parse("tel:" + Uri.encode(phoneNumber))
+        }
+    }
+
             callIntent.setClass(context, WidgetClickReceiver::class.java)
-            return PendingIntent.getBroadcast(context, widgetId, callIntent, 0)
+            return PendingIntent.getBroadcast(context, widgetId, callIntent,
+               if  (Build.VERSION.SDK_INT >= 23)
+                FLAG_IMMUTABLE else 0)
         }
 
         private fun setWidgetDataWithPic(context: Context, awm: AppWidgetManager,

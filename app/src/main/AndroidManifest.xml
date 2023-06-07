@@ -41,15 +41,20 @@
         android:name="androidx.multidex.MultiDexApplication">
 
         <activity android:name=".ui.WidgetConfigActivity2"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
 
-        <receiver android:name=".appwidget.DirectCallWidgetProvider">
+        <receiver
+            android:name=".appwidget.DirectCallWidgetProvider"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action
+
+                    android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETE" />
             </intent-filter>
 
@@ -58,7 +63,8 @@
                 android:resource="@xml/widget_2x2_info" />
         </receiver>
 
-        <receiver android:name=".appwidget.DirectCallWidgetProvider1x1">
+        <receiver android:name=".appwidget.DirectCallWidgetProvider1x1"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETE" />
@@ -72,10 +78,10 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/app_name"
+            android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
