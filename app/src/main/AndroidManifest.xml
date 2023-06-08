@@ -20,7 +20,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.blaxsoftware.directcallwidget"
     android:installLocation="internalOnly">
-
+    <queries>
+        <package android:name="com.whatsapp"/>
+        <package android:name="com.whatsapp.w4b"/>
+    </queries>
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission

@@ -24,7 +24,8 @@ data class WidgetData(
         val phoneNumber: String,
         val phoneType: Int,
         val pictureUri: String?,
-        val selectedApp: String?
+        val selectedApp: String?,
+        val contactId: String?
 ) {
     val hasDisplayName: Boolean
         get() = displayName?.isNotEmpty() == true

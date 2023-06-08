@@ -17,6 +17,7 @@
  */
 package com.blaxsoftware.directcallwidget.appwidget
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.appwidget.AppWidgetManager
@@ -28,9 +29,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.ContactsContract
+import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
-import androidx.annotation.RequiresApi
 import com.blaxsoftware.directcallwidget.*
 import com.blaxsoftware.directcallwidget.data.model.WidgetData
 import com.blaxsoftware.directcallwidget.ui.xdpToPx
@@ -87,7 +89,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                 setViewVisibility(R.id.placeholder,
                         if (widgetData.hasPicture) View.INVISIBLE else View.VISIBLE)
                 setOnClickPendingIntent(R.id.widgetLayout,
-                        callContactIntent(context, widgetData.phoneNumber, widgetId, widgetData.selectedApp))
+                        callContactIntent(context, widgetData.phoneNumber, widgetId, widgetData.selectedApp, widgetData.contactId))
             }.also {
                 if (widgetData.hasPicture) {
                     setWidgetDataWithPic(context, appWidgetManager, it, widgetId)
@@ -99,18 +101,32 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
 
 //        @RequiresApi(Build.VERSION_CODES.M)
         private fun callContactIntent(context: Context, phoneNumber: String,
-                                      widgetId: Int, desiredApp: String?): PendingIntent {
+                                      widgetId: Int,
+                                      desiredApp: String?,
+                                      contactId: String?
+): PendingIntent {
 //            val callUri = Uri.parse("tel:" + Uri.encode(phoneNumber))
             val callIntent = Intent()
 //            val callIntent = Intent(Intents.ACTION_WIDGET_CLICK, callUri)
     when (desiredApp){
         "com.whatsapp" -> {
             callIntent.action = Intents.ACTION_WIDGET_CLICK;
-            callIntent.data = Uri.parse("callto:" + Uri.encode(phoneNumber))
-            callIntent.setPackage("com.whatsapp")
+            Log.d("callMode", "WhatsApp")
+//            callIntent.setPackage("com.whatsapp")
+            if(contactId != null){
+                val data = "$contactId"
+                val type = "vnd.android.cursor.item/vnd.com.whatsapp.profile"
+                callIntent.action = Intent.ACTION_VIEW
+                callIntent.setDataAndType(Uri.parse(hasWhatsapp(contactId, context)), type)
+                callIntent.setPackage("com.whatsapp")
+            }else {
+                callIntent.action = Intent.ACTION_CALL
+                callIntent.data = Uri.parse("tel:" + Uri.encode(phoneNumber))
+            }
         }
         else -> {
             callIntent.action = Intents.ACTION_WIDGET_CLICK;
+            Log.d("callMode", "Dialer")
             callIntent.data = Uri.parse("tel:" + Uri.encode(phoneNumber))
         }
     }
@@ -119,6 +135,38 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
             return PendingIntent.getBroadcast(context, widgetId, callIntent,
                if  (Build.VERSION.SDK_INT >= 23)
                 FLAG_IMMUTABLE else 0)
+        }
+
+
+
+        @SuppressLint("Range")
+        private fun hasWhatsapp(contactId:String, context: Context):String? {
+            var whatsappId:String? = null
+            val projection = arrayOf(
+                ContactsContract.Data._ID,
+                ContactsContract.Data.CONTACT_ID,
+                ContactsContract.Data.DISPLAY_NAME,
+                ContactsContract.Data.MIMETYPE,
+                "account_type"
+            )
+            val selection =
+                ContactsContract.RawContacts.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " =? and account_type=?"
+            val selectionArgs = arrayOf(
+                contactId,
+                "vnd.android.cursor.item/vnd.com.whatsapp.voip.call",
+                "com.whatsapp"
+            )
+            val cursor = context.contentResolver.query(
+                ContactsContract.Data.CONTENT_URI,
+                projection, selection, selectionArgs,
+                ContactsContract.Contacts.DISPLAY_NAME
+            )
+
+            //ID QUERY SECTION
+            while (cursor?.moveToNext() == true) {
+                whatsappId = cursor.getLong(cursor.getColumnIndex(ContactsContract.Data._ID)).toString()
+            }
+            return whatsappId
         }
 
         private fun setWidgetDataWithPic(context: Context, awm: AppWidgetManager,

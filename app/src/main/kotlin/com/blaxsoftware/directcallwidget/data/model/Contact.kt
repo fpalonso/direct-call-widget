@@ -23,6 +23,7 @@ import android.net.Uri
 data class Contact(
         val displayName: String,
         val photoUri: Uri?,
+        val contactId: String?,
         val phoneList: List<Phone>
 )
 

@@ -39,7 +39,8 @@ class WidgetDataRepository(private val preferences: SharedPreferences) : WidgetD
                     phoneNumber = getString("$ATTR_PHONE_NUMBER$widgetId", "") ?: "",
                     phoneType = getInt("$ATTR_PHONE_TYPE$widgetId", Phone.TYPE_HOME),
                     pictureUri = getString("$ATTR_PICTURE_URI$widgetId", null),
-                    selectedApp = getString("$ATTR_SELECTED_APP_URI$widgetId", null)
+                    selectedApp = getString("$ATTR_SELECTED_APP_URI$widgetId", null),
+                    contactId = getString("$ATTR_CONTACT_ID_URI$widgetId", null)
             )
         } else null
     }
@@ -51,6 +52,7 @@ class WidgetDataRepository(private val preferences: SharedPreferences) : WidgetD
             putInt("$ATTR_PHONE_TYPE$widgetId", phoneType)
             putString("$ATTR_PICTURE_URI$widgetId", pictureUri)
             putString("$ATTR_SELECTED_APP_URI$widgetId", selectedApp)
+            putString("$ATTR_CONTACT_ID_URI", selectedApp)
         }
     }
 
@@ -61,6 +63,7 @@ class WidgetDataRepository(private val preferences: SharedPreferences) : WidgetD
             remove("$ATTR_PHONE_TYPE$widgetId")
             remove("$ATTR_PICTURE_URI$widgetId")
             remove("$ATTR_SELECTED_APP_URI$widgetId")
+            remove("$ATTR_CONTACT_ID_URI")
         }
     }
 
@@ -70,5 +73,6 @@ class WidgetDataRepository(private val preferences: SharedPreferences) : WidgetD
         private const val ATTR_PHONE_TYPE = "phone_type_"
         private const val ATTR_PICTURE_URI = "pic_"
         private const val ATTR_SELECTED_APP_URI = "app_"
+        private const val ATTR_CONTACT_ID_URI = "contact_id_"
     }
 }

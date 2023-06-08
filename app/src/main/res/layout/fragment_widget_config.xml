@@ -148,7 +148,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/app_action"
-                        android:editable="false"
+                        android:inputType="none"
+                        android:focusable="false"
                         android:text="@={viewModel.selectedApp}"
                         app:appList="@{viewModel.appList}"
                     />

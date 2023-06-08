@@ -33,6 +33,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
+
+import android.util.Log;
 import android.widget.LinearLayout;
 
 public class CallActivity extends Activity {
@@ -46,7 +48,8 @@ public class CallActivity extends Activity {
         view.setBackgroundColor(Color.TRANSPARENT);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
                 == PackageManager.PERMISSION_GRANTED) {
-            call(getIntent().getData());
+//            boolean thirdPartyApp = getIntent().getType() != "";
+            call(getIntent().getData(), getIntent());
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.CALL_PHONE)) {
@@ -66,22 +69,45 @@ public class CallActivity extends Activity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == Constants.REQUEST_CALL_PERMISSION
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            call(getIntent().getData());
+//            boolean thirdPartyApp = getIntent().getType() != "";
+            call(getIntent().getData(), getIntent());
         } else {
             finish();
         }
     }
 
-    private void call(Uri phone) {
+    private void call(Uri phone, Intent intent) {
         if (phone == null) {
+            Log.d("m", "null ___ phone");
             return;
         }
+
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
                 == PackageManager.PERMISSION_GRANTED) {
-            Intent callIntent = new Intent(Intent.ACTION_CALL, phone);
-            callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(callIntent);
-            finish();
+            Log.d("callIntent", "call Started ____" + phone + " original ID ___" + intent.getData());
+            if (phone.toString().startsWith("tel")) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL, phone);
+                callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(callIntent);
+                finish();
+            } else {
+                Log.d("whatsapp", "Start WhatsApp Call");
+                try {
+                    Intent callIntent = new Intent();
+                    callIntent.setAction(Intent.ACTION_VIEW);
+                    callIntent.setDataAndType(
+                            Uri.parse("content://com.android.contacts/data/" + phone.toString()),
+                            "vnd.android.cursor.item/vnd.com.whatsapp.voip.call"
+                    );
+                    callIntent.setPackage("com.whatsapp");
+                    startActivity(callIntent);
+                    finish();
+
+                }catch(Exception e){
+                    Log.d("exceptionThrown", e.toString());
+                }
+            }
         }
     }
 
