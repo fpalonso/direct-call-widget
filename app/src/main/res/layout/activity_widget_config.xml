@@ -63,5 +63,10 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"/>
+        <Spinner
+            android:id="@+id/actionAppSpinner"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"/>
     </LinearLayout>
 </ScrollView>

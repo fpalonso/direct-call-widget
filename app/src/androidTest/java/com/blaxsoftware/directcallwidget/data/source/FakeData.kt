@@ -30,7 +30,8 @@ val fakeWidgetData = WidgetData(
         displayName = "Alice",
         phoneNumber = "+34 123",
         phoneType = CommonDataKinds.Phone.TYPE_HOME,
-        pictureUri = "content://alice.jpg"
+        pictureUri = "content://alice.jpg",
+        selectedApp = null
 )
 
 val fakeContact = Contact(

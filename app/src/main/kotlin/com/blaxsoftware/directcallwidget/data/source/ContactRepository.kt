@@ -40,7 +40,9 @@ class ContactRepository(
         return withContext(Dispatchers.IO) {
             contentResolver.query(
                     contactUri,
-                    arrayOf(Contacts.DISPLAY_NAME, Contacts.PHOTO_URI, Contacts.LOOKUP_KEY),
+                    arrayOf(
+                        Contacts.DISPLAY_NAME, Contacts.PHOTO_URI, ContactsContract.PhoneLookup._ID, Contacts.LOOKUP_KEY,
+                    ),
                     null,
                     null,
                     null
@@ -50,6 +52,7 @@ class ContactRepository(
                         return@withContext Contact(
                                 getString(Contacts.DISPLAY_NAME) ?: "",
                                 getUri(Contacts.PHOTO_URI),
+                                getString(cursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID)),
                                 getPhoneListByLookupKey(getString(Contacts.LOOKUP_KEY))
                         )
                     }

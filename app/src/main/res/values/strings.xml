@@ -67,5 +67,6 @@
     <string name="request_external_storage_explanation">Direct Call Widget needs permission to show you your pictures.</string>
     <string name="change_picture">Change picture</string>
     <string name="phone">Phone</string>
+    <string name="app_action">Call With</string>
 
 </resources>

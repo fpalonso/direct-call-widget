@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.databinding.BindingAdapter
 import com.blaxsoftware.directcallwidget.R
+import com.blaxsoftware.directcallwidget.data.model.AppInfo
 import com.blaxsoftware.directcallwidget.data.model.Phone
 import com.bumptech.glide.Glide
 
@@ -52,6 +53,15 @@ fun ImageView.setUri(uri: Uri?) {
 fun AutoCompleteTextView.setPhoneList(phones: List<Phone>?) {
     val phoneArray = phones?.map { phone -> phone.number }?.toTypedArray() ?: emptyArray()
     ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, phoneArray).also {
+        setAdapter(it)
+    }
+}
+
+
+@BindingAdapter("app:appList")
+fun AutoCompleteTextView.setAppList(appList: List<AppInfo>?) {
+    val appArray = appList?.map { app -> app.appName }?.toTypedArray() ?: emptyArray()
+    ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, appArray).also {
         setAdapter(it)
     }
 }
