@@ -21,7 +21,9 @@
     package="com.blaxsoftware.directcallwidget"
     android:installLocation="internalOnly">
     <queries>
-        <package android:name="com.whatsapp"/>
+        <package
+            android:name="com.whatsapp"
+            />
         <package android:name="com.whatsapp.w4b"/>
     </queries>
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -56,7 +58,6 @@
             android:exported="true">
             <intent-filter>
                 <action
-
                     android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETE" />
             </intent-filter>

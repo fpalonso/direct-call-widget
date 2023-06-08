@@ -39,6 +39,16 @@ import android.widget.LinearLayout;
 
 public class CallActivity extends Activity {
 
+    boolean killApplicationAfterCall = false;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(killApplicationAfterCall){
+            finish();
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +104,7 @@ public class CallActivity extends Activity {
             } else {
                 Log.d("whatsapp", "Start WhatsApp Call");
                 try {
+                    killApplicationAfterCall = true;
                     Intent callIntent = new Intent();
                     callIntent.setAction(Intent.ACTION_VIEW);
                     callIntent.setDataAndType(
@@ -102,8 +113,6 @@ public class CallActivity extends Activity {
                     );
                     callIntent.setPackage("com.whatsapp");
                     startActivity(callIntent);
-                    finish();
-
                 }catch(Exception e){
                     Log.d("exceptionThrown", e.toString());
                 }
