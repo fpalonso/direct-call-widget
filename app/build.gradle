@@ -38,7 +38,7 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-    compileSdkVersion 30
+    compileSdkVersion 34
     buildToolsVersion "30.0.3"
 
     defaultConfig {
