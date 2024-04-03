@@ -20,18 +20,20 @@ package com.blaxsoftware.directcallwidget.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.blaxsoftware.directcallwidget.R
-import kotlinx.android.synthetic.main.menu_item_with_icon.view.*
+import com.blaxsoftware.directcallwidget.databinding.MenuItemWithIconBinding
 
 class MenuItemWithIcon(
         context: Context,
         attributeSet: AttributeSet
 ) : ConstraintLayout(context, attributeSet) {
 
+    private val viewBinding: MenuItemWithIconBinding
+
     init {
-        View.inflate(context, R.layout.menu_item_with_icon, this)
+        viewBinding = MenuItemWithIconBinding.inflate(LayoutInflater.from(context), this, true)
         context.theme.obtainStyledAttributes(
                 attributeSet,
                 R.styleable.MenuItemWithIcon,
@@ -39,14 +41,14 @@ class MenuItemWithIcon(
                 0
         ).apply {
             getResourceId(R.styleable.MenuItemWithIcon_icon, 0).also {
-                imageView.setImageResource(it)
+                viewBinding.imageView.setImageResource(it)
             }
-            textView.text = getString(R.styleable.MenuItemWithIcon_android_text)
+            viewBinding.textView.text = getString(R.styleable.MenuItemWithIcon_android_text)
             recycle()
         }
     }
 
     override fun setOnClickListener(l: OnClickListener?) {
-        root.setOnClickListener(l)
+        viewBinding.root.setOnClickListener(l)
     }
 }

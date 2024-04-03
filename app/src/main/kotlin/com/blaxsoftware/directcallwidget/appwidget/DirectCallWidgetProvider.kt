@@ -99,7 +99,8 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
             val callUri = Uri.parse("tel:" + Uri.encode(phoneNumber))
             val callIntent = Intent(Intents.ACTION_WIDGET_CLICK, callUri)
             callIntent.setClass(context, WidgetClickReceiver::class.java)
-            return PendingIntent.getBroadcast(context, widgetId, callIntent, 0)
+            return PendingIntent.getBroadcast(context, widgetId, callIntent,
+                PendingIntent.FLAG_IMMUTABLE)
         }
 
         private fun setWidgetDataWithPic(context: Context, awm: AppWidgetManager,
