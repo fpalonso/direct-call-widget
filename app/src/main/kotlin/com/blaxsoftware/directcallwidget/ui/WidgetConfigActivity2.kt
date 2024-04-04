@@ -37,8 +37,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import com.blaxsoftware.directcallwidget.R
+import com.blaxsoftware.directcallwidget.analytics.Analytics
 import com.blaxsoftware.directcallwidget.analytics.AnalyticsHelper
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
 import com.blaxsoftware.directcallwidget.file.Files
@@ -61,23 +63,36 @@ class WidgetConfigActivity2 : AppCompatActivity(),
     private val requestContactPermission =
         registerForActivityResult(RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
+                firebaseAnalytics.logEvent(Analytics.Event.GRANT_CONTACT_PERMISSION, null)
                 pickContact.launch(null)
+            } else {
+                firebaseAnalytics.logEvent(Analytics.Event.DENY_CONTACT_PERMISSION, null)
             }
         }
 
     private val pickContact = registerForActivityResult(PickContact()) { contactUri: Uri? ->
         contactUri?.let {
+            firebaseAnalytics.logEvent(Analytics.Event.PICK_CONTACT, null)
             viewModel.loadContact(it)
-        }
+        } ?: firebaseAnalytics.logEvent(Analytics.Event.PICK_CONTACT_CANCEL, null)
+
     }
 
     private val pickImage = registerForActivityResult(PickVisualMedia()) { uri: Uri? ->
+        if (uri != null) {
+            firebaseAnalytics.logEvent(Analytics.Event.PICK_IMAGE, null)
+        } else {
+            firebaseAnalytics.logEvent(Analytics.Event.PICK_IMAGE_CANCEL, null)
+        }
         viewModel.onPictureSelected(uri)
     }
 
     private val takePicture = registerForActivityResult(TakePicture()) { result: Boolean ->
         if (result) {
+            firebaseAnalytics.logEvent(Analytics.Event.TAKE_PICTURE, null)
             viewModel.onPictureSelected(cameraOutputUri)
+        } else {
+            firebaseAnalytics.logEvent(Analytics.Event.TAKE_PICTURE_CANCEL, null)
         }
     }
 
@@ -87,6 +102,11 @@ class WidgetConfigActivity2 : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         firebaseAnalytics = AnalyticsHelper(this).firebaseAnalytics
+        val params = bundleOf(
+            FirebaseAnalytics.Param.SCREEN_NAME to "Widget Setup",
+            FirebaseAnalytics.Param.SCREEN_CLASS to WidgetConfigActivity2::class.simpleName
+        )
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, params)
         setContentView(R.layout.activity_widget_config2)
 
         viewModel.widgetId = intent.getIntExtra(
@@ -121,6 +141,10 @@ class WidgetConfigActivity2 : AppCompatActivity(),
                 this,
                 Manifest.permission.READ_CONTACTS
             ) == PackageManager.PERMISSION_GRANTED -> {
+                val params = bundleOf(
+                    FirebaseAnalytics.Param.SCREEN_NAME to "Pick Contact"
+                )
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, params)
                 pickContact.launch(null)
             }
 
@@ -136,6 +160,7 @@ class WidgetConfigActivity2 : AppCompatActivity(),
     }
 
     override fun onTakePictureClick() {
+        firebaseAnalytics.logEvent(Analytics.Event.TAKE_PICTURE_CLICK, null)
         lifecycleScope.launch {
             try {
                 val outputFile = Files.createCameraOutputFile(this@WidgetConfigActivity2)
@@ -161,6 +186,7 @@ class WidgetConfigActivity2 : AppCompatActivity(),
     }
 
     override fun onPickImageFromGalleryClick() {
+        firebaseAnalytics.logEvent(Analytics.Event.PICK_IMAGE_CLICK, null)
         pickImage.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
 
