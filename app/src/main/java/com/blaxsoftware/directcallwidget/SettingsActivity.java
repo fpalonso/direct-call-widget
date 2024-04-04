@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2024 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,17 +30,21 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 
+import com.blaxsoftware.directcallwidget.analytics.AnalyticsHelper;
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private static final String KEY_SUPPORT = "pref_support";
     private static final String KEY_BETA = "pref_btester";
     private static final String KEY_CONTRIBUTE = "pref_contribute";
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = new AnalyticsHelper(this).getFirebaseAnalytics();
         setContentView(R.layout.activity_settings);
         setSupportActionBar(findViewById(R.id.topAppBar));
 

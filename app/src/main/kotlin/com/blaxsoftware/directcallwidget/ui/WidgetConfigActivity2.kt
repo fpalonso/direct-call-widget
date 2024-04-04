@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2024 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,28 +39,31 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.blaxsoftware.directcallwidget.R
+import com.blaxsoftware.directcallwidget.analytics.AnalyticsHelper
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
 import com.blaxsoftware.directcallwidget.file.Files
 import com.blaxsoftware.directcallwidget.viewmodel.ConfigResult
 import com.blaxsoftware.directcallwidget.viewmodel.ViewModelFactory
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.launch
 import java.io.IOException
 
 class WidgetConfigActivity2 : AppCompatActivity(),
-        ReadContactsPermissionExplanationDialog.Callback,
-        ChangePictureOptionsDialog.ChangePictureListener {
+    ReadContactsPermissionExplanationDialog.Callback,
+    ChangePictureOptionsDialog.ChangePictureListener {
 
     private val viewModel by viewModels<WidgetConfigViewModel> {
         ViewModelFactory(applicationContext)
     }
 
-    private val requestContactPermission = registerForActivityResult(RequestPermission()) { isGranted: Boolean ->
-        if (isGranted) {
-            pickContact.launch(null)
+    private val requestContactPermission =
+        registerForActivityResult(RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                pickContact.launch(null)
+            }
         }
-    }
 
     private val pickContact = registerForActivityResult(PickContact()) { contactUri: Uri? ->
         contactUri?.let {
@@ -79,14 +82,16 @@ class WidgetConfigActivity2 : AppCompatActivity(),
     }
 
     private var cameraOutputUri: Uri? = null
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        firebaseAnalytics = AnalyticsHelper(this).firebaseAnalytics
         setContentView(R.layout.activity_widget_config2)
 
         viewModel.widgetId = intent.getIntExtra(
-                AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID
+            AppWidgetManager.EXTRA_APPWIDGET_ID,
+            AppWidgetManager.INVALID_APPWIDGET_ID
         )
 
         setResult(Activity.RESULT_CANCELED)
@@ -113,17 +118,19 @@ class WidgetConfigActivity2 : AppCompatActivity(),
     private fun pickContact() {
         when {
             ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.READ_CONTACTS
+                this,
+                Manifest.permission.READ_CONTACTS
             ) == PackageManager.PERMISSION_GRANTED -> {
                 pickContact.launch(null)
             }
+
             shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS) -> {
                 ReadContactsPermissionExplanationDialog().show(
-                        supportFragmentManager,
-                        "readContactsPermissionExplanation"
+                    supportFragmentManager,
+                    "readContactsPermissionExplanation"
                 )
             }
+
             else -> requestContactPermission.launch(Manifest.permission.READ_CONTACTS)
         }
     }
@@ -134,9 +141,9 @@ class WidgetConfigActivity2 : AppCompatActivity(),
                 val outputFile = Files.createCameraOutputFile(this@WidgetConfigActivity2)
                 outputFile?.let {
                     cameraOutputUri = FileProvider.getUriForFile(
-                            this@WidgetConfigActivity2,
-                            "$packageName.fileprovider",
-                            outputFile
+                        this@WidgetConfigActivity2,
+                        "$packageName.fileprovider",
+                        outputFile
                     )
                     cameraOutputUri?.let {
                         takePicture.launch(it)
@@ -144,9 +151,9 @@ class WidgetConfigActivity2 : AppCompatActivity(),
                 }
             } catch (e: IOException) {
                 Toast.makeText(
-                        this@WidgetConfigActivity2,
-                        R.string.error_using_camera,
-                        Toast.LENGTH_SHORT
+                    this@WidgetConfigActivity2,
+                    R.string.error_using_camera,
+                    Toast.LENGTH_SHORT
                 ).show()
                 e.printStackTrace()
             }
@@ -177,10 +184,10 @@ class WidgetConfigActivity2 : AppCompatActivity(),
         result.widgetData?.let { widgetData ->
             FirebaseCrashlytics.getInstance().log("Widget data accepted from WidgetConfigActivity2")
             DirectCallWidgetProvider.setWidgetData(
-                    applicationContext,
-                    AppWidgetManager.getInstance(this),
-                    widgetData.widgetId,
-                    widgetData
+                applicationContext,
+                AppWidgetManager.getInstance(this),
+                widgetData.widgetId,
+                widgetData
             )
         }
     }
