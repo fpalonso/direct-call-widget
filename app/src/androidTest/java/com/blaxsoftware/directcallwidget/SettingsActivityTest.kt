@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2024 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,8 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers.*
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.activityScenarioRule
@@ -44,29 +45,13 @@ class SettingsActivityTest {
     val activityScenarioRule = activityScenarioRule<SettingsActivity>()
 
     @Test
-    fun supportPreferenceClickStartsEmail() {
-        Intents.init()
-        intending(hasAction(Intent.ACTION_SENDTO))
-                .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, Intent()))
-
-        onView(withChild(withText(R.string.pref_support_title)))
-                .perform(click())
-
-        intended(hasAction(Intent.ACTION_SENDTO))
-        val subject = "Direct Call Widget ${BuildConfig.VERSION_NAME}"
-        intended(hasData("mailto:blax.software@gmail.com?subject=$subject"))
-        intended(hasExtra(Intent.EXTRA_SUBJECT, subject))
-        Intents.release()
-    }
-
-    @Test
     fun joinBetaPreferenceClickSendsToProperLink() {
         Intents.init()
         intending(hasAction(Intent.ACTION_VIEW))
-                .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, Intent()))
+            .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, Intent()))
 
         onView(withChild(withText(R.string.pref_become_btester_title)))
-                .perform(click())
+            .perform(click())
 
         intended(hasAction(Intent.ACTION_VIEW))
         intended(hasData("https://play.google.com/apps/testing/com.blaxsoftware.directcallwidget"))
@@ -77,10 +62,10 @@ class SettingsActivityTest {
     fun contributePreferenceClickOpensGitHub() {
         Intents.init()
         intending(hasAction(Intent.ACTION_VIEW))
-                .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, Intent()))
+            .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, Intent()))
 
         onView(withChild(withText(R.string.pref_contribute_title)))
-                .perform(click())
+            .perform(click())
 
         intended(hasAction(Intent.ACTION_VIEW))
         intended(hasData("https://github.com/fpalonso/direct-call-widget"))

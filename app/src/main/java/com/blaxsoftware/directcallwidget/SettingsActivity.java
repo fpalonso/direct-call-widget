@@ -36,7 +36,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private static final String KEY_SUPPORT = "pref_support";
     private static final String KEY_BETA = "pref_btester";
     private static final String KEY_CONTRIBUTE = "pref_contribute";
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -76,13 +75,6 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public boolean onPreferenceTreeClick(Preference preference) {
             switch (preference.getKey()) {
-                case KEY_SUPPORT:
-                    final String subject = getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME;
-                    final Uri supportUri = Uri.parse("mailto:blax.software@gmail.com?subject=" + subject /* Necessary for GMail */);
-                    final Intent supportIntent = new Intent(Intent.ACTION_SENDTO, supportUri)
-                            .putExtra(Intent.EXTRA_SUBJECT, subject);
-                    startActivity(supportIntent);
-                    break;
                 case KEY_BETA:
                     final Uri joinBetaUri = Uri.parse("https://play.google.com/apps/testing/com.blaxsoftware.directcallwidget");
                     final Intent joinBetaIntent = new Intent(Intent.ACTION_VIEW, joinBetaUri);
