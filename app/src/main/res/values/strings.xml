@@ -40,6 +40,7 @@
     <string name="phone_name_work">Work</string>
     <string name="phone_name_other">Phone</string>
     <string name="choose_contact">Choose contact</string>
+    <string name="multicontact_widget_description">Multicontact</string>
 
     <!-- Settings -->
     <string name="pref_cat_settings">Settings</string>

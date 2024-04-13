@@ -38,6 +38,7 @@
     <string name="phone_name_work">Trabajo</string>
     <string name="phone_name_other">Teléfono</string>
     <string name="choose_contact">Seleccionar contacto</string>
+    <string name="multicontact_widget_description">Varios contactos</string>
 
     <!-- Settings -->
     <string name="pref_cat_settings">Ajustes</string>
