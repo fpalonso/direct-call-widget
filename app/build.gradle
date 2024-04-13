@@ -21,6 +21,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.dagger.hilt.android'
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
@@ -133,6 +134,8 @@ dependencies {
     androidTestImplementation composeBom
     implementation 'androidx.compose.material3:material3'
     implementation 'androidx.compose.material:material-icons-extended'
+    implementation "com.google.dagger:hilt-android:2.46"
+    kapt "com.google.dagger:hilt-compiler:2.46"
 
     // Android Studio Preview support
     implementation 'androidx.compose.ui:ui-tooling-preview'
