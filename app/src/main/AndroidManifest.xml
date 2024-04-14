@@ -55,6 +55,16 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.multicontact.config.MultiContactWidgetConfigActivity"
+            android:exported="false"
+            android:label="@string/title_activity_multi_contact_widget_config"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name=".glance.MultiContactWidgetReceiver"
             android:enabled="false"

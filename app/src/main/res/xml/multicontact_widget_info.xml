@@ -17,6 +17,7 @@
   -->
 
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.blaxsoftware.directcallwidget.ui.multicontact.config.MultiContactWidgetConfigActivity"
     android:description="@string/multicontact_widget_description"
     android:initialLayout="@layout/glance_default_loading_layout"
     android:minWidth="@dimen/widget_2x2_width"
