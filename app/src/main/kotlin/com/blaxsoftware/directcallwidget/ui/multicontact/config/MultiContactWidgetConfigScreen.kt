@@ -18,6 +18,7 @@
 
 package com.blaxsoftware.directcallwidget.ui.multicontact.config
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -46,7 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.blaxsoftware.directcallwidget.R
-import com.blaxsoftware.directcallwidget.ui.multicontact.config.ui.theme.DirectcallwidgetTheme
+import com.example.compose.DirectCallWidgetTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +55,7 @@ fun MultiContactWidgetConfigScreen(
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    DirectcallwidgetTheme {
+    DirectCallWidgetTheme {
         Scaffold(
             modifier = modifier.fillMaxSize(),
             topBar = {
@@ -123,16 +124,17 @@ private fun AddContactItem(
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(
+    showSystemUi = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    name = "MultiContact config Light"
+)
+@Preview(
+    showSystemUi = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "MultiContact config Dark"
+)
 @Composable
 private fun MultiContactWidgetConfigScreenPreview() {
     MultiContactWidgetConfigScreen(onSaveClick = { })
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun AddContactItemPreview() {
-    AddContactItem(
-        onClick = {}
-    )
 }
