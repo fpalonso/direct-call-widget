@@ -46,14 +46,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.blaxsoftware.directcallwidget.R
-import com.example.compose.DirectCallWidgetTheme
+import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
+import com.blaxsoftware.directcallwidget.ui.theme.WidgetPlaceholderStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MultiContactWidgetConfigScreen(
+    onAddContactClick: () -> Unit,
     onSaveClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: MCWidgetConfigViewModel = hiltViewModel()
 ) {
     DirectCallWidgetTheme {
         Scaffold(
@@ -85,12 +89,12 @@ fun MultiContactWidgetConfigScreen(
                     modifier = Modifier
                         .padding(padding)
                         .padding(16.dp),
-                    columns = GridCells.Adaptive(minSize = 130.dp)
+                    columns = GridCells.Adaptive(minSize = 130.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
-                        AddContactItem(
-                            onClick = {}
-                        )
+                        AddContactItem(onClick = onAddContactClick)
                     }
                 }
             }
@@ -106,7 +110,7 @@ private fun AddContactItem(
     Card(
         modifier = modifier
             .width(130.dp)
-            .aspectRatio(0.75f),
+            .aspectRatio(WidgetPlaceholderStyle.WidthRatio),
         onClick = onClick
     ) {
         Column(
@@ -136,5 +140,8 @@ private fun AddContactItem(
 )
 @Composable
 private fun MultiContactWidgetConfigScreenPreview() {
-    MultiContactWidgetConfigScreen(onSaveClick = { })
+    MultiContactWidgetConfigScreen(
+        onAddContactClick = {},
+        onSaveClick = {}
+    )
 }

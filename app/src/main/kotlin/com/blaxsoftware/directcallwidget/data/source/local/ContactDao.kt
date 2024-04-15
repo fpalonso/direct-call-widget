@@ -16,20 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.ui.multicontact.config
+package com.blaxsoftware.directcallwidget.data.source.local
 
-import android.appwidget.AppWidgetManager
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Upsert
+import com.blaxsoftware.directcallwidget.data.Contact
+import kotlinx.coroutines.flow.Flow
 
-@HiltViewModel
-class MultiContactWidgetConfigViewModel @Inject constructor() : ViewModel() {
+@Dao
+interface ContactDao {
 
-    var widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
-        private set
+    @Query("SELECT * FROM Contact WHERE id = :id")
+    suspend fun getContact(id: Long): Contact?
 
-    fun onStart(widgetId: Int) {
-        this.widgetId = widgetId
-    }
+    @Query("SELECT * FROM Contact WHERE widgetId = :widgetId ORDER BY id")
+    fun getWidgetContacts(widgetId: Long): Flow<List<Contact>>
+
+    @Upsert
+    suspend fun upsertWidgetContact(contact: Contact)
 }

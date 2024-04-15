@@ -23,17 +23,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.blaxsoftware.directcallwidget.MultiContactNavGraph
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MultiContactWidgetConfigActivity : ComponentActivity() {
-
-    private val viewModel: MultiContactWidgetConfigViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,18 +35,19 @@ class MultiContactWidgetConfigActivity : ComponentActivity() {
             AppWidgetManager.EXTRA_APPWIDGET_ID,
             AppWidgetManager.INVALID_APPWIDGET_ID
         )
-        viewModel.onStart(widgetId)
         setResult(RESULT_CANCELED)
         setContent {
-            MultiContactWidgetConfigScreen(
-                onSaveClick = {
-                    val resultData = Intent()
-                        .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, viewModel.widgetId)
-                    setResult(RESULT_OK, resultData)
-                    finish()
-                }
+            MultiContactNavGraph(
+                widgetId = widgetId,
+                onSaveClick = { onSaveWidgetClick(widgetId) }
             )
         }
     }
-}
 
+    private fun onSaveWidgetClick(widgetId: Int) {
+        val resultData = Intent()
+            .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+        setResult(RESULT_OK, resultData)
+        finish()
+    }
+}
