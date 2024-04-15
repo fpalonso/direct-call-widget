@@ -20,18 +20,15 @@ package com.blaxsoftware.directcallwidget.ui.multicontact.config
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.PersonAdd
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -41,15 +38,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blaxsoftware.directcallwidget.R
+import com.blaxsoftware.directcallwidget.ui.components.DcwVerticalPlaceholder
 import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
-import com.blaxsoftware.directcallwidget.ui.theme.WidgetPlaceholderStyle
+import com.blaxsoftware.directcallwidget.ui.theme.VerticalPlaceholderStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +61,7 @@ fun MultiContactWidgetConfigScreen(
             modifier = modifier.fillMaxSize(),
             topBar = {
                 TopAppBar(title = {
-                    Text(text = stringResource(R.string.multicontact_widget_setup))
+                    Text(text = stringResource(R.string.title_activity_multi_contact_widget_config))
                 })
             },
             floatingActionButton = {
@@ -94,36 +91,17 @@ fun MultiContactWidgetConfigScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
-                        AddContactItem(onClick = onAddContactClick)
+                        DcwVerticalPlaceholder(
+                            modifier = modifier
+                                .width(130.dp)
+                                .aspectRatio(VerticalPlaceholderStyle.WidthRatio),
+                            icon = Icons.Rounded.PersonAdd,
+                            text = stringResource(id = R.string.add_contact),
+                            onClick = onAddContactClick
+                        )
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun AddContactItem(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .width(130.dp)
-            .aspectRatio(WidgetPlaceholderStyle.WidthRatio),
-        onClick = onClick
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                modifier = Modifier.size(32.dp),
-                imageVector = Icons.Rounded.PersonAdd,
-                contentDescription = null
-            )
-            Text(text = stringResource(R.string.add_contact))
         }
     }
 }

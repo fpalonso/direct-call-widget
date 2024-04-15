@@ -19,25 +19,59 @@
 package com.blaxsoftware.directcallwidget.ui.singlecontact.config
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.InsertPhoto
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.PersonSearch
+import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blaxsoftware.directcallwidget.R
+import com.blaxsoftware.directcallwidget.ui.components.DcwVerticalPlaceholder
 import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun ContactConfigScreen(
     modifier: Modifier = Modifier,
     viewModel: ContactConfigViewModel = hiltViewModel()
+) {
+    ContactConfigScreen(
+        modifier = modifier,
+        onSearchButtonClick = {}
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ContactConfigScreen(
+    onSearchButtonClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     DirectCallWidgetTheme {
         Scaffold(
@@ -45,15 +79,102 @@ fun ContactConfigScreen(
             topBar = {
                 TopAppBar(title = {
                     Text(text = stringResource(id = R.string.activity_config_title))
+                }, actions = {
+                    IconButton(onClick = onSearchButtonClick) {
+                        Icon(
+                            Icons.Rounded.PersonSearch,
+                            contentDescription = stringResource(id = R.string.add_contact)
+                        )
+                    }
                 })
+            },
+            floatingActionButton = {
+                ExtendedFloatingActionButton(
+                    icon = {
+                        Icon(
+                            Icons.Rounded.Check,
+                            contentDescription = null
+                        )
+                    },
+                    text = {
+                        Text(text = stringResource(id = R.string.save))
+                    },
+                    onClick = { /*TODO*/ }
+                )
             }
         ) { padding ->
-            Column(
-                modifier = Modifier.padding(padding)
-            ) {
-
+            BoxWithConstraints {
+                if (maxWidth < 600.dp) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                            .padding(16.dp)
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        ContactPicture(modifier = Modifier.align(Alignment.CenterHorizontally))
+                        ContactDetails()
+                    }
+                } else {
+                    Row(
+                        modifier = Modifier
+                            .padding(padding)
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        ContactPicture(modifier = Modifier.sizeIn(maxWidth = 320.dp))
+                        ContactDetails(modifier = Modifier.fillMaxHeight())
+                    }
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun ContactPicture(
+    modifier: Modifier = Modifier
+) {
+    DcwVerticalPlaceholder(
+        modifier = modifier
+            .fillMaxWidth(0.5f)
+            .padding(bottom = 16.dp),
+        icon = Icons.Rounded.InsertPhoto,
+        text = stringResource(R.string.add_picture)
+    )
+}
+
+@Composable
+private fun ContactDetails(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            leadingIcon = {
+                Icon(
+                    Icons.Rounded.Person,
+                    contentDescription = null
+                )
+            },
+            value = "",
+            onValueChange = {}
+        )
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            leadingIcon = {
+                Icon(
+                    Icons.Rounded.Phone,
+                    contentDescription = null
+                )
+            },
+            value = "",
+            onValueChange = {}
+        )
     }
 }
 
@@ -67,7 +188,15 @@ fun ContactConfigScreen(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     name = "Contact config Dark"
 )
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    name = "Contact config Light (ES)",
+    locale = "es",
+    widthDp = 600,
+    heightDp = 480
+)
 @Composable
 fun ContactConfigScreenPreview() {
-    ContactConfigScreen()
+    ContactConfigScreen(onSearchButtonClick = {})
 }

@@ -18,6 +18,6 @@
 
 package com.blaxsoftware.directcallwidget.ui.theme
 
-object WidgetPlaceholderStyle {
+object VerticalPlaceholderStyle {
     const val WidthRatio: Float = 0.75f
 }
