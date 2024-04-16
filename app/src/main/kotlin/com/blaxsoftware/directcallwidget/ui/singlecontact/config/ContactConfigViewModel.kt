@@ -18,12 +18,38 @@
 
 package com.blaxsoftware.directcallwidget.ui.singlecontact.config
 
+import android.net.Uri
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+data class Contact(
+    val pictureUri: Uri? = null,
+    val name: String = "",
+    val phone: String = ""
+)
+
 @HiltViewModel
 class ContactConfigViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
-) : ViewModel()
+) : ViewModel() {
+
+    var contact: Contact by mutableStateOf(Contact())
+        private set
+
+    fun onPictureUriChanged(uri: Uri) {
+        contact = contact.copy(pictureUri = uri)
+    }
+
+    fun onNameChanged(name: String) {
+        contact = contact.copy(name = name)
+    }
+
+    fun onPhoneChanged(phone: String) {
+        contact = contact.copy(phone = phone)
+    }
+}

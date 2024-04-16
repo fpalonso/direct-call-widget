@@ -19,6 +19,7 @@
 package com.blaxsoftware.directcallwidget.ui.singlecontact.config
 
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -63,14 +64,24 @@ fun ContactConfigScreen(
 ) {
     ContactConfigScreen(
         modifier = modifier,
-        onSearchButtonClick = {}
+        pictureUri = viewModel.contact.pictureUri,
+        name = viewModel.contact.name,
+        phone = viewModel.contact.phone,
+        onSearchButtonClick = {},
+        onNameChanged = { viewModel.onNameChanged(it) },
+        onPhoneChanged = { viewModel.onPhoneChanged(it) }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactConfigScreen(
+    pictureUri: Uri?,
+    name: String,
+    phone: String,
     onSearchButtonClick: () -> Unit,
+    onNameChanged: (name: String) -> Unit,
+    onPhoneChanged: (phone: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     DirectCallWidgetTheme {
@@ -114,7 +125,12 @@ fun ContactConfigScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         ContactPicture(modifier = Modifier.align(Alignment.CenterHorizontally))
-                        ContactDetails()
+                        ContactDetails(
+                            name = name,
+                            phone = phone,
+                            onNameChanged = onNameChanged,
+                            onPhoneChanged = onPhoneChanged
+                        )
                     }
                 } else {
                     Row(
@@ -124,7 +140,13 @@ fun ContactConfigScreen(
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         ContactPicture(modifier = Modifier.sizeIn(maxWidth = 320.dp))
-                        ContactDetails(modifier = Modifier.fillMaxHeight())
+                        ContactDetails(
+                            modifier = Modifier.fillMaxHeight(),
+                            name = name,
+                            phone = phone,
+                            onNameChanged = onNameChanged,
+                            onPhoneChanged = onPhoneChanged
+                        )
                     }
                 }
             }
@@ -147,6 +169,10 @@ private fun ContactPicture(
 
 @Composable
 private fun ContactDetails(
+    name: String,
+    phone: String,
+    onNameChanged: (name: String) -> Unit,
+    onPhoneChanged: (phone: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -161,8 +187,8 @@ private fun ContactDetails(
                     contentDescription = null
                 )
             },
-            value = "",
-            onValueChange = {}
+            value = name,
+            onValueChange = onNameChanged
         )
         TextField(
             modifier = Modifier.fillMaxWidth(),
@@ -172,8 +198,8 @@ private fun ContactDetails(
                     contentDescription = null
                 )
             },
-            value = "",
-            onValueChange = {}
+            value = phone,
+            onValueChange = onPhoneChanged
         )
     }
 }
@@ -198,5 +224,12 @@ private fun ContactDetails(
 )
 @Composable
 fun ContactConfigScreenPreview() {
-    ContactConfigScreen(onSearchButtonClick = {})
+    ContactConfigScreen(
+        pictureUri = null,
+        name = "Fer",
+        phone = "12345",
+        onSearchButtonClick = {},
+        onNameChanged = {},
+        onPhoneChanged = {}
+    )
 }
