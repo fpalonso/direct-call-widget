@@ -39,7 +39,7 @@ import android.widget.LinearLayout;
 
 public class CallActivity extends Activity {
 
-    boolean killApplicationAfterCall = false;
+    boolean killApplicationAfterCall = true;
 
     @Override
     protected void onResume() {
@@ -117,6 +117,8 @@ public class CallActivity extends Activity {
                     Log.d("exceptionThrown", e.toString());
                 }
             }
+        }else{
+
         }
     }
 
