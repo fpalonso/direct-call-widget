@@ -36,7 +36,8 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
             WidgetConfigViewModel(
                     serviceLocator.contactDataSource,
                     serviceLocator.widgetDataSource,
-                    serviceLocator.widgetPicDataSource
+                    serviceLocator.widgetPicDataSource,
+                    context
             ) as T
         } else throw IllegalArgumentException("ViewModel not recognized: ${modelClass.name}")
     }
