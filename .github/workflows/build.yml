@@ -30,7 +30,7 @@ jobs:
           script: ./gradlew connectedDebugAndroidTest
           
       - name: publish tests
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: app/build/reports/androidTests/connected
