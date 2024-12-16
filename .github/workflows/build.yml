@@ -21,7 +21,7 @@ jobs:
       - name: setup Java
         uses: actions/setup-java@v4
         with:
-          java-version: 21
+          java-version: 17
           distribution: temurin
           
       - name: test
@@ -50,7 +50,7 @@ jobs:
       - name: setup Java
         uses: actions/setup-java@v4
         with:
-          java-version: 21
+          java-version: 17
           distribution: temurin
 
       # Runs a set of commands using the runners shell
