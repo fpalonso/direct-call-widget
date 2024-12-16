@@ -1,56 +1,52 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Test and build
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
     branches: [ '*' ]
   pull_request:
     branches: [ develop ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
-        
+        uses: actions/checkout@v4
+
       - name: setup Java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
-          java-version: 1.8
-          
-      - name: test
+          java-version: 17
+          distribution: temurin
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 28
-          script: ./gradlew connectedDebugAndroidTest
-          
+          api-level: 29
+          script: ./gradlew connectedCheck
+
       - name: publish tests
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: app/build/reports/androidTests/connected
 
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout
-        uses: actions/checkout@v2
-      
-      - name: setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
+        uses: actions/checkout@v4
 
-      # Runs a set of commands using the runners shell
+      - name: setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
       - name: build
         run: ./gradlew buildDebug
