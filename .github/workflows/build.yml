@@ -25,7 +25,7 @@ jobs:
           distribution: temurin	
           
       - name: 'Run UI tests'
-        uses: vgaidarji/android-github-actions-emulator@v1.0.1
+        uses: faruktoptas/android-github-actions-emulator@latest
           
       - name: publish tests
         uses: actions/upload-artifact@v4
