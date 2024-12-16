@@ -156,7 +156,6 @@ class WidgetConfigActivity2 : AppCompatActivity(),
     }
 
     override fun onTakePictureClick() {
-        firebaseAnalytics.logEvent(Analytics.Event.TAKE_PICTURE_CLICK, null)
         lifecycleScope.launch {
             try {
                 val outputFile = Files.createCameraOutputFile(this@WidgetConfigActivity2)
