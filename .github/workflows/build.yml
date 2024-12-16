@@ -24,11 +24,8 @@ jobs:
           java-version: 17
           distribution: temurin	
           
-      - name: test
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: ./gradlew connectedDebugAndroidTest
+      - name: 'Run UI tests'
+        uses: vgaidarji/android-github-actions-emulator@v1.0.1
           
       - name: publish tests
         uses: actions/upload-artifact@v4
