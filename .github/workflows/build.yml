@@ -21,7 +21,7 @@ jobs:
       - name: setup Java
         uses: actions/setup-java@v4
         with:
-          java-version: 1.8
+          distribution: jetbrains
           
       - name: test
         uses: reactivecircus/android-emulator-runner@v2
@@ -49,7 +49,7 @@ jobs:
       - name: setup Java
         uses: actions/setup-java@v4
         with:
-          java-version: 1.8
+          distribution: jetbrains
 
       # Runs a set of commands using the runners shell
       - name: build
