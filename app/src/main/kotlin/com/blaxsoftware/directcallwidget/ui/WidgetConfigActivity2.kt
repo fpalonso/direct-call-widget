@@ -24,16 +24,19 @@ import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts.*
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts.PickContact
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.activity.result.contract.ActivityResultContracts.TakePicture
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
@@ -47,7 +50,6 @@ import java.io.IOException
 
 class WidgetConfigActivity2 : AppCompatActivity(),
         ReadContactsPermissionExplanationDialog.Callback,
-        ReadExternalStoragePermissionExplanationDialog.Callback,
         ChangePictureOptionsDialog.ChangePictureListener {
 
     private val viewModel by viewModels<WidgetConfigViewModel> {
@@ -66,13 +68,7 @@ class WidgetConfigActivity2 : AppCompatActivity(),
         }
     }
 
-    private val requestReadStoragePermission = registerForActivityResult(RequestPermission()) { isGranted: Boolean ->
-        if (isGranted) {
-            pickImage.launch("image/*")
-        }
-    }
-
-    private val pickImage = registerForActivityResult(GetContent()) { uri: Uri? ->
+    private val pickImage = registerForActivityResult(PickVisualMedia()) { uri: Uri? ->
         viewModel.onPictureSelected(uri)
     }
 
@@ -99,9 +95,14 @@ class WidgetConfigActivity2 : AppCompatActivity(),
         pickContact()
     }
 
+    @Suppress("DEPRECATION")
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        cameraOutputUri = savedInstanceState.getParcelable(STATE_CAMERA_OUTPUT_URI)
+        cameraOutputUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            savedInstanceState.getParcelable(STATE_CAMERA_OUTPUT_URI, Uri::class.java)
+        } else {
+            savedInstanceState.getParcelable(STATE_CAMERA_OUTPUT_URI)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -127,7 +128,6 @@ class WidgetConfigActivity2 : AppCompatActivity(),
         }
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     override fun onTakePictureClick() {
         lifecycleScope.launch {
             try {
@@ -154,32 +154,13 @@ class WidgetConfigActivity2 : AppCompatActivity(),
     }
 
     override fun onPickImageFromGalleryClick() {
-        when {
-            ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                Log.d(TAG, "onChangePictureButtonClick: Permission granted, picking image")
-                pickImage.launch("image/*")
-            }
-            shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE) -> {
-                Log.d(TAG, "onChangePictureButtonClick: Showing permission rationale")
-                ReadExternalStoragePermissionExplanationDialog().show(
-                        supportFragmentManager,
-                        "readExternalStoragePermissionExplanation"
-                )
-            }
-            else -> {
-                Log.d(TAG, "onChangePictureButtonClick: Requesting permission")
-                requestReadStoragePermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-            }
-        }
+        pickImage.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
 
     override fun onStart() {
         super.onStart()
 
-        viewModel.result.observe(this, Observer { result ->
+        viewModel.result.observe(this) { result ->
             if (result.accepted) {
                 updateWidget(result)
                 viewModel.widgetId?.let { widgetId ->
@@ -189,7 +170,7 @@ class WidgetConfigActivity2 : AppCompatActivity(),
                 }
             }
             finish()
-        })
+        }
     }
 
     private fun updateWidget(result: ConfigResult) {
@@ -208,12 +189,7 @@ class WidgetConfigActivity2 : AppCompatActivity(),
         requestContactPermission.launch(Manifest.permission.READ_CONTACTS)
     }
 
-    override fun onReadExternalStorageExplanationClosed() {
-        requestReadStoragePermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-    }
-
     companion object {
-        const val TAG = "WidgetConfigActivity2"
         const val STATE_CAMERA_OUTPUT_URI = "cameraOutputUri"
     }
 }

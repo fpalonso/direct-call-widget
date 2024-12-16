@@ -31,7 +31,7 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
         ServiceLocator.getInstance(context)
     }
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(WidgetConfigViewModel::class.java)) {
             WidgetConfigViewModel(
                     serviceLocator.contactDataSource,
