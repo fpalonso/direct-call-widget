@@ -17,6 +17,12 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+      
+      - name: setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
 
       - name: Enable KVM
         run: |
