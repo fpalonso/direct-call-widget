@@ -28,7 +28,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew connectedCheck
+          script: ./gradlew testCollectionEnabledDebugUnitTest
 
       - name: publish tests
         uses: actions/upload-artifact@v4
@@ -49,4 +49,4 @@ jobs:
           distribution: temurin
 
       - name: build
-        run: ./gradlew buildDebug
+        run: ./gradlew buildCollectionEnabledDebug

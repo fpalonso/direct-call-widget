@@ -41,6 +41,10 @@
         android:theme="@style/AppTheme"
         android:name="androidx.multidex.MultiDexApplication">
 
+        <meta-data
+            android:name="google_analytics_automatic_screen_reporting_enabled"
+            android:value="false" />
+
         <activity android:name=".ui.WidgetConfigActivity2"
             android:screenOrientation="portrait"
             android:exported="true">

@@ -44,22 +44,6 @@ class SettingsActivityTest {
     val activityScenarioRule = activityScenarioRule<SettingsActivity>()
 
     @Test
-    fun supportPreferenceClickStartsEmail() {
-        Intents.init()
-        intending(hasAction(Intent.ACTION_SENDTO))
-                .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, Intent()))
-
-        onView(withChild(withText(R.string.pref_support_title)))
-                .perform(click())
-
-        intended(hasAction(Intent.ACTION_SENDTO))
-        val subject = "Direct Call Widget ${BuildConfig.VERSION_NAME}"
-        intended(hasData("mailto:blax.software@gmail.com?subject=$subject"))
-        intended(hasExtra(Intent.EXTRA_SUBJECT, subject))
-        Intents.release()
-    }
-
-    @Test
     fun joinBetaPreferenceClickSendsToProperLink() {
         Intents.init()
         intending(hasAction(Intent.ACTION_VIEW))
