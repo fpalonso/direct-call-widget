@@ -49,4 +49,4 @@ jobs:
           distribution: temurin
 
       - name: build
-        run: ./gradlew buildDebug
+        run: ./gradlew buildCollectionEnabledDebug
