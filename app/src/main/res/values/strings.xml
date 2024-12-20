@@ -51,9 +51,6 @@
     <string name="pref_onTap_value_call">"1"</string>
     <string name="pref_onTap_default">@string/pref_onTap_value_call</string>
     <string name="pref_cat_about">About the app</string>
-    <string name="pref_support_key" translatable="false">pref_support</string>
-    <string name="pref_support_title">Need support?</string>
-    <string name="pref_support_summary">Ask a question or report a bug</string>
     <string name="pref_become_btester_key" translatable="false">pref_btester</string>
     <string name="pref_become_btester_title">Join the beta program</string>
     <string name="pref_become_btester_summary">Want to receive updates before anybody else? Become a beta tester!</string>

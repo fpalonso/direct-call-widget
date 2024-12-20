@@ -48,8 +48,6 @@
     <string name="pref_onTap_value_call">"1"</string>
     <string name="pref_cat_about">Acerca de la app</string>
     <string name="pref_onTap_default">@string/pref_onTap_value_call</string>
-    <string name="pref_support_title">¿Necesitas ayuda?</string>
-    <string name="pref_support_summary">Resuelve tus dudas o informa de un bug</string>
     <string name="pref_become_btester_title">Quiero ser beta tester</string>
     <string name="pref_become_btester_summary">¿Quieres ser el primero en recibir las actualizaciones? ¡Conviértete en beta tester!</string>
     <string name="pref_contribute_title">Colaborar</string>
