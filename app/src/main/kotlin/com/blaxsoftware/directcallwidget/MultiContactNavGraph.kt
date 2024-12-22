@@ -19,14 +19,13 @@
 package com.blaxsoftware.directcallwidget
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.blaxsoftware.directcallwidget.ui.multicontact.config.MultiContactConfigViewModel
 import com.blaxsoftware.directcallwidget.ui.multicontact.config.MultiContactWidgetConfigScreen
 import com.blaxsoftware.directcallwidget.ui.singlecontact.config.ContactConfigScreen
 
@@ -35,10 +34,8 @@ fun MultiContactNavGraph(
     widgetId: Int,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = MultiContactDestinations.MULTICONTACT_CONFIG_ROUTE,
-    navigationActions: MultiContactNavigationActions = remember {
-        MultiContactNavigationActions(navController)
-    },
+    startDestination: MultiContactConfig = MultiContactConfig,
+    multiContactConfigViewModel: MultiContactConfigViewModel = hiltViewModel(),
     onSaveClick: (widgetId: Int) -> Unit = {}
 ) {
     NavHost(
@@ -46,32 +43,21 @@ fun MultiContactNavGraph(
         navController = navController,
         startDestination = startDestination
     ) {
-
-        composable(
-            route = MultiContactDestinations.MULTICONTACT_CONFIG_ROUTE,
-            arguments = listOf(
-                navArgument(MultiContactDestinationArgs.WIDGET_ID_ARG) {
-                    type = NavType.IntType
-                    // https://stackoverflow.com/a/69038771
-                    defaultValue = widgetId
-                }
-            )
-        ) {
+        composable<MultiContactConfig> {
             MultiContactWidgetConfigScreen(
-                onAddContactClick = { navigationActions.navigateToContactConfigScreen(widgetId) },
+                contacts = multiContactConfigViewModel.uiState.contacts,
+                onAddContactClick = { navController.navigate(SingleContactConfig) },
                 onSaveClick = { onSaveClick(widgetId) }
             )
         }
 
-        composable(
-            route = MultiContactDestinations.CONTACT_CONFIG_ROUTE,
-            arguments = listOf(
-                navArgument(MultiContactDestinationArgs.WIDGET_ID_ARG) {
-                    type = NavType.IntType
+        composable<SingleContactConfig> {
+            ContactConfigScreen(
+                onOkButtonClick = { contactConfig ->
+                    multiContactConfigViewModel.addContact(contactConfig)
+                    navController.popBackStack(MultiContactConfig, inclusive = false)
                 }
             )
-        ) {
-            ContactConfigScreen()
         }
     }
 }

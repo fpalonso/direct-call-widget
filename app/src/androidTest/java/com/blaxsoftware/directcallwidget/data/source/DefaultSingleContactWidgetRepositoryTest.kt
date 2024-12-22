@@ -23,20 +23,20 @@ import com.google.common.truth.Truth
 import org.junit.Rule
 import org.junit.Test
 
-class WidgetDataRepositoryTest {
+class DefaultSingleContactWidgetRepositoryTest {
 
     @get:Rule
     val sharedPreferencesRule = SharedPreferencesRule("testPrefs.txt")
 
-    private val dataSource: WidgetDataSource by lazy {
-        WidgetDataRepository(sharedPreferencesRule.sharedPreferences)
+    private val dataSource: SingleContactWidgetRepository by lazy {
+        DefaultSingleContactWidgetRepository(sharedPreferencesRule.sharedPreferences)
     }
 
     @Test
     fun writeAndReadWidgetDataFromSharedPreferences() {
         with(dataSource) {
-            insertWidgetData(fakeWidgetData)
-            getWidgetDataById(fakeWidgetData.widgetId).also {
+            insertWidget(fakeWidgetData)
+            getWidgetById(fakeWidgetData.widgetId).also {
                 Truth.assertThat(it).isEqualTo(fakeWidgetData)
             }
         }
@@ -45,9 +45,9 @@ class WidgetDataRepositoryTest {
     @Test
     fun writeAndDeleteWidgetDataFromSharedPreferences() {
         with(dataSource) {
-            insertWidgetData(fakeWidgetData)
-            deleteWidgetDataById(fakeWidgetData.widgetId)
-            getWidgetDataById(fakeWidgetData.widgetId).also {
+            insertWidget(fakeWidgetData)
+            deleteWidgetById(fakeWidgetData.widgetId)
+            getWidgetById(fakeWidgetData.widgetId).also {
                 Truth.assertThat(it).isNull()
             }
         }

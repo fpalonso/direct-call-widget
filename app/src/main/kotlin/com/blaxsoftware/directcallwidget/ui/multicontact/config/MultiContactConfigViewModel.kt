@@ -18,18 +18,26 @@
 
 package com.blaxsoftware.directcallwidget.ui.multicontact.config
 
-import android.appwidget.AppWidgetManager
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.blaxsoftware.directcallwidget.data.ContactConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-@HiltViewModel
-class MCWidgetConfigViewModel @Inject constructor() : ViewModel() {
+data class MultiContactConfigUiState(
+    val contacts: List<ContactConfig> = emptyList()
+)
 
-    var widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
+@HiltViewModel
+class MultiContactConfigViewModel @Inject constructor() : ViewModel() {
+
+    var uiState by mutableStateOf(MultiContactConfigUiState())
         private set
 
-    fun onStart(widgetId: Int) {
-        this.widgetId = widgetId
+    fun addContact(contactConfig: ContactConfig) {
+        val contacts = uiState.contacts + contactConfig
+        uiState = uiState.copy(contacts = contacts)
     }
 }

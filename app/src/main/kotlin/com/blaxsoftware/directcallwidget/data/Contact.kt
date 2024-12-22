@@ -18,16 +18,18 @@
 
 package com.blaxsoftware.directcallwidget.data
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import android.net.Uri
 
-@Entity
+/**
+ * Contact information as it comes from the contact provider.
+ */
 data class Contact(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val widgetId: Long,
-    val pictureUri: String,
-    val name: String,
-    val action: String,
-    val actionUri: String
+        val displayName: String,
+        val photoUri: Uri?,
+        val phoneList: List<Phone>
+)
+
+data class Phone(
+        val number: String,
+        val type: Int
 )

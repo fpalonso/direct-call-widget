@@ -18,14 +18,13 @@
 
 package com.blaxsoftware.directcallwidget.data.source
 
-import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds
 import androidx.core.net.toUri
-import com.blaxsoftware.directcallwidget.data.model.Contact
-import com.blaxsoftware.directcallwidget.data.model.Phone
-import com.blaxsoftware.directcallwidget.data.model.WidgetData
+import com.blaxsoftware.directcallwidget.data.Contact
+import com.blaxsoftware.directcallwidget.data.Phone
+import com.blaxsoftware.directcallwidget.data.SingleContactWidget
 
-val fakeWidgetData = WidgetData(
+val fakeWidgetData = SingleContactWidget(
         widgetId = 3,
         displayName = "Alice",
         phoneNumber = "+34 123",

@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2024 Fer P. A.
+ * Copyright (C) 2020 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.data.source.local
+package com.blaxsoftware.directcallwidget.data.source
 
-import androidx.room.Dao
-import androidx.room.Query
-import androidx.room.Upsert
-import com.blaxsoftware.directcallwidget.data.Contact
-import kotlinx.coroutines.flow.Flow
+import com.blaxsoftware.directcallwidget.data.SingleContactWidget
 
-@Dao
-interface ContactDao {
+interface SingleContactWidgetRepository {
 
-    @Query("SELECT * FROM Contact WHERE id = :id")
-    suspend fun getContact(id: Long): Contact?
+    fun getWidgetById(widgetId: Int): SingleContactWidget?
 
-    @Query("SELECT * FROM Contact WHERE widgetId = :widgetId ORDER BY id")
-    fun getWidgetContacts(widgetId: Long): Flow<List<Contact>>
+    fun insertWidget(widget: SingleContactWidget)
 
-    @Upsert
-    suspend fun upsertWidgetContact(contact: Contact)
+    fun deleteWidgetById(widgetId: Int)
 }

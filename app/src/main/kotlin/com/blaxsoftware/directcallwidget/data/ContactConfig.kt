@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2024 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.data.model
+package com.blaxsoftware.directcallwidget.data
 
-data class WidgetData(
-        val widgetId: Int,
-        val displayName: String?,
-        val phoneNumber: String,
-        val phoneType: Int,
-        val pictureUri: String?
-) {
-    val hasDisplayName: Boolean
-        get() = displayName?.isNotEmpty() == true
-
-    val hasPicture: Boolean
-        get() = pictureUri != null
-}
+/**
+ * Information provided for a contact, which can be used both for a single-contact widget
+ * or as part of a multi-contact widget.
+ */
+data class ContactConfig(
+    val pictureUri: String = "",
+    val displayName: String = "",
+    val phoneNumber: String = ""
+)

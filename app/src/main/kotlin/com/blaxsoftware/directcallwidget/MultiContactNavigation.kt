@@ -18,28 +18,10 @@
 
 package com.blaxsoftware.directcallwidget
 
-import androidx.navigation.NavHostController
-import com.blaxsoftware.directcallwidget.MultiContactDestinationArgs.WIDGET_ID_ARG
-import com.blaxsoftware.directcallwidget.MultiContactScreens.CONTACT_CONFIG_SCREEN
-import com.blaxsoftware.directcallwidget.MultiContactScreens.MULTICONTACT_CONFIG_SCREEN
+import kotlinx.serialization.Serializable
 
-private object MultiContactScreens {
-    const val MULTICONTACT_CONFIG_SCREEN = "multiContactConfig"
-    const val CONTACT_CONFIG_SCREEN = "contactConfig"
-}
+@Serializable
+object MultiContactConfig
 
-object MultiContactDestinationArgs {
-    const val WIDGET_ID_ARG = "widgetId"
-}
-
-object MultiContactDestinations {
-    const val MULTICONTACT_CONFIG_ROUTE = "$MULTICONTACT_CONFIG_SCREEN/{$WIDGET_ID_ARG}"
-    const val CONTACT_CONFIG_ROUTE = "$CONTACT_CONFIG_SCREEN/{$WIDGET_ID_ARG}"
-}
-
-class MultiContactNavigationActions(private val navHostController: NavHostController) {
-
-    fun navigateToContactConfigScreen(widgetId: Int) {
-        navHostController.navigate("$CONTACT_CONFIG_SCREEN/$widgetId")
-    }
-}
+@Serializable
+object SingleContactConfig

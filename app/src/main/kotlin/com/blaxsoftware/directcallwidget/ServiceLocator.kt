@@ -22,10 +22,11 @@ import android.content.Context
 import com.blaxsoftware.directcallwidget.data.source.*
 import java.io.File
 
+// TODO replace with Hilt
 interface ServiceLocator {
-    val contactDataSource: ContactDataSource
-    val widgetDataSource: WidgetDataSource
-    val widgetPicDataSource: WidgetPicDataSource
+    val contactDataSource: ContactRepository
+    val widgetDataSource: SingleContactWidgetRepository
+    val widgetPicDataSource: WidgetPicRepository
 
     companion object {
         private val LOCK = Any()
@@ -44,19 +45,19 @@ interface ServiceLocator {
 
 class DefaultServiceLocator(private val context: Context) : ServiceLocator {
 
-    override val contactDataSource: ContactDataSource by lazy {
-        ContactRepository(context.contentResolver)
+    override val contactDataSource: ContactRepository by lazy {
+        DefaultContactRepository(context.contentResolver)
     }
 
-    override val widgetDataSource: WidgetDataSource by lazy {
-        WidgetDataRepository(context.getSharedPreferences(
+    override val widgetDataSource: SingleContactWidgetRepository by lazy {
+        DefaultSingleContactWidgetRepository(context.getSharedPreferences(
                 "widget_data",
                 Context.MODE_PRIVATE
         ))
     }
 
-    override val widgetPicDataSource: WidgetPicDataSource by lazy {
-        WidgetPicRepository(
+    override val widgetPicDataSource: WidgetPicRepository by lazy {
+        DefaultWidgetPicRepository(
                 context.contentResolver,
                 picsDir = File(context.filesDir, "pics")
         )
@@ -66,11 +67,11 @@ class DefaultServiceLocator(private val context: Context) : ServiceLocator {
 val Context.serviceLocator: ServiceLocator
     get() = ServiceLocator.getInstance(this)
 
-val Context.contactRepository: ContactDataSource
+val Context.contactRepository: ContactRepository
     get() = serviceLocator.contactDataSource
 
-val Context.widgetRepository: WidgetDataSource
+val Context.widgetRepository: SingleContactWidgetRepository
     get() = serviceLocator.widgetDataSource
 
-val Context.widgetPicRepository: WidgetPicDataSource
+val Context.widgetPicRepository: WidgetPicRepository
     get() = serviceLocator.widgetPicDataSource

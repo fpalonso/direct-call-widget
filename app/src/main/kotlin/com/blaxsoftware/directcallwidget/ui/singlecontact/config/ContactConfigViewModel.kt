@@ -22,34 +22,31 @@ import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-data class Contact(
+data class ContactConfigUiState(
     val pictureUri: Uri? = null,
-    val name: String = "",
-    val phone: String = ""
+    val displayName: String = "",
+    val phoneNumber: String = "",
 )
 
 @HiltViewModel
-class ContactConfigViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+class ContactConfigViewModel @Inject constructor() : ViewModel() {
 
-    var contact: Contact by mutableStateOf(Contact())
+    var uiState: ContactConfigUiState by mutableStateOf(ContactConfigUiState())
         private set
 
     fun onPictureUriChanged(uri: Uri) {
-        contact = contact.copy(pictureUri = uri)
+        uiState = uiState.copy(pictureUri = uri)
     }
 
-    fun onNameChanged(name: String) {
-        contact = contact.copy(name = name)
+    fun onDisplayNameChanged(displayName: String) {
+        uiState = uiState.copy(displayName = displayName)
     }
 
-    fun onPhoneChanged(phone: String) {
-        contact = contact.copy(phone = phone)
+    fun onPhoneNumberChanged(phoneNumber: String) {
+        uiState = uiState.copy(phoneNumber = phoneNumber)
     }
 }

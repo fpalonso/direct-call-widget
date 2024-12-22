@@ -19,16 +19,21 @@
 package com.blaxsoftware.directcallwidget.ui.multicontact.config
 
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.PersonAdd
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -38,12 +43,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blaxsoftware.directcallwidget.R
+import com.blaxsoftware.directcallwidget.data.Contact
+import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.ui.components.DcwVerticalPlaceholder
 import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
 import com.blaxsoftware.directcallwidget.ui.theme.VerticalPlaceholderStyle
@@ -51,10 +60,10 @@ import com.blaxsoftware.directcallwidget.ui.theme.VerticalPlaceholderStyle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MultiContactWidgetConfigScreen(
-    onAddContactClick: () -> Unit,
-    onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: MCWidgetConfigViewModel = hiltViewModel()
+    contacts: List<ContactConfig> = emptyList(),
+    onAddContactClick: () -> Unit = {},
+    onSaveClick: () -> Unit = {}
 ) {
     DirectCallWidgetTheme {
         Scaffold(
@@ -90,6 +99,13 @@ fun MultiContactWidgetConfigScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    items(contacts) { contact ->
+                        Contact(
+                            pictureUri = contact.pictureUri.toUri(),
+                            displayName = contact.displayName,
+                            phoneNumber = contact.phoneNumber
+                        )
+                    }
                     item {
                         DcwVerticalPlaceholder(
                             modifier = modifier
@@ -102,6 +118,30 @@ fun MultiContactWidgetConfigScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+// TODO extract to a component
+@Composable
+fun Contact(
+    pictureUri: Uri,
+    displayName: String,
+    phoneNumber: String,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .width(130.dp) // TODO extract styles
+            .aspectRatio(VerticalPlaceholderStyle.WidthRatio)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(Modifier.weight(1f))
+            Text(displayName)
         }
     }
 }
@@ -119,7 +159,17 @@ fun MultiContactWidgetConfigScreen(
 @Composable
 private fun MultiContactWidgetConfigScreenPreview() {
     MultiContactWidgetConfigScreen(
-        onAddContactClick = {},
-        onSaveClick = {}
+        contacts = listOf(
+            ContactConfig(
+                pictureUri = "",
+                displayName = "Mom",
+                phoneNumber = "123"
+            ),
+            ContactConfig(
+                pictureUri = "",
+                displayName = "Dad",
+                phoneNumber = "123"
+            )
+        )
     )
 }

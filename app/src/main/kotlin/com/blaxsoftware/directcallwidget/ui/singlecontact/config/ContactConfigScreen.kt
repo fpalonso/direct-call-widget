@@ -33,14 +33,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.InsertPhoto
 import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material.icons.rounded.PersonSearch
 import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -53,23 +50,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blaxsoftware.directcallwidget.R
-import com.blaxsoftware.directcallwidget.ui.components.DcwVerticalPlaceholder
+import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
-
 
 @Composable
 fun ContactConfigScreen(
+    onOkButtonClick: (contactConfig: ContactConfig) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ContactConfigViewModel = hiltViewModel()
 ) {
     ContactConfigScreen(
         modifier = modifier,
-        pictureUri = viewModel.contact.pictureUri,
-        name = viewModel.contact.name,
-        phone = viewModel.contact.phone,
+        pictureUri = viewModel.uiState.pictureUri,
+        name = viewModel.uiState.displayName,
+        phone = viewModel.uiState.phoneNumber,
         onSearchButtonClick = {},
-        onNameChanged = { viewModel.onNameChanged(it) },
-        onPhoneChanged = { viewModel.onPhoneChanged(it) }
+        onNameChanged = { viewModel.onDisplayNameChanged(it) },
+        onPhoneChanged = { viewModel.onPhoneNumberChanged(it) },
+        onOkButtonClick = { onOkButtonClick(viewModel.uiState.contactConfig) }
     )
 }
 
@@ -82,6 +80,7 @@ fun ContactConfigScreen(
     onSearchButtonClick: () -> Unit,
     onNameChanged: (name: String) -> Unit,
     onPhoneChanged: (phone: String) -> Unit,
+    onOkButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     DirectCallWidgetTheme {
@@ -91,12 +90,12 @@ fun ContactConfigScreen(
                 TopAppBar(title = {
                     Text(text = stringResource(id = R.string.activity_config_title))
                 }, actions = {
-                    IconButton(onClick = onSearchButtonClick) {
+                    /*IconButton(onClick = onSearchButtonClick) {
                         Icon(
                             Icons.Rounded.PersonSearch,
                             contentDescription = stringResource(id = R.string.add_contact)
                         )
-                    }
+                    }*/
                 })
             },
             floatingActionButton = {
@@ -110,7 +109,7 @@ fun ContactConfigScreen(
                     text = {
                         Text(text = stringResource(id = R.string.save))
                     },
-                    onClick = { /*TODO*/ }
+                    onClick = onOkButtonClick
                 )
             }
         ) { padding ->
@@ -157,14 +156,14 @@ fun ContactConfigScreen(
 @Composable
 private fun ContactPicture(
     modifier: Modifier = Modifier
-) {
+) {/*
     DcwVerticalPlaceholder(
         modifier = modifier
             .fillMaxWidth(0.5f)
             .padding(bottom = 16.dp),
         icon = Icons.Rounded.InsertPhoto,
         text = stringResource(R.string.add_picture)
-    )
+    )*/
 }
 
 @Composable
@@ -230,6 +229,7 @@ fun ContactConfigScreenPreview() {
         phone = "12345",
         onSearchButtonClick = {},
         onNameChanged = {},
-        onPhoneChanged = {}
+        onPhoneChanged = {},
+        onOkButtonClick = {}
     )
 }

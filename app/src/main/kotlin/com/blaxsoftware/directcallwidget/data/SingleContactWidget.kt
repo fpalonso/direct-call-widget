@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2024 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.data.source
+package com.blaxsoftware.directcallwidget.data
 
-import android.net.Uri
-import java.io.File
+data class SingleContactWidget(
+        val widgetId: Int,
+        val displayName: String?,
+        val phoneNumber: String,
+        val phoneType: Int,
+        val pictureUri: String?
+) {
+    val hasDisplayName: Boolean
+        get() = displayName?.isNotEmpty() == true
 
-interface WidgetPicDataSource {
-
-    suspend fun insertFromUri(uri: Uri): File?
-
-    fun delete(uri: Uri)
+    val hasPicture: Boolean
+        get() = pictureUri != null
 }

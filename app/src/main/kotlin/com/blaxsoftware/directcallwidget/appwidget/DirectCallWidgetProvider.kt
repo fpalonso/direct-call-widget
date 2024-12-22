@@ -29,7 +29,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
 import com.blaxsoftware.directcallwidget.*
-import com.blaxsoftware.directcallwidget.data.model.WidgetData
+import com.blaxsoftware.directcallwidget.data.SingleContactWidget
 import com.blaxsoftware.directcallwidget.ui.xdpToPx
 import com.blaxsoftware.directcallwidget.ui.ydpToPx
 import com.bumptech.glide.Glide
@@ -54,7 +54,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     }
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, id: Int) {
-        context.widgetRepository.getWidgetDataById(id)?.let { widgetData ->
+        context.widgetRepository.getWidgetById(id)?.let { widgetData ->
             setWidgetData(context, appWidgetManager, id, widgetData)
         }
     }
@@ -62,11 +62,11 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         super.onDeleted(context, appWidgetIds)
         appWidgetIds.forEach { id ->
-            context.widgetRepository.getWidgetDataById(id)?.let { widgetData ->
+            context.widgetRepository.getWidgetById(id)?.let { widgetData ->
                 widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { uri ->
                     context.widgetPicRepository.delete(uri)
                 }
-                context.widgetRepository.deleteWidgetDataById(id)
+                context.widgetRepository.deleteWidgetById(id)
             }
         }
     }
@@ -74,7 +74,8 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     companion object {
 
         fun setWidgetData(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int,
-                          widgetData: WidgetData) {
+                          widgetData: SingleContactWidget
+        ) {
             FirebaseCrashlytics.getInstance().log("setWidgetData: widgetId=$widgetId")
             RemoteViews(context.packageName, R.layout.widget_2x2).apply {
                 setViewVisibility(R.id.picture, View.VISIBLE)
@@ -120,7 +121,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
             FirebaseCrashlytics.getInstance().setCustomKey("scr_xdpi", context.resources.displayMetrics.xdpi)
             FirebaseCrashlytics.getInstance().setCustomKey("scr_ydpi", context.resources.displayMetrics.ydpi)
 
-            context.widgetRepository.getWidgetDataById(appWidgetId)?.let { widgetData ->
+            context.widgetRepository.getWidgetById(appWidgetId)?.let { widgetData ->
                 widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { picUri ->
                     AppWidgetTarget(context, R.id.picture, remoteViews, appWidgetId).also { target ->
                         val widthPx = context.xdpToPx(widthDp)
