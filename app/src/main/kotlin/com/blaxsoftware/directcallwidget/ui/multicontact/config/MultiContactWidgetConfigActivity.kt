@@ -23,6 +23,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.glance.appwidget.state.updateAppWidgetState
 import com.blaxsoftware.directcallwidget.MultiContactNavGraph
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,7 +41,8 @@ class MultiContactWidgetConfigActivity : ComponentActivity() {
         setContent {
             MultiContactNavGraph(
                 widgetId = widgetId,
-                onSaveClick = { onSaveWidgetClick(widgetId) }
+                onSaveClick = { onSaveWidgetClick(widgetId) },
+                discardConfig = { finish() }
             )
         }
     }

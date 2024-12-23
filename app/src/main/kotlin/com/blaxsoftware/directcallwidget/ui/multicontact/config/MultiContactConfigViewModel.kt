@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.blaxsoftware.directcallwidget.data.ContactConfig
+import com.blaxsoftware.directcallwidget.data.MultiContactInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -40,4 +41,8 @@ class MultiContactConfigViewModel @Inject constructor() : ViewModel() {
         val contacts = uiState.contacts + contactConfig
         uiState = uiState.copy(contacts = contacts)
     }
+
+    fun buildWidgetInfo() = MultiContactInfo.Available(
+        contactList = uiState.contacts
+    )
 }

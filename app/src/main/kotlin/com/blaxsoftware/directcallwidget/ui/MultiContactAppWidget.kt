@@ -19,16 +19,56 @@
 package com.blaxsoftware.directcallwidget.ui
 
 import android.content.Context
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
+import androidx.glance.GlanceModifier
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.lazy.LazyColumn
+import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
+import androidx.glance.background
+import androidx.glance.currentState
+import androidx.glance.layout.Column
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.height
+import androidx.glance.layout.padding
 import androidx.glance.text.Text
+import com.blaxsoftware.directcallwidget.data.MultiContactInfo
 
 class MultiContactAppWidget : GlanceAppWidget() {
 
+    override val stateDefinition = MultiContactStateDefinition
+
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
-            Text(text = "Hello")
+            when (val state = currentState<MultiContactInfo>()) {
+                is MultiContactInfo.Available -> {
+                    LazyColumn(
+                        modifier = GlanceModifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                    ) {
+                        items(state.contactList) { contact ->
+                            Column(
+                                GlanceModifier
+                                    .fillMaxWidth()
+                                    .height(100.dp)
+                            ) {
+                                Text(
+                                    modifier = GlanceModifier.padding(8.dp),
+                                    text = contact.displayName
+                                )
+                                Text(
+                                    modifier = GlanceModifier.padding(8.dp),
+                                    text = contact.phoneNumber
+                                )
+                            }
+                        }
+                    }
+                }
+                else -> {}
+            }
         }
     }
 }

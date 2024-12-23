@@ -18,10 +18,13 @@
 
 package com.blaxsoftware.directcallwidget.data
 
+import kotlinx.serialization.Serializable
+
 /**
  * Information provided for a contact, which can be used both for a single-contact widget
  * or as part of a multi-contact widget.
  */
+@Serializable
 data class ContactConfig(
     val pictureUri: String = "",
     val displayName: String = "",

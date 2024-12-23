@@ -16,27 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget
+package com.blaxsoftware.directcallwidget.data
 
-import androidx.glance.appwidget.updateAll
-import androidx.multidex.MultiDexApplication
-import com.blaxsoftware.directcallwidget.ui.MultiContactAppWidget
-import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
-@HiltAndroidApp
-class DirectCallWidgetApp : MultiDexApplication() {
+/**
+ * Information for MultiContact widgets
+ */
+@Serializable
+sealed interface MultiContactInfo {
 
-    override fun onCreate() {
-        super.onCreate()
-        updateGlanceAppWidgets()
-    }
+    @Serializable
+    object Loading : MultiContactInfo
 
-    private fun updateGlanceAppWidgets() {
-        // TODO use a CoroutineWorker instead
-        GlobalScope.launch {
-            MultiContactAppWidget().updateAll(this@DirectCallWidgetApp)
-        }
-    }
+    @Serializable
+    data class Available(
+        val contactList: List<ContactConfig>
+    ) : MultiContactInfo
+
+    @Serializable
+    data class Unavailable(
+        val errorMsg: String
+    ) : MultiContactInfo
 }

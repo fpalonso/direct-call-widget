@@ -36,7 +36,8 @@ fun MultiContactNavGraph(
     navController: NavHostController = rememberNavController(),
     startDestination: MultiContactConfig = MultiContactConfig,
     multiContactConfigViewModel: MultiContactConfigViewModel = hiltViewModel(),
-    onSaveClick: (widgetId: Int) -> Unit = {}
+    onSaveClick: (widgetId: Int) -> Unit = {},
+    discardConfig: () -> Unit = {}
 ) {
     NavHost(
         modifier = modifier,
@@ -45,9 +46,11 @@ fun MultiContactNavGraph(
     ) {
         composable<MultiContactConfig> {
             MultiContactWidgetConfigScreen(
-                contacts = multiContactConfigViewModel.uiState.contacts,
+                viewModel = multiContactConfigViewModel,
                 onAddContactClick = { navController.navigate(SingleContactConfig) },
-                onSaveClick = { onSaveClick(widgetId) }
+                onSaveClick = {
+                    onSaveClick(widgetId)
+                }
             )
         }
 

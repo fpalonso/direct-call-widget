@@ -18,6 +18,7 @@
 
 package com.blaxsoftware.directcallwidget.ui.multicontact.config
 
+import android.app.Activity
 import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
@@ -43,19 +44,63 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blaxsoftware.directcallwidget.R
-import com.blaxsoftware.directcallwidget.data.Contact
 import com.blaxsoftware.directcallwidget.data.ContactConfig
+import com.blaxsoftware.directcallwidget.ui.MultiContactAppWidget
+import com.blaxsoftware.directcallwidget.ui.MultiContactStateDefinition
 import com.blaxsoftware.directcallwidget.ui.components.DcwVerticalPlaceholder
 import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
 import com.blaxsoftware.directcallwidget.ui.theme.VerticalPlaceholderStyle
+import kotlinx.coroutines.launch
+
+@Composable
+fun MultiContactWidgetConfigScreen(
+    modifier: Modifier = Modifier,
+    viewModel: MultiContactConfigViewModel = hiltViewModel(),
+    onAddContactClick: () -> Unit = {},
+    onSaveClick: () -> Unit = {}
+) {
+    // TODO move to navigation graph and remove viewModel dependency
+    val activity = LocalContext.current as Activity
+    val glanceAppWidgetManager = GlanceAppWidgetManager(activity)
+    val glanceId = remember {
+        glanceAppWidgetManager.getGlanceIdBy(activity.intent)
+    }
+    if (glanceId == null) {
+        activity.finish()
+        return
+    }
+    val scope = rememberCoroutineScope()
+    MultiContactWidgetConfigScreen(
+        modifier,
+        viewModel.uiState.contacts,
+        onAddContactClick,
+        onSaveClick = {
+            scope.launch {
+                updateAppWidgetState(
+                    context = activity,
+                    definition = MultiContactStateDefinition,
+                    glanceId = glanceId,
+                    updateState = { viewModel.buildWidgetInfo() }
+                )
+                MultiContactAppWidget().update(activity, glanceId)
+            }
+            onSaveClick()
+        }
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
