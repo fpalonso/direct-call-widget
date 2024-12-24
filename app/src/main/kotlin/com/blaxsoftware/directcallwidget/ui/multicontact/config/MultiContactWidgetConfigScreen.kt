@@ -20,11 +20,14 @@ package com.blaxsoftware.directcallwidget.ui.multicontact.config
 
 import android.content.res.Configuration
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -45,13 +48,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.ui.components.DcwVerticalPlaceholder
+import com.blaxsoftware.directcallwidget.ui.components.Picture
 import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
 import com.blaxsoftware.directcallwidget.ui.theme.PortraitCardStyle
 
@@ -99,9 +106,10 @@ fun MultiContactWidgetConfigScreen(
                 ) {
                     items(contacts) { contact ->
                         Contact(
+                            modifier = Modifier
+                                .aspectRatio(PortraitCardStyle.WidthRatio),
                             pictureUri = contact.pictureUri.toUri(),
-                            displayName = contact.displayName,
-                            phoneNumber = contact.phoneNumber
+                            displayName = contact.displayName
                         )
                     }
                     item {
@@ -125,21 +133,34 @@ fun MultiContactWidgetConfigScreen(
 fun Contact(
     pictureUri: Uri,
     displayName: String,
-    phoneNumber: String,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier
-            .width(130.dp) // TODO extract styles
-            .aspectRatio(PortraitCardStyle.WidthRatio)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Spacer(Modifier.weight(1f))
-            Text(displayName)
+    Card(modifier) {
+        Box(Modifier.fillMaxSize()) {
+            Picture(
+                modifier = Modifier.fillMaxSize(),
+                pictureUri = pictureUri
+            )
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Spacer(Modifier.weight(1f))
+                Text(
+                    modifier = Modifier
+                        .background(
+                            Brush.verticalGradient(
+                                listOf(Color.Transparent, Color.Black)
+                            )
+                        )
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    color = Color.White,
+                    textAlign = TextAlign.Start,
+                    text = displayName
+                )
+            }
         }
     }
 }
