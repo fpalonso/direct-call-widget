@@ -38,7 +38,7 @@ class ContactConfigViewModel @Inject constructor() : ViewModel() {
     var uiState: ContactConfigUiState by mutableStateOf(ContactConfigUiState())
         private set
 
-    fun onPictureUriChanged(uri: Uri) {
+    fun onPictureUriChanged(uri: Uri?) {
         uiState = uiState.copy(pictureUri = uri)
     }
 

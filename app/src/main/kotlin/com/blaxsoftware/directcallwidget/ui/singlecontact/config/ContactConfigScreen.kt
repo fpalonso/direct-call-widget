@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,13 +46,16 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.data.ContactConfig
+import com.blaxsoftware.directcallwidget.ui.components.PickablePicture
 import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
+import com.blaxsoftware.directcallwidget.ui.theme.PortraitCardStyle
 
 @Composable
 fun ContactConfigScreen(
@@ -65,6 +69,7 @@ fun ContactConfigScreen(
         name = viewModel.uiState.displayName,
         phone = viewModel.uiState.phoneNumber,
         onSearchButtonClick = {},
+        onPictureUriChanged = { viewModel.onPictureUriChanged(it) },
         onNameChanged = { viewModel.onDisplayNameChanged(it) },
         onPhoneChanged = { viewModel.onPhoneNumberChanged(it) },
         onOkButtonClick = { onOkButtonClick(viewModel.uiState.contactConfig) }
@@ -77,11 +82,12 @@ fun ContactConfigScreen(
     pictureUri: Uri?,
     name: String,
     phone: String,
-    onSearchButtonClick: () -> Unit,
-    onNameChanged: (name: String) -> Unit,
-    onPhoneChanged: (phone: String) -> Unit,
-    onOkButtonClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSearchButtonClick: () -> Unit = {},
+    onPictureUriChanged: (Uri?) -> Unit = {},
+    onNameChanged: (name: String) -> Unit = {},
+    onPhoneChanged: (phone: String) -> Unit = {},
+    onOkButtonClick: () -> Unit = {}
 ) {
     DirectCallWidgetTheme {
         Scaffold(
@@ -90,7 +96,8 @@ fun ContactConfigScreen(
                 TopAppBar(title = {
                     Text(text = stringResource(id = R.string.activity_config_title))
                 }, actions = {
-                    /*IconButton(onClick = onSearchButtonClick) {
+                    /*
+                    IconButton(onClick = onSearchButtonClick) {
                         Icon(
                             Icons.Rounded.PersonSearch,
                             contentDescription = stringResource(id = R.string.add_contact)
@@ -123,7 +130,14 @@ fun ContactConfigScreen(
                             .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        ContactPicture(modifier = Modifier.align(Alignment.CenterHorizontally))
+                        PickablePicture(
+                            modifier = Modifier
+                                .fillMaxWidth(0.5f)
+                                .aspectRatio(PortraitCardStyle.WidthRatio)
+                                .align(Alignment.CenterHorizontally),
+                            pictureUri = pictureUri,
+                            onUriChanged = { onPictureUriChanged(it) }
+                        )
                         ContactDetails(
                             name = name,
                             phone = phone,
@@ -138,7 +152,12 @@ fun ContactConfigScreen(
                             .padding(16.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        ContactPicture(modifier = Modifier.sizeIn(maxWidth = 320.dp))
+                        PickablePicture(
+                            modifier = Modifier
+                                .sizeIn(maxWidth = dimensionResource(R.dimen.portrait_card_width))
+                                .aspectRatio(PortraitCardStyle.WidthRatio),
+                            pictureUri = pictureUri
+                        )
                         ContactDetails(
                             modifier = Modifier.fillMaxHeight(),
                             name = name,
@@ -151,19 +170,6 @@ fun ContactConfigScreen(
             }
         }
     }
-}
-
-@Composable
-private fun ContactPicture(
-    modifier: Modifier = Modifier
-) {/*
-    DcwVerticalPlaceholder(
-        modifier = modifier
-            .fillMaxWidth(0.5f)
-            .padding(bottom = 16.dp),
-        icon = Icons.Rounded.InsertPhoto,
-        text = stringResource(R.string.add_picture)
-    )*/
 }
 
 @Composable
@@ -226,10 +232,6 @@ fun ContactConfigScreenPreview() {
     ContactConfigScreen(
         pictureUri = null,
         name = "Fer",
-        phone = "12345",
-        onSearchButtonClick = {},
-        onNameChanged = {},
-        onPhoneChanged = {},
-        onOkButtonClick = {}
+        phone = "12345"
     )
 }

@@ -18,6 +18,6 @@
 
 package com.blaxsoftware.directcallwidget.ui.theme
 
-object VerticalPlaceholderStyle {
+object PortraitCardStyle {
     const val WidthRatio: Float = 0.75f
 }

@@ -53,7 +53,7 @@ import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.ui.components.DcwVerticalPlaceholder
 import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
-import com.blaxsoftware.directcallwidget.ui.theme.VerticalPlaceholderStyle
+import com.blaxsoftware.directcallwidget.ui.theme.PortraitCardStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,7 +108,7 @@ fun MultiContactWidgetConfigScreen(
                         DcwVerticalPlaceholder(
                             modifier = modifier
                                 .width(130.dp)
-                                .aspectRatio(VerticalPlaceholderStyle.WidthRatio),
+                                .aspectRatio(PortraitCardStyle.WidthRatio),
                             icon = Icons.Rounded.PersonAdd,
                             text = stringResource(id = R.string.add_contact),
                             onClick = onAddContactClick
@@ -131,7 +131,7 @@ fun Contact(
     Card(
         modifier = modifier
             .width(130.dp) // TODO extract styles
-            .aspectRatio(VerticalPlaceholderStyle.WidthRatio)
+            .aspectRatio(PortraitCardStyle.WidthRatio)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
