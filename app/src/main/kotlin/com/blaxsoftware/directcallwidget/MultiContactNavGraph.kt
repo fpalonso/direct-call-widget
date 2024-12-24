@@ -25,19 +25,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.blaxsoftware.directcallwidget.ui.MultiContactAppWidget
+import com.blaxsoftware.directcallwidget.ui.MultiContactStateDefinition
 import com.blaxsoftware.directcallwidget.ui.multicontact.config.MultiContactConfigViewModel
 import com.blaxsoftware.directcallwidget.ui.multicontact.config.MultiContactWidgetConfigScreen
 import com.blaxsoftware.directcallwidget.ui.singlecontact.config.ContactConfigScreen
 
 @Composable
 fun MultiContactNavGraph(
-    widgetId: Int,
+    onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: MultiContactConfig = MultiContactConfig,
-    multiContactConfigViewModel: MultiContactConfigViewModel = hiltViewModel(),
-    onSaveClick: (widgetId: Int) -> Unit = {},
-    discardConfig: () -> Unit = {}
+    multiContactConfigViewModel: MultiContactConfigViewModel = hiltViewModel()
 ) {
     NavHost(
         modifier = modifier,
@@ -45,13 +45,20 @@ fun MultiContactNavGraph(
         startDestination = startDestination
     ) {
         composable<MultiContactConfig> {
-            MultiContactWidgetConfigScreen(
-                viewModel = multiContactConfigViewModel,
-                onAddContactClick = { navController.navigate(SingleContactConfig) },
-                onSaveClick = {
-                    onSaveClick(widgetId)
-                }
-            )
+            GlanceAppWidgetConfig(
+                widgetInstance = MultiContactAppWidget(),
+                stateDefinition = MultiContactStateDefinition,
+                provideState = { multiContactConfigViewModel.buildWidgetInfo() }
+            ) { _, _, updateWidget ->
+                MultiContactWidgetConfigScreen(
+                    contacts = multiContactConfigViewModel.uiState.contacts,
+                    onAddContactClick = { navController.navigate(SingleContactConfig) },
+                    onSaveClick = {
+                        updateWidget()
+                        onSaveClick()
+                    }
+                )
+            }
         }
 
         composable<SingleContactConfig> {
