@@ -31,9 +31,9 @@ import getString
 import getUri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class DefaultContactRepository(
-    // TODO use hilt to inject this dependency
+class DefaultContactRepository @Inject constructor(
     private val contentResolver: ContentResolver
 ) : ContactRepository {
 

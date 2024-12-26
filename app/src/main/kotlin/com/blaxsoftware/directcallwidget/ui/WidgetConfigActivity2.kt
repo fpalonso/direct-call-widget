@@ -43,22 +43,25 @@ import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.analytics.Analytics
 import com.blaxsoftware.directcallwidget.analytics.AnalyticsHelper
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
+import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
 import com.blaxsoftware.directcallwidget.file.Files
 import com.blaxsoftware.directcallwidget.viewmodel.ConfigResult
-import com.blaxsoftware.directcallwidget.viewmodel.ViewModelFactory
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.IOException
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class WidgetConfigActivity2 : AppCompatActivity(),
         ReadContactsPermissionExplanationDialog.Callback,
         ChangePictureOptionsDialog.ChangePictureListener {
 
-    private val viewModel by viewModels<WidgetConfigViewModel> {
-        ViewModelFactory(applicationContext)
-    }
+    private val viewModel: WidgetConfigViewModel by viewModels()
+
+    @Inject lateinit var singleContactWidgetRepo: SingleContactWidgetRepository
 
     private val requestContactPermission = registerForActivityResult(RequestPermission()) { isGranted: Boolean ->
         if (isGranted) {
@@ -206,6 +209,7 @@ class WidgetConfigActivity2 : AppCompatActivity(),
             FirebaseCrashlytics.getInstance().log("Widget data accepted from WidgetConfigActivity2")
             DirectCallWidgetProvider.setWidgetData(
                     applicationContext,
+                    singleContactWidgetRepo,
                     AppWidgetManager.getInstance(this),
                     widgetData.widgetId,
                     widgetData

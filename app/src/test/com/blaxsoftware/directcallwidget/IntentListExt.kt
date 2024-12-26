@@ -18,18 +18,7 @@
 
 package com.blaxsoftware.directcallwidget
 
-import androidx.multidex.MultiDexApplication
-import com.blaxsoftware.directcallwidget.glance.MultiContactWidgets
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import android.content.Intent
 
-@HiltAndroidApp
-class DirectCallWidgetApp : MultiDexApplication() {
-
-    @Inject lateinit var multiContactWidgets: MultiContactWidgets
-
-    override fun onCreate() {
-        super.onCreate()
-        multiContactWidgets.updateAll()
-    }
-}
+inline fun <reified T> List<Intent>.findByComponent() =
+    find { it.component?.className == T::class.java.name }

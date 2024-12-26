@@ -19,14 +19,20 @@
 package com.blaxsoftware.directcallwidget
 
 import android.content.Context
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.annotation.LayoutRes
+import com.blaxsoftware.directcallwidget.data.pictures.WidgetPictureRepository
+import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
+import com.blaxsoftware.directcallwidget.di.LegacyWidgetProviderDependencies
+import dagger.hilt.EntryPoints
+import kotlinx.coroutines.CoroutineScope
 
-fun Context.inflate(
-        @LayoutRes layoutResId: Int,
-        parent: ViewGroup,
-        attachToParent: Boolean = false
-) {
-    LayoutInflater.from(this).inflate(layoutResId, parent, attachToParent)
-}
+val Context.singleContactWidgetRepo: SingleContactWidgetRepository
+    get() = legacyWidgetProviderDependencies.singleContactWidgetRepo()
+
+val Context.widgetPictureRepo: WidgetPictureRepository
+    get() = legacyWidgetProviderDependencies.widgetPictureRepo()
+
+val Context.appScope: CoroutineScope
+    get() = legacyWidgetProviderDependencies.appScope()
+
+private val Context.legacyWidgetProviderDependencies: LegacyWidgetProviderDependencies
+    get() = EntryPoints.get(applicationContext, LegacyWidgetProviderDependencies::class.java)

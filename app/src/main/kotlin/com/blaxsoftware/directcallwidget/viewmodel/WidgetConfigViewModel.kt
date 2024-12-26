@@ -19,6 +19,7 @@
 package com.blaxsoftware.directcallwidget.viewmodel
 
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.UiThread
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
@@ -31,14 +32,17 @@ import com.blaxsoftware.directcallwidget.data.Phone
 import com.blaxsoftware.directcallwidget.data.SingleContactWidget
 import com.blaxsoftware.directcallwidget.data.source.ContactRepository
 import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
-import com.blaxsoftware.directcallwidget.data.source.WidgetPicRepository
+import com.blaxsoftware.directcallwidget.data.pictures.WidgetPictureRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@HiltViewModel
 @UiThread
-class WidgetConfigViewModel(
-    private val contactDataSource: ContactRepository,
-    private val widgetDataSource: SingleContactWidgetRepository,
-    private val widgetPicDataSource: WidgetPicRepository
+class WidgetConfigViewModel @Inject constructor(
+    private val contactRepo: ContactRepository,
+    private val singleContactWidgetRepo: SingleContactWidgetRepository,
+    private val widgetPictureRepo: WidgetPictureRepository
 ) : ViewModel(), Observable {
 
     private val callbacks: PropertyChangeRegistry = PropertyChangeRegistry()
@@ -72,7 +76,7 @@ class WidgetConfigViewModel(
 
     fun loadContact(contactUri: Uri) {
         viewModelScope.launch {
-            contactDataSource.getContactByUri(contactUri)?.let { contact ->
+            contactRepo.getContactByUri(contactUri)?.let { contact ->
                 _picUri.value = contact.photoUri
                 displayName.value = contact.displayName
                 _phoneList.value = contact.phoneList
@@ -97,8 +101,7 @@ class WidgetConfigViewModel(
     private suspend fun copyPictureToInternalFolder() {
         _picUri.value?.let { picUri ->
             try {
-                val internalFile = widgetPicDataSource.insertFromUri(picUri)
-                _picUri.value = Uri.fromFile(internalFile)
+                _picUri.value = widgetPictureRepo.copyFromUri(picUri)
             } catch (e: Throwable) {
                 e.printStackTrace()
             }
@@ -114,7 +117,7 @@ class WidgetConfigViewModel(
                     0, // FIXME this property is no longer valid
                     picUri.value?.toString()
             )
-            with(widgetDataSource) {
+            with(singleContactWidgetRepo) {
                 insertWidget(widgetData)
                 _result.value = ConfigResult(accepted = true, widgetData = widgetData)
             }

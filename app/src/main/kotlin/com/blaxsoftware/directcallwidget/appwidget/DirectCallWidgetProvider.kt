@@ -28,14 +28,22 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
-import com.blaxsoftware.directcallwidget.*
+import androidx.core.net.toUri
+import com.blaxsoftware.directcallwidget.Intents
+import com.blaxsoftware.directcallwidget.R
+import com.blaxsoftware.directcallwidget.WidgetClickReceiver
+import com.blaxsoftware.directcallwidget.appScope
 import com.blaxsoftware.directcallwidget.data.SingleContactWidget
+import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
+import com.blaxsoftware.directcallwidget.singleContactWidgetRepo
 import com.blaxsoftware.directcallwidget.ui.xdpToPx
 import com.blaxsoftware.directcallwidget.ui.ydpToPx
+import com.blaxsoftware.directcallwidget.widgetPictureRepo
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import kotlinx.coroutines.launch
 
 open class DirectCallWidgetProvider : AppWidgetProvider() {
 
@@ -54,27 +62,39 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     }
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, id: Int) {
-        context.widgetRepository.getWidgetById(id)?.let { widgetData ->
-            setWidgetData(context, appWidgetManager, id, widgetData)
+        context.singleContactWidgetRepo.getWidgetById(id)?.let { widgetData ->
+            setWidgetData(
+                context,
+                context.singleContactWidgetRepo,
+                appWidgetManager,
+                id,
+                widgetData
+            )
         }
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         super.onDeleted(context, appWidgetIds)
         appWidgetIds.forEach { id ->
-            context.widgetRepository.getWidgetById(id)?.let { widgetData ->
-                widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { uri ->
-                    context.widgetPicRepository.delete(uri)
+            context.singleContactWidgetRepo.getWidgetById(id)?.let { widgetData ->
+                widgetData.pictureUri?.toUri()?.let { uri ->
+                    context.appScope.launch {
+                        context.widgetPictureRepo.delete(uri)
+                    }
                 }
-                context.widgetRepository.deleteWidgetById(id)
+                context.singleContactWidgetRepo.deleteWidgetById(id)
             }
         }
     }
 
     companion object {
 
-        fun setWidgetData(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int,
-                          widgetData: SingleContactWidget
+        fun setWidgetData(
+            context: Context,
+            singleContactWidgetRepo: SingleContactWidgetRepository,
+            appWidgetManager: AppWidgetManager,
+            widgetId: Int,
+            widgetData: SingleContactWidget
         ) {
             FirebaseCrashlytics.getInstance().log("setWidgetData: widgetId=$widgetId")
             RemoteViews(context.packageName, R.layout.widget_2x2).apply {
@@ -88,7 +108,13 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                         callContactIntent(context, widgetData.phoneNumber, widgetId))
             }.also {
                 if (widgetData.hasPicture) {
-                    setWidgetDataWithPic(context, appWidgetManager, it, widgetId)
+                    setWidgetDataWithPic(
+                        context,
+                        appWidgetManager,
+                        singleContactWidgetRepo,
+                        it,
+                        widgetId
+                    )
                 } else {
                     appWidgetManager.updateAppWidget(widgetId, it)
                 }
@@ -104,24 +130,35 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                 PendingIntent.FLAG_IMMUTABLE)
         }
 
-        private fun setWidgetDataWithPic(context: Context, awm: AppWidgetManager,
-                                         remoteViews: RemoteViews, appWidgetId: Int) {
+        private fun setWidgetDataWithPic(
+            context: Context,
+            awm: AppWidgetManager,
+            singleContactWidgetRepo: SingleContactWidgetRepository,
+            remoteViews: RemoteViews,
+            appWidgetId: Int
+        ) {
             val options = awm.getAppWidgetOptions(appWidgetId)
             val w = options.getInt(OPTION_APPWIDGET_MAX_WIDTH)
             val h = options.getInt(OPTION_APPWIDGET_MAX_HEIGHT)
             FirebaseCrashlytics.getInstance().log("updatePhoto: Updating photo for widget with id $appWidgetId")
-            setWidgetDataWithPic(context, remoteViews, appWidgetId, w, h)
+            setWidgetDataWithPic(context, singleContactWidgetRepo, remoteViews, appWidgetId, w, h)
         }
 
-        private fun setWidgetDataWithPic(context: Context, remoteViews: RemoteViews,
-                                         appWidgetId: Int, widthDp: Int, heightDp: Int) {
+        private fun setWidgetDataWithPic(
+            context: Context,
+            singleContactWidgetRepo: SingleContactWidgetRepository,
+            remoteViews: RemoteViews,
+            appWidgetId: Int,
+            widthDp: Int,
+            heightDp: Int
+        ) {
             FirebaseCrashlytics.getInstance().setCustomKey("scr_width_px", context.resources.displayMetrics.widthPixels)
             FirebaseCrashlytics.getInstance().setCustomKey("scr_height_px", context.resources.displayMetrics.heightPixels)
             FirebaseCrashlytics.getInstance().setCustomKey("scr_density", context.resources.displayMetrics.density)
             FirebaseCrashlytics.getInstance().setCustomKey("scr_xdpi", context.resources.displayMetrics.xdpi)
             FirebaseCrashlytics.getInstance().setCustomKey("scr_ydpi", context.resources.displayMetrics.ydpi)
 
-            context.widgetRepository.getWidgetById(appWidgetId)?.let { widgetData ->
+            singleContactWidgetRepo.getWidgetById(appWidgetId)?.let { widgetData ->
                 widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { picUri ->
                     AppWidgetTarget(context, R.id.picture, remoteViews, appWidgetId).also { target ->
                         val widthPx = context.xdpToPx(widthDp)

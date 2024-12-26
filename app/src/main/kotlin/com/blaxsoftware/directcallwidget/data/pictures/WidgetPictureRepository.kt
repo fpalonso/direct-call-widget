@@ -16,20 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget
+package com.blaxsoftware.directcallwidget.data.pictures
 
-import androidx.multidex.MultiDexApplication
-import com.blaxsoftware.directcallwidget.glance.MultiContactWidgets
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import android.net.Uri
+import java.io.IOException
 
-@HiltAndroidApp
-class DirectCallWidgetApp : MultiDexApplication() {
+interface WidgetPictureRepository {
 
-    @Inject lateinit var multiContactWidgets: MultiContactWidgets
+    @Throws(
+        IllegalArgumentException::class,
+        IllegalStateException::class,
+        IOException::class
+    )
+    suspend fun copyFromUri(uri: Uri): Uri
 
-    override fun onCreate() {
-        super.onCreate()
-        multiContactWidgets.updateAll()
-    }
+    @Throws(
+        SecurityException::class,
+        IOException::class
+    )
+    suspend fun delete(uri: Uri): Boolean?
 }

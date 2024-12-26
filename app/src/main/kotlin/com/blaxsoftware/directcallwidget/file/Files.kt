@@ -18,7 +18,9 @@
 
 package com.blaxsoftware.directcallwidget.file
 
+import android.content.ContentResolver
 import android.content.Context
+import android.net.Uri
 import android.os.Environment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -30,14 +32,14 @@ import java.io.OutputStream
 object Files {
 
     @Throws(IOException::class, IllegalArgumentException::class)
-    suspend fun createFile(dir: File, fileName: String): File? = withContext(Dispatchers.IO) {
+    suspend fun createFile(dir: File, name: String): File? = withContext(Dispatchers.IO) {
         if (!dir.exists() && !dir.mkdirs()) {
             throw IOException("${dir.absolutePath} does not exist and could not be created")
         }
         if (!dir.isDirectory) {
             throw IllegalArgumentException("${dir.absolutePath} is not a valid directory")
         }
-        File(dir, fileName).also { file ->
+        File(dir, name).also { file ->
             return@withContext if (file.createNewFile()) file else null
         }
     }
@@ -51,6 +53,16 @@ object Files {
             if (len > 0) out.write(buffer, 0, len)
         } while (len > 0)
     }
+
+    @Throws(IOException::class)
+    suspend fun ContentResolver.copyFile(source: Uri, target: File) =
+        withContext(Dispatchers.IO) {
+            target.outputStream().use { outputStream ->
+                openInputStream(source)?.use { inputStream ->
+                    copyFile(inputStream, outputStream)
+                }
+            }
+        }
 
     @Throws(IOException::class)
     suspend fun createCameraOutputFile(context: Context): File? = withContext(Dispatchers.IO) {

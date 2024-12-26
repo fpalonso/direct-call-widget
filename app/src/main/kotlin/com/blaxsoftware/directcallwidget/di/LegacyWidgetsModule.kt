@@ -16,20 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget
+package com.blaxsoftware.directcallwidget.di
 
-import androidx.multidex.MultiDexApplication
-import com.blaxsoftware.directcallwidget.glance.MultiContactWidgets
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import android.appwidget.AppWidgetManager
+import android.content.Context
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-@HiltAndroidApp
-class DirectCallWidgetApp : MultiDexApplication() {
+@Module
+@InstallIn(SingletonComponent::class)
+object LegacyWidgetsModule {
 
-    @Inject lateinit var multiContactWidgets: MultiContactWidgets
-
-    override fun onCreate() {
-        super.onCreate()
-        multiContactWidgets.updateAll()
-    }
+    @Singleton
+    @Provides
+    fun provideAppWidgetManager(
+        @ApplicationContext appContext: Context
+    ): AppWidgetManager = AppWidgetManager.getInstance(appContext)
 }

@@ -79,7 +79,7 @@
 
         <receiver
             android:name=".appwidget.DirectCallWidgetProvider"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETE" />

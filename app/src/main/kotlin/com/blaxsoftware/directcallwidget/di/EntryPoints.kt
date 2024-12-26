@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2024 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.data.source
+package com.blaxsoftware.directcallwidget.di
 
-import android.net.Uri
-import java.io.File
+import com.blaxsoftware.directcallwidget.data.pictures.WidgetPictureRepository
+import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
 
-interface WidgetPicRepository {
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface LegacyWidgetProviderDependencies {
 
-    suspend fun insertFromUri(uri: Uri): File?
+    fun singleContactWidgetRepo(): SingleContactWidgetRepository
 
-    fun delete(uri: Uri)
+    fun widgetPictureRepo(): WidgetPictureRepository
+
+    @ApplicationScope
+    fun appScope(): CoroutineScope
 }

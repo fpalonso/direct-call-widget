@@ -22,13 +22,14 @@ import android.content.SharedPreferences
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import androidx.core.content.edit
 import com.blaxsoftware.directcallwidget.data.SingleContactWidget
+import com.blaxsoftware.directcallwidget.di.LegacyWidgetInfo
+import javax.inject.Inject
 
 /**
  * Data source class that retrieves widget data from the given SharedPreferences object.
  */
-class DefaultSingleContactWidgetRepository(
-    // TODO use hilt to inject this dependency
-    private val preferences: SharedPreferences
+class DefaultSingleContactWidgetRepository @Inject constructor(
+    @LegacyWidgetInfo private val preferences: SharedPreferences
 ) : SingleContactWidgetRepository {
 
     override fun getWidgetById(widgetId: Int): SingleContactWidget? = with(preferences) {

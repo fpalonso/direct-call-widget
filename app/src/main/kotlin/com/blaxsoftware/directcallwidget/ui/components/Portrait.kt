@@ -97,7 +97,7 @@ fun PicturePlaceholder(
 
 @Composable
 fun Picture(
-    pictureUri: Uri,
+    pictureUri: Uri?,
     modifier: Modifier = Modifier
 ) {
     AsyncImage(
