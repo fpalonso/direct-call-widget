@@ -21,10 +21,11 @@ package com.blaxsoftware.directcallwidget.data.pictures
 import android.content.ContentResolver
 import android.net.Uri
 import androidx.core.net.toUri
+import com.blaxsoftware.directcallwidget.di.IODispatcher
 import com.blaxsoftware.directcallwidget.di.PicturesDir
 import com.blaxsoftware.directcallwidget.file.Files
 import com.blaxsoftware.directcallwidget.file.Files.copyFile
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.UUID
@@ -32,17 +33,18 @@ import javax.inject.Inject
 
 class DefaultWidgetPictureRepository @Inject constructor(
     private val contentResolver: ContentResolver,
-    @PicturesDir private val picturesDir: File
+    @PicturesDir private val picturesDir: File,
+    @IODispatcher private val ioDispatcher: CoroutineDispatcher
 ) : WidgetPictureRepository {
 
-    override suspend fun copyFromUri(uri: Uri): Uri = withContext(Dispatchers.IO) {
+    override suspend fun copyFromUri(uri: Uri): Uri = withContext(ioDispatcher) {
         val targetFile = Files.createFile(picturesDir, name = UUID.randomUUID().toString())
         checkNotNull(targetFile)
         contentResolver.copyFile(uri, targetFile)
         targetFile.toUri()
     }
 
-    override suspend fun delete(uri: Uri) = withContext(Dispatchers.IO) {
+    override suspend fun delete(uri: Uri) = withContext(ioDispatcher) {
         uri.path?.let { File(it).delete() }
     }
 }

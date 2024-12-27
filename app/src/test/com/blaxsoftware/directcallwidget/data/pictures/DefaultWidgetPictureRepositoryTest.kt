@@ -25,7 +25,11 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.blaxsoftware.directcallwidget.DirectCallWidgetApp
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,12 +41,16 @@ class DefaultWidgetPictureRepositoryTest {
     private lateinit var context: Context
     private lateinit var pictureRepo: WidgetPictureRepository
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun initPictureRepo() {
+        val dispatcher = StandardTestDispatcher()
+        Dispatchers.setMain(dispatcher)
         context = ApplicationProvider.getApplicationContext<DirectCallWidgetApp>()
         pictureRepo = DefaultWidgetPictureRepository(
             contentResolver = context.contentResolver,
-            picturesDir = context.filesDir
+            picturesDir = File(context.filesDir, "pics"),
+            ioDispatcher = dispatcher
         )
     }
 
@@ -55,7 +63,9 @@ class DefaultWidgetPictureRepositoryTest {
         val internalFileUri = pictureRepo.copyFromUri(tempFile.toUri())
 
         // Then
-        assertThat(internalFileUri.toFile().exists()).isTrue()
+        val internalFile = internalFileUri.toFile()
+        assertThat(internalFile).isNotEqualTo(tempFile)
+        assertThat(internalFile.exists()).isTrue()
     }
 
     @Test
