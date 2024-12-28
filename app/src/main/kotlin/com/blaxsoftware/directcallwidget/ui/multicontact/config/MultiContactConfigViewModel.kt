@@ -21,10 +21,14 @@ package com.blaxsoftware.directcallwidget.ui.multicontact.config
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.data.MultiContactInfo
+import com.blaxsoftware.directcallwidget.data.pictures.WidgetPictureRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class MultiContactConfigUiState(
@@ -32,14 +36,22 @@ data class MultiContactConfigUiState(
 )
 
 @HiltViewModel
-class MultiContactConfigViewModel @Inject constructor() : ViewModel() {
+class MultiContactConfigViewModel @Inject constructor(
+    private val widgetPictureRepo: WidgetPictureRepository
+) : ViewModel() {
 
     var uiState by mutableStateOf(MultiContactConfigUiState())
         private set
 
     fun addContact(contactConfig: ContactConfig) {
-        val contacts = uiState.contacts + contactConfig
-        uiState = uiState.copy(contacts = contacts)
+        viewModelScope.launch {
+            val internalPictureUri = widgetPictureRepo
+                .copyFromUri(contactConfig.pictureUri.toUri())
+            val contacts = uiState.contacts + contactConfig.copy(
+                pictureUri = internalPictureUri.toString()
+            )
+            uiState = uiState.copy(contacts = contacts)
+        }
     }
 
     fun buildWidgetInfo() = MultiContactInfo.Available(
