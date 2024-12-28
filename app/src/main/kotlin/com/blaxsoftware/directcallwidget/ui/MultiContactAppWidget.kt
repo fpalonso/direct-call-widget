@@ -19,17 +19,15 @@
 package com.blaxsoftware.directcallwidget.ui
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
-import androidx.glance.Image
-import androidx.glance.ImageProvider
+import androidx.glance.LocalSize
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.ImageProvider
+import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
@@ -38,7 +36,6 @@ import androidx.glance.background
 import androidx.glance.currentState
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
-import androidx.glance.layout.ContentScale
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
@@ -50,6 +47,7 @@ import androidx.glance.preview.Preview
 import androidx.glance.text.Text
 import androidx.glance.text.TextDefaults
 import androidx.glance.unit.ColorProvider
+import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.data.MultiContactInfo
 
@@ -57,20 +55,35 @@ class MultiContactAppWidget : GlanceAppWidget() {
 
     override val stateDefinition = MultiContactStateDefinition
 
+    companion object {
+        private val SMALL_SQUARE = DpSize(40.dp, 110.dp)
+        private val MEDIUM_SQUARE = DpSize(110.dp, 165.dp)
+        private val BIG_SQUARE = DpSize(180.dp, 270.dp)
+    }
+
+    override val sizeMode = SizeMode.Responsive(
+        sizes = setOf(
+            SMALL_SQUARE,
+            MEDIUM_SQUARE,
+            BIG_SQUARE
+        )
+    )
+
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
             when (val state = currentState<MultiContactInfo>()) {
                 is MultiContactInfo.Available -> {
+                    val size = LocalSize.current
                     LazyColumn(
                         modifier = GlanceModifier
-                            .fillMaxWidth()
-                            .background(Color.White)
+                            .fillMaxSize()
+                            .background(Color.Transparent),
                     ) {
                         items(state.contactList) { contact ->
                             GlanceContactCard(
                                 modifier = GlanceModifier
-                                    // TODO extract dimensions
-                                    .size(width = 130.dp, height = 175.dp),
+                                    .fillMaxWidth()
+                                    .height(size.height),
                                 contactConfig = contact
                             )
                         }
@@ -87,27 +100,21 @@ private fun GlanceContactCard(
     contactConfig: ContactConfig,
     modifier: GlanceModifier = GlanceModifier
 ) {
-    Box(modifier
-        .fillMaxWidth()
-        .height(175.dp) // TODO Extract
-        .cornerRadius(16.dp)
-    ) {
-        Image(
-            modifier = GlanceModifier.fillMaxSize(),
-            provider = getImageProvider(contactConfig.pictureUri),
-            contentDescription = null,
-            contentScale = ContentScale.Crop
-        )
-        GlanceContactCardLabel(contactConfig.displayName)
+    Column(modifier.padding(4.dp)) {
+        Box(
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .cornerRadius(16.dp)
+        ) {
+            RemoteImage(
+                modifier = GlanceModifier.fillMaxSize(),
+                model = contactConfig.pictureUri,
+                contentDescription = null,
+                placeholderResId = R.drawable.ic_default_picture
+            )
+            GlanceContactCardLabel(contactConfig.displayName)
+        }
     }
-}
-
-private fun getImageProvider(path: String): ImageProvider {
-    if (path.startsWith("content://")) {
-        return ImageProvider(path.toUri())
-    }
-    val bitmap = BitmapFactory.decodeFile(path)
-    return ImageProvider(bitmap)
 }
 
 @Composable
