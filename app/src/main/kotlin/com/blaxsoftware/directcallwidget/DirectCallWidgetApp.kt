@@ -20,16 +20,19 @@ package com.blaxsoftware.directcallwidget
 
 import androidx.multidex.MultiDexApplication
 import com.blaxsoftware.directcallwidget.glance.MultiContactWidgets
+import com.blaxsoftware.directcallwidget.legacy.LegacyWidgets
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
 class DirectCallWidgetApp : MultiDexApplication() {
 
+    @Inject lateinit var legacyWidgets: LegacyWidgets
     @Inject lateinit var multiContactWidgets: MultiContactWidgets
 
     override fun onCreate() {
         super.onCreate()
+        legacyWidgets.updateAll()
         multiContactWidgets.updateAll()
     }
 }
