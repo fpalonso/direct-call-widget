@@ -19,20 +19,23 @@
 package com.blaxsoftware.directcallwidget.ui
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
-import androidx.glance.LocalContext
 import androidx.glance.LocalSize
+import androidx.glance.action.Action
+import androidx.glance.action.ActionParameters
+import androidx.glance.action.action
+import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
-import androidx.glance.appwidget.action.actionSendBroadcast
+import androidx.glance.appwidget.action.ActionCallback
+import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
@@ -52,27 +55,39 @@ import androidx.glance.preview.Preview
 import androidx.glance.text.Text
 import androidx.glance.text.TextDefaults
 import androidx.glance.unit.ColorProvider
-import com.blaxsoftware.directcallwidget.Intents
+import com.blaxsoftware.directcallwidget.Caller
+import com.blaxsoftware.directcallwidget.Dialer
+import com.blaxsoftware.directcallwidget.Preferences
+import com.blaxsoftware.directcallwidget.Preferences.WidgetClickAction
 import com.blaxsoftware.directcallwidget.R
-import com.blaxsoftware.directcallwidget.WidgetClickReceiver
+import com.blaxsoftware.directcallwidget.asPhoneUri
 import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.data.MultiContactInfo
+import com.blaxsoftware.directcallwidget.ui.MultiContactAppWidget.ActionParameterKeys.phoneNumberKey
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 
 class MultiContactAppWidget : GlanceAppWidget() {
 
     override val stateDefinition = MultiContactStateDefinition
 
-    companion object {
-        private val SMALL_SQUARE = DpSize(40.dp, 110.dp)
-        private val MEDIUM_SQUARE = DpSize(110.dp, 165.dp)
-        private val BIG_SQUARE = DpSize(180.dp, 270.dp)
+    object ActionParameterKeys {
+        val phoneNumberKey = ActionParameters.Key<String>("phoneNumber")
+    }
+
+    object Sizes {
+        internal val SMALL_SQUARE = DpSize(40.dp, 110.dp)
+        internal val BIG_SQUARE = DpSize(180.dp, 270.dp)
+        internal val MEDIUM_SQUARE = DpSize(110.dp, 165.dp)
     }
 
     override val sizeMode = SizeMode.Responsive(
         sizes = setOf(
-            SMALL_SQUARE,
-            MEDIUM_SQUARE,
-            BIG_SQUARE
+            Sizes.SMALL_SQUARE,
+            Sizes.MEDIUM_SQUARE,
+            Sizes.BIG_SQUARE
         )
     )
 
@@ -91,7 +106,12 @@ class MultiContactAppWidget : GlanceAppWidget() {
                                 modifier = GlanceModifier
                                     .fillMaxWidth()
                                     .height(size.height),
-                                contactConfig = contact
+                                contactConfig = contact,
+                                cardClickAction = actionRunCallback<HandleWidgetClickAction>(
+                                    actionParametersOf(
+                                        phoneNumberKey to contact.phoneNumber
+                                    )
+                                )
                             )
                         }
                     }
@@ -102,25 +122,45 @@ class MultiContactAppWidget : GlanceAppWidget() {
     }
 }
 
+class HandleWidgetClickAction : ActionCallback {
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface HandleWidgetClickActionEntryPoint {
+        fun preferences(): Preferences
+        fun dialer(): Dialer
+        fun caller(): Caller
+    }
+
+    override suspend fun onAction(
+        context: Context,
+        glanceId: GlanceId,
+        parameters: ActionParameters
+    ) {
+        val phoneUri = parameters[phoneNumberKey]?.asPhoneUri() ?: return
+        val hiltEntryPoint = EntryPointAccessors
+            .fromApplication(context, HandleWidgetClickActionEntryPoint::class.java)
+        val prefs = hiltEntryPoint.preferences()
+        if (prefs.getWidgetClickAction() == WidgetClickAction.DIAL) {
+            hiltEntryPoint.dialer().dial(phoneUri)
+        } else {
+            hiltEntryPoint.caller().call(phoneUri)
+        }
+    }
+}
+
 @Composable
 private fun GlanceContactCard(
     contactConfig: ContactConfig,
-    modifier: GlanceModifier = GlanceModifier
+    modifier: GlanceModifier = GlanceModifier,
+    cardClickAction: Action = action {  }
 ) {
-    val callUri = Uri.parse("tel:" + Uri.encode(contactConfig.phoneNumber))
-    val context = LocalContext.current
     Column(modifier.padding(4.dp)) {
         Box(
             modifier = GlanceModifier
                 .fillMaxSize()
                 .cornerRadius(16.dp)
-                .clickable(
-                    onClick =
-                        actionSendBroadcast(
-                            Intent(Intents.ACTION_WIDGET_CLICK, callUri)
-                                .setClass(context, WidgetClickReceiver::class.java)
-                        )
-                )
+                .clickable(cardClickAction)
         ) {
             RemoteImage(
                 modifier = GlanceModifier.fillMaxSize(),

@@ -18,7 +18,10 @@
 
 package com.blaxsoftware.directcallwidget.di
 
+import android.content.ContentResolver
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.blaxsoftware.directcallwidget.data.pictures.DefaultWidgetPictureRepository
 import com.blaxsoftware.directcallwidget.data.pictures.WidgetPictureRepository
 import com.blaxsoftware.directcallwidget.data.source.ContactRepository
@@ -51,7 +54,7 @@ object FilesModule {
     @Provides
     fun provideContentResolver(
         @ApplicationContext appContext: Context
-    ) = appContext.contentResolver
+    ): ContentResolver = appContext.contentResolver
 
     @PicturesDir
     @Singleton
@@ -65,7 +68,7 @@ object FilesModule {
     @Provides
     fun provideLegacyWidgetInfoPreferences(
         @ApplicationContext appContext: Context
-    ) = appContext.getSharedPreferences("widget_data", Context.MODE_PRIVATE)
+    ): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
 }
 
 @Module
