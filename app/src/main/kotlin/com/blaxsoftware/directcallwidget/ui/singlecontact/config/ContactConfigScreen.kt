@@ -18,8 +18,11 @@
 
 package com.blaxsoftware.directcallwidget.ui.singlecontact.config
 
+import android.Manifest
 import android.content.res.Configuration
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -35,10 +38,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.PersonSearch
 import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -56,19 +61,45 @@ import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.ui.components.PickablePicture
 import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
 import com.blaxsoftware.directcallwidget.ui.theme.PortraitCardStyle
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ContactConfigScreen(
     onOkButtonClick: (contactConfig: ContactConfig) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ContactConfigViewModel = hiltViewModel()
 ) {
+    val pickContactLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickContact()
+    ) { uri ->
+        viewModel.onContactPicked(uri)
+    }
+
+    val contactPermissionState = rememberPermissionState(Manifest.permission.READ_CONTACTS)
+
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            pickContactLauncher.launch(null)
+        }
+    }
+
     ContactConfigScreen(
         modifier = modifier,
         pictureUri = viewModel.uiState.pictureUri,
         name = viewModel.uiState.displayName,
         phone = viewModel.uiState.phoneNumber,
-        onSearchButtonClick = {},
+        onSearchButtonClick = {
+            if (contactPermissionState.status.isGranted) {
+                pickContactLauncher.launch(null)
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
+            }
+        },
         onPictureUriChanged = { viewModel.onPictureUriChanged(it) },
         onNameChanged = { viewModel.onDisplayNameChanged(it) },
         onPhoneChanged = { viewModel.onPhoneNumberChanged(it) },
@@ -96,13 +127,12 @@ fun ContactConfigScreen(
                 TopAppBar(title = {
                     Text(text = stringResource(id = R.string.activity_config_title))
                 }, actions = {
-                    /*
                     IconButton(onClick = onSearchButtonClick) {
                         Icon(
                             Icons.Rounded.PersonSearch,
                             contentDescription = stringResource(id = R.string.add_contact)
                         )
-                    }*/
+                    }
                 })
             },
             floatingActionButton = {

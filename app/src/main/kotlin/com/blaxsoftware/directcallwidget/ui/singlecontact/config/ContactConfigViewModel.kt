@@ -23,7 +23,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.blaxsoftware.directcallwidget.data.source.ContactRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ContactConfigUiState(
@@ -33,7 +36,9 @@ data class ContactConfigUiState(
 )
 
 @HiltViewModel
-class ContactConfigViewModel @Inject constructor() : ViewModel() {
+class ContactConfigViewModel @Inject constructor(
+    private val contactRepo: ContactRepository
+) : ViewModel() {
 
     var uiState: ContactConfigUiState by mutableStateOf(ContactConfigUiState())
         private set
@@ -48,5 +53,17 @@ class ContactConfigViewModel @Inject constructor() : ViewModel() {
 
     fun onPhoneNumberChanged(phoneNumber: String) {
         uiState = uiState.copy(phoneNumber = phoneNumber)
+    }
+
+    fun onContactPicked(contactUri: Uri?) {
+        if (contactUri == null) return
+        viewModelScope.launch {
+            val contact = contactRepo.getContactByUri(contactUri) ?: return@launch
+            uiState = uiState.copy(
+                pictureUri = contact.photoUri,
+                displayName = contact.displayName,
+                phoneNumber = contact.phoneList.firstOrNull()?.number ?: ""
+            )
+        }
     }
 }
