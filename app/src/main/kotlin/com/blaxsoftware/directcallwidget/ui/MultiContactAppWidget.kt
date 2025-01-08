@@ -19,15 +19,20 @@
 package com.blaxsoftware.directcallwidget.ui
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.LocalContext
 import androidx.glance.LocalSize
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
+import androidx.glance.appwidget.action.actionSendBroadcast
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
@@ -47,7 +52,9 @@ import androidx.glance.preview.Preview
 import androidx.glance.text.Text
 import androidx.glance.text.TextDefaults
 import androidx.glance.unit.ColorProvider
+import com.blaxsoftware.directcallwidget.Intents
 import com.blaxsoftware.directcallwidget.R
+import com.blaxsoftware.directcallwidget.WidgetClickReceiver
 import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.data.MultiContactInfo
 
@@ -100,11 +107,20 @@ private fun GlanceContactCard(
     contactConfig: ContactConfig,
     modifier: GlanceModifier = GlanceModifier
 ) {
+    val callUri = Uri.parse("tel:" + Uri.encode(contactConfig.phoneNumber))
+    val context = LocalContext.current
     Column(modifier.padding(4.dp)) {
         Box(
             modifier = GlanceModifier
                 .fillMaxSize()
                 .cornerRadius(16.dp)
+                .clickable(
+                    onClick =
+                        actionSendBroadcast(
+                            Intent(Intents.ACTION_WIDGET_CLICK, callUri)
+                                .setClass(context, WidgetClickReceiver::class.java)
+                        )
+                )
         ) {
             RemoteImage(
                 modifier = GlanceModifier.fillMaxSize(),
