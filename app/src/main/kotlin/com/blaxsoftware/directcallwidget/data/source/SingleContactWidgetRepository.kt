@@ -18,12 +18,13 @@
 
 package com.blaxsoftware.directcallwidget.data.source
 
-import android.net.Uri
-import java.io.File
+import com.blaxsoftware.directcallwidget.data.SingleContactWidget
 
-interface WidgetPicDataSource {
+interface SingleContactWidgetRepository {
 
-    suspend fun insertFromUri(uri: Uri): File?
+    fun getWidgetById(widgetId: Int): SingleContactWidget?
 
-    fun delete(uri: Uri)
+    fun insertWidget(widget: SingleContactWidget)
+
+    fun deleteWidgetById(widgetId: Int)
 }

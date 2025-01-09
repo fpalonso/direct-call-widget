@@ -1,6 +1,6 @@
 <!--
   ~ Direct Call Widget - The widget that makes contacts accessible
-  ~ Copyright (C) 2020 Fer P. A.
+  ~ Copyright (C) 2024 Fer P. A.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@
     <string name="phone_name_work">Work</string>
     <string name="phone_name_other">Phone</string>
     <string name="choose_contact">Choose contact</string>
+    <string name="multicontact_widget_description">Multicontact</string>
 
     <!-- Settings -->
     <string name="pref_cat_settings">Settings</string>
@@ -64,5 +65,12 @@
     <string name="request_external_storage_explanation">Direct Call Widget needs permission to show you your pictures.</string>
     <string name="change_picture">Change picture</string>
     <string name="phone">Phone</string>
+
+    <!--Multicontact widget -->
+    <string name="title_activity_multi_contact_widget_config">New Multicontact widget</string>
+    <string name="add_contact">Add contact</string>
+    <string name="add_picture">Add picture</string>
+    <string name="save">Save</string>
+    <string name="search_contact">Search in contact list</string>
 
 </resources>

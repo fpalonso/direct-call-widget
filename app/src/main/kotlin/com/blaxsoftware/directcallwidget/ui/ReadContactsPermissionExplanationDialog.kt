@@ -19,14 +19,9 @@
 package com.blaxsoftware.directcallwidget.ui
 
 import android.app.Dialog
-import android.net.Uri
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
 import com.blaxsoftware.directcallwidget.R
-import com.blaxsoftware.directcallwidget.viewmodel.ViewModelFactory
-import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**

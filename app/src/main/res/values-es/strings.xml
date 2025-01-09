@@ -38,6 +38,7 @@
     <string name="phone_name_work">Trabajo</string>
     <string name="phone_name_other">Teléfono</string>
     <string name="choose_contact">Seleccionar contacto</string>
+    <string name="multicontact_widget_description">Varios contactos</string>
 
     <!-- Settings -->
     <string name="pref_cat_settings">Ajustes</string>
@@ -57,5 +58,12 @@
     <string name="request_readContacts_permission_explanation">Direct Call Widget necesita permiso para mostrarte tus contactos.</string>
     <string name="request_call_permission_explanation">Direct Call Widget necesita permiso para llamar a este contacto.</string>
     <string name="request_external_storage_explanation">Direct Call Widget necesita permiso para mostrarte tus fotos.</string>
+
+    <!--Multicontact widget -->
+    <string name="title_activity_multi_contact_widget_config">Nuevo widget múltiple</string>
+    <string name="add_contact">Añadir contacto</string>
+    <string name="add_picture">Añadir foto</string>
+    <string name="save">Guardar</string>
+    <string name="search_contact">Buscar en la agenda</string>
 
 </resources>

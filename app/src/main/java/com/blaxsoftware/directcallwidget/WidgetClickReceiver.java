@@ -31,6 +31,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class WidgetClickReceiver extends BroadcastReceiver {
 
+    // TODO get constants from the Preferences class
     public static final String PREF_ONTAP_KEY = "pref_onTap";
     public static final String PREF_ONTAP_DIAL_VALUE = "0";
     public static final String PREF_ONTAP_CALL_VALUE = "1";

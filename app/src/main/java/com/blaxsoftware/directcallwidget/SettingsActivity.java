@@ -18,7 +18,6 @@
 
 package com.blaxsoftware.directcallwidget;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,9 +33,11 @@ import androidx.preference.PreferenceGroup;
 
 import com.blaxsoftware.directcallwidget.analytics.Analytics;
 import com.blaxsoftware.directcallwidget.analytics.AnalyticsHelper;
-import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SettingsActivity extends AppCompatActivity {
 
     private static final String KEY_ON_TAP = "pref_onTap";
@@ -53,10 +54,6 @@ public class SettingsActivity extends AppCompatActivity {
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, params);
         setContentView(R.layout.activity_settings);
         setSupportActionBar(findViewById(R.id.topAppBar));
-
-        Intent updateWidget = new Intent(this, DirectCallWidgetProvider.class);
-        updateWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        sendBroadcast(updateWidget);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragContainer, new SettingsFragment())

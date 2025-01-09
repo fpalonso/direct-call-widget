@@ -27,7 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.databinding.BindingAdapter
 import com.blaxsoftware.directcallwidget.R
-import com.blaxsoftware.directcallwidget.data.model.Phone
+import com.blaxsoftware.directcallwidget.data.Phone
 import com.bumptech.glide.Glide
 
 @BindingAdapter("app:uri")

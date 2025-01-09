@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2024 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.data.source
+package com.blaxsoftware.directcallwidget
 
-import com.blaxsoftware.directcallwidget.data.model.WidgetData
+import android.content.Intent
 
-interface WidgetDataSource {
-
-    fun getWidgetDataById(widgetId: Int): WidgetData?
-
-    fun insertWidgetData(widgetData: WidgetData)
-
-    fun deleteWidgetDataById(widgetId: Int)
-}
+inline fun <reified T> List<Intent>.findByComponent() =
+    find { it.component?.className == T::class.java.name }

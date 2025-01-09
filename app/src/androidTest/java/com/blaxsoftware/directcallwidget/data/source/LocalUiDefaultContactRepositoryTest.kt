@@ -25,14 +25,14 @@ import android.provider.ContactsContract.CommonDataKinds.Phone.NUMBER
 import android.provider.ContactsContract.CommonDataKinds.Phone.TYPE
 import android.provider.ContactsContract.Contacts
 import androidx.core.net.toUri
-import com.blaxsoftware.directcallwidget.data.model.Contact
+import com.blaxsoftware.directcallwidget.data.Contact
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
-class ContactRepositoryTest {
+class LocalUiDefaultContactRepositoryTest {
 
     private val mockResolver = mockk<ContentResolver>()
 
@@ -42,7 +42,7 @@ class ContactRepositoryTest {
     private val fakePhoneCursor: MatrixCursor
         get() = MatrixCursor(arrayOf(NUMBER, TYPE))
 
-    private val repository = ContactRepository(mockResolver)
+    private val repository = DefaultContactRepository(mockResolver)
 
     @Test
     fun getContactByUri_dataFound_returnsIt() {

@@ -21,19 +21,23 @@ package com.blaxsoftware.directcallwidget.data.source
 import android.content.SharedPreferences
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import androidx.core.content.edit
-import com.blaxsoftware.directcallwidget.data.model.WidgetData
+import com.blaxsoftware.directcallwidget.data.SingleContactWidget
+import com.blaxsoftware.directcallwidget.di.LegacyWidgetInfo
+import javax.inject.Inject
 
 /**
  * Data source class that retrieves widget data from the given SharedPreferences object.
  */
-class WidgetDataRepository(private val preferences: SharedPreferences) : WidgetDataSource {
+class DefaultSingleContactWidgetRepository @Inject constructor(
+    @LegacyWidgetInfo private val preferences: SharedPreferences
+) : SingleContactWidgetRepository {
 
-    override fun getWidgetDataById(widgetId: Int): WidgetData? = with(preferences) {
+    override fun getWidgetById(widgetId: Int): SingleContactWidget? = with(preferences) {
         if (contains("$ATTR_DISPLAY_NAME$widgetId")
                 || contains("$ATTR_PHONE_NUMBER$widgetId")
                 || contains("$ATTR_PHONE_TYPE$widgetId")
                 || contains("$ATTR_PICTURE_URI$widgetId")) {
-            WidgetData(
+            SingleContactWidget(
                     widgetId = widgetId,
                     displayName = getString("$ATTR_DISPLAY_NAME$widgetId", null),
                     phoneNumber = getString("$ATTR_PHONE_NUMBER$widgetId", "") ?: "",
@@ -43,7 +47,7 @@ class WidgetDataRepository(private val preferences: SharedPreferences) : WidgetD
         } else null
     }
 
-    override fun insertWidgetData(widgetData: WidgetData) = with(widgetData) {
+    override fun insertWidget(widget: SingleContactWidget) = with(widget) {
         preferences.edit {
             putString("$ATTR_DISPLAY_NAME$widgetId", displayName)
             putString("$ATTR_PHONE_NUMBER$widgetId", phoneNumber)
@@ -52,7 +56,7 @@ class WidgetDataRepository(private val preferences: SharedPreferences) : WidgetD
         }
     }
 
-    override fun deleteWidgetDataById(widgetId: Int) {
+    override fun deleteWidgetById(widgetId: Int) {
         preferences.edit {
             remove("$ATTR_DISPLAY_NAME$widgetId")
             remove("$ATTR_PHONE_NUMBER$widgetId")

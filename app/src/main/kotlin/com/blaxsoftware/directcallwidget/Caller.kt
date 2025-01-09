@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.data.source
+package com.blaxsoftware.directcallwidget
 
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
-import com.blaxsoftware.directcallwidget.data.model.Contact
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface ContactDataSource {
-
-    suspend fun getContactByUri(contactUri: Uri): Contact?
+@Singleton
+class Caller @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
+    fun call(phoneUri: Uri) {
+        val intent = Intent(context, CallActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            .setData(phoneUri)
+        context.startActivity(intent)
+    }
 }

@@ -1,3 +1,5 @@
+# This is a basic workflow to help you get started with Actions
+
 name: Test and build
 
 on:
@@ -28,7 +30,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew testCollectionEnabledDebugUnitTest
+          script: ./gradlew connectedCheck
 
       - name: publish tests
         uses: actions/upload-artifact@v4

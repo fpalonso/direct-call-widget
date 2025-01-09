@@ -32,18 +32,18 @@ import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.analytics.Analytics
 import com.blaxsoftware.directcallwidget.analytics.AnalyticsHelper
 import com.blaxsoftware.directcallwidget.databinding.FragmentWidgetConfigBinding
-import com.blaxsoftware.directcallwidget.viewmodel.ViewModelFactory
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.analytics.FirebaseAnalytics
+import dagger.hilt.android.AndroidEntryPoint
 
 @Suppress("unused")
+@AndroidEntryPoint
 class WidgetConfigFragment : Fragment() {
 
-    private val viewModel by activityViewModels<WidgetConfigViewModel> {
-        ViewModelFactory(requireContext().applicationContext)
-    }
+    private val viewModel: WidgetConfigViewModel by activityViewModels()
 
+    // TODO inject with hilt
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onAttach(context: Context) {

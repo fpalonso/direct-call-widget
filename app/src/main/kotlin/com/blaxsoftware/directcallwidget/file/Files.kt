@@ -18,8 +18,11 @@
 
 package com.blaxsoftware.directcallwidget.file
 
+import android.content.ContentResolver
 import android.content.Context
+import android.net.Uri
 import android.os.Environment
+import androidx.annotation.WorkerThread
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -29,21 +32,23 @@ import java.io.OutputStream
 
 object Files {
 
+    @WorkerThread
     @Throws(IOException::class, IllegalArgumentException::class)
-    suspend fun createFile(dir: File, fileName: String): File? = withContext(Dispatchers.IO) {
+    fun createFile(dir: File, name: String): File? {
         if (!dir.exists() && !dir.mkdirs()) {
             throw IOException("${dir.absolutePath} does not exist and could not be created")
         }
         if (!dir.isDirectory) {
             throw IllegalArgumentException("${dir.absolutePath} is not a valid directory")
         }
-        File(dir, fileName).also { file ->
-            return@withContext if (file.createNewFile()) file else null
+        File(dir, name).also { file ->
+            return if (file.createNewFile()) file else null
         }
     }
 
+    @WorkerThread
     @Throws(IOException::class)
-    suspend fun copyFile(`in`: InputStream, out: OutputStream) = withContext(Dispatchers.IO) {
+    private fun copyFile(`in`: InputStream, out: OutputStream) {
         val buffer = ByteArray(1024)
         var len: Int
         do {
@@ -52,6 +57,17 @@ object Files {
         } while (len > 0)
     }
 
+    @WorkerThread
+    @Throws(IOException::class)
+    fun ContentResolver.copyFile(source: Uri, target: File) {
+        target.outputStream().use { outputStream ->
+            openInputStream(source)?.use { inputStream ->
+                copyFile(inputStream, outputStream)
+            }
+        }
+    }
+
+    // FIXME inject the dispatcher so it's easier to test
     @Throws(IOException::class)
     suspend fun createCameraOutputFile(context: Context): File? = withContext(Dispatchers.IO) {
         val fileDir: File? = context.getExternalFilesDir("${Environment.DIRECTORY_PICTURES}/pics")

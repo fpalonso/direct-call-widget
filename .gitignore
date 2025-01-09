@@ -86,3 +86,6 @@ lint/tmp/
 # lint/reports/
 
 keystore.properties
+
+# .attach files
+.attach_pid*
