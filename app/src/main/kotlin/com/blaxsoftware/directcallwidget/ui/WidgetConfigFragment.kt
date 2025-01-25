@@ -19,7 +19,6 @@
 package com.blaxsoftware.directcallwidget.ui
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,12 +29,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.analytics.Analytics
-import com.blaxsoftware.directcallwidget.analytics.AnalyticsHelper
 import com.blaxsoftware.directcallwidget.databinding.FragmentWidgetConfigBinding
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @Suppress("unused")
 @AndroidEntryPoint
@@ -43,13 +42,7 @@ class WidgetConfigFragment : Fragment() {
 
     private val viewModel: WidgetConfigViewModel by activityViewModels()
 
-    // TODO inject with hilt
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        firebaseAnalytics = AnalyticsHelper(context).firebaseAnalytics
-    }
+    @Inject lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
