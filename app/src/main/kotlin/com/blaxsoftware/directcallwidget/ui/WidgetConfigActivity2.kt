@@ -41,7 +41,6 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.analytics.Analytics
-import com.blaxsoftware.directcallwidget.analytics.AnalyticsHelper
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
 import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
 import com.blaxsoftware.directcallwidget.file.Files
@@ -54,6 +53,7 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
+// TODO deprecate this class
 @AndroidEntryPoint
 class WidgetConfigActivity2 : AppCompatActivity(),
         ReadContactsPermissionExplanationDialog.Callback,
@@ -61,6 +61,7 @@ class WidgetConfigActivity2 : AppCompatActivity(),
 
     private val viewModel: WidgetConfigViewModel by viewModels()
 
+    // TODO inject this in viewModel
     @Inject lateinit var singleContactWidgetRepo: SingleContactWidgetRepository
 
     private val requestContactPermission = registerForActivityResult(RequestPermission()) { isGranted: Boolean ->
@@ -98,11 +99,10 @@ class WidgetConfigActivity2 : AppCompatActivity(),
     }
 
     private var cameraOutputUri: Uri? = null
-    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    @Inject lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        firebaseAnalytics = AnalyticsHelper(this).firebaseAnalytics
         val params = bundleOf(
             FirebaseAnalytics.Param.SCREEN_NAME to "Widget Setup",
             FirebaseAnalytics.Param.SCREEN_CLASS to WidgetConfigActivity2::class.simpleName

@@ -19,7 +19,6 @@
 package com.blaxsoftware.directcallwidget;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -28,25 +27,30 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.view.ContextThemeWrapper;
 import android.widget.LinearLayout;
 
+import androidx.activity.ComponentActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.blaxsoftware.directcallwidget.analytics.Analytics;
-import com.blaxsoftware.directcallwidget.analytics.AnalyticsHelper;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-public class CallActivity extends Activity {
+import javax.inject.Inject;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
+public class CallActivity extends ComponentActivity {
+
+    @Inject FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFirebaseAnalytics = new AnalyticsHelper(this).getFirebaseAnalytics();
         Bundle params = new Bundle();
         params.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Call");
         params.putString(FirebaseAnalytics.Param.SCREEN_CLASS, CallActivity.class.getName());

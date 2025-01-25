@@ -18,13 +18,11 @@
 
 package com.blaxsoftware.directcallwidget;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -32,13 +30,16 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 
 import com.blaxsoftware.directcallwidget.analytics.Analytics;
-import com.blaxsoftware.directcallwidget.analytics.AnalyticsHelper;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class SettingsActivity extends AppCompatActivity {
+
+    @Inject FirebaseAnalytics mFirebaseAnalytics;
 
     private static final String KEY_ON_TAP = "pref_onTap";
     private static final String KEY_BETA = "pref_btester";
@@ -47,7 +48,6 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseAnalytics mFirebaseAnalytics = new AnalyticsHelper(this).getFirebaseAnalytics();
         Bundle params = new Bundle();
         params.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Settings");
         params.putString(FirebaseAnalytics.Param.SCREEN_CLASS, SettingsActivity.class.getName());
@@ -60,16 +60,11 @@ public class SettingsActivity extends AppCompatActivity {
                 .commit();
     }
 
+    @AndroidEntryPoint
     public static class SettingsFragment extends PreferenceFragmentCompat
             implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-        private FirebaseAnalytics mFirebaseAnalytics;
-
-        @Override
-        public void onAttach(@NonNull Context context) {
-            super.onAttach(context);
-            mFirebaseAnalytics = new AnalyticsHelper(context).getFirebaseAnalytics();
-        }
+        @Inject FirebaseAnalytics mFirebaseAnalytics;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

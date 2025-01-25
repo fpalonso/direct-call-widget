@@ -26,10 +26,16 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.blaxsoftware.directcallwidget.analytics.Analytics;
-import com.blaxsoftware.directcallwidget.analytics.AnalyticsHelper;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class WidgetClickReceiver extends BroadcastReceiver {
+
+    @Inject FirebaseAnalytics firebaseAnalytics;
 
     // TODO get constants from the Preferences class
     public static final String PREF_ONTAP_KEY = "pref_onTap";
@@ -38,7 +44,6 @@ public class WidgetClickReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        FirebaseAnalytics firebaseAnalytics = new AnalyticsHelper(context).getFirebaseAnalytics();
         Bundle params = new Bundle();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         String tapAction = pref.getString(PREF_ONTAP_KEY, PREF_ONTAP_CALL_VALUE);

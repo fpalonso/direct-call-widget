@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2024 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.analytics
+package com.blaxsoftware.directcallwidget.di
 
 import android.content.Context
 import android.util.Log
 import com.blaxsoftware.directcallwidget.R
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-class AnalyticsHelper(context: Context) {
+@Module
+@InstallIn(SingletonComponent::class)
+object AnalyticsModule {
 
-    val firebaseAnalytics by lazy {
-        Firebase.analytics.apply {
-            val collectAnalytics = context.resources.getBoolean(R.bool.collect_analytics)
-            Log.d(TAG, "firebaseAnalytics: collecting analytics: $collectAnalytics")
-            setAnalyticsCollectionEnabled(collectAnalytics)
-        }
-    }
+    private const val TAG = "AnalyticsModule"
 
-    companion object {
-        const val TAG = "AnalyticsHelper"
+    @Singleton
+    @Provides
+    fun provideFirebaseAnalytics(
+        @ApplicationContext context: Context
+    ): FirebaseAnalytics = Firebase.analytics.apply {
+        val collectAnalytics = context.resources.getBoolean(R.bool.collect_analytics)
+        // TODO use Timber: https://github.com/JakeWharton/timber/tree/trunk
+        Log.d(TAG, "firebaseAnalytics: collecting analytics: $collectAnalytics")
+        setAnalyticsCollectionEnabled(collectAnalytics)
     }
 }
