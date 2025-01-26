@@ -16,11 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.di
+package dev.ferp.dcw.core.analytics.di
 
 import android.content.Context
 import android.util.Log
-import com.blaxsoftware.directcallwidget.R
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -29,6 +28,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import dev.ferp.dcw.core.analytics.R
 import javax.inject.Singleton
 
 @Module

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.analytics
+package dev.ferp.dcw.core.analytics
 
 object Analytics {
 
@@ -34,7 +34,7 @@ object Analytics {
         const val SETTING_ON_TAP_CLICK = "setting_on_tap_click"
         const val SETTING_ON_TAP_CHANGED = "setting_on_tap_changed"
         const val SETTING_BETA_CLICK = "setting_beta_click"
-        const val SETTING_CONTRIBUTE_CLICK = "setting_beta_click"
+        const val SETTING_CONTRIBUTE_CLICK = "setting_contribute_click"
 
         // Setup
         const val PICK_CONTACT = "pick_contact"

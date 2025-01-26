@@ -1,0 +1,53 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+}
+
+android {
+    namespace 'dev.ferp.dcw.core.analytics'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 21
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions += "analytics"
+    productFlavors {
+        create("collectionEnabled") {
+            dimension = "analytics"
+            resValue("bool", "collect_analytics", "true")
+        }
+        create("collectionDisabled") {
+            dimension = "analytics"
+            resValue("bool", "collect_analytics", "false")
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+
+dependencies {
+    // Hilt
+    implementation 'com.google.dagger:hilt-android:2.51.1'
+    kapt 'com.google.dagger:hilt-compiler:2.51.1'
+
+    // Analytics
+    implementation platform('com.google.firebase:firebase-bom:33.8.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+}

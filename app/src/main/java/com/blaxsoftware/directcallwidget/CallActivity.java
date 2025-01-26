@@ -36,12 +36,12 @@ import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.blaxsoftware.directcallwidget.analytics.Analytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import dev.ferp.dcw.core.analytics.Analytics;
 
 @AndroidEntryPoint
 public class CallActivity extends ComponentActivity {
