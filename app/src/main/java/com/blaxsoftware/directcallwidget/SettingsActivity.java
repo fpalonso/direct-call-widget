@@ -29,12 +29,12 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 
-import com.blaxsoftware.directcallwidget.analytics.Analytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import dev.ferp.dcw.core.analytics.Analytics;
 
 @AndroidEntryPoint
 public class SettingsActivity extends AppCompatActivity {

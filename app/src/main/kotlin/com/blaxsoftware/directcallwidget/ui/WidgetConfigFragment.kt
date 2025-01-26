@@ -28,7 +28,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blaxsoftware.directcallwidget.R
-import com.blaxsoftware.directcallwidget.analytics.Analytics
+import dev.ferp.dcw.core.analytics.Analytics
 import com.blaxsoftware.directcallwidget.databinding.FragmentWidgetConfigBinding
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

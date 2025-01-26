@@ -40,7 +40,7 @@ import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import com.blaxsoftware.directcallwidget.R
-import com.blaxsoftware.directcallwidget.analytics.Analytics
+import dev.ferp.dcw.core.analytics.Analytics
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
 import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
 import com.blaxsoftware.directcallwidget.file.Files
