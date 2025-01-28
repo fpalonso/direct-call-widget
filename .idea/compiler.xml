@@ -11,6 +11,9 @@
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
-    <bytecodeTargetLevel target="21" />
+    <bytecodeTargetLevel target="11">
+      <module name="direct-call-widget.app" target="21" />
+      <module name="direct-call-widget.core.analytics" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>

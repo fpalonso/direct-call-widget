@@ -39,6 +39,7 @@ roomCompiler = "2.6.1"
 roomRuntime = "2.6.1"
 runner = "1.6.2"
 truth = "1.6.0"
+jetbrainsKotlinJvm = "2.0.21"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -107,3 +108,4 @@ firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "compose" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
