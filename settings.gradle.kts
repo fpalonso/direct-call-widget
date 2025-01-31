@@ -33,4 +33,5 @@ dependencyResolutionManagement {
     }
 }
 include(":app")
+include(":data:pictures:api")
 include(":core:analytics")

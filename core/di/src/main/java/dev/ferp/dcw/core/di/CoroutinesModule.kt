@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-plugins {
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.gms.google.services) apply false
-    alias(libs.plugins.firebase.crashlytics) apply false
-    alias(libs.plugins.hilt.android) apply false
-    alias(libs.plugins.kotlin.serialization) apply false
-    alias(libs.plugins.kotlin.compose) apply false
-    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
+package dev.ferp.dcw.core.di
+
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import javax.inject.Qualifier
+import javax.inject.Singleton
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class IoDispatcher
+
+@Module
+@InstallIn(SingletonComponent::class)
+object CoroutinesModule {
+
+    @IoDispatcher
+    @Singleton
+    @Provides
+    fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 }
