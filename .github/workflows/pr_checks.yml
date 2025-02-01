@@ -9,7 +9,7 @@ on:
     branches: [ develop ]
 
 jobs:
-  unit-tests:
+  pr-checks:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -27,26 +27,14 @@ jobs:
       - name: build
         run: ./gradlew build
 
-      - name: test
+      - name: unit tests
         run: ./gradlew test
 
-      - name: publish tests
+      - name: publish unit tests results
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: app/build/reports/tests
-
-  instrumented-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-
-      - name: setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: temurin
 
       - name: enable KVM
         run: |
@@ -54,13 +42,13 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: run tests
+      - name: run instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
           script: ./gradlew connectedCheck
 
-      - name: publish tests
+      - name: publish instrumented tests results
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
