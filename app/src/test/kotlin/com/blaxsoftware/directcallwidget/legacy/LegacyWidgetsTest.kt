@@ -4,23 +4,30 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.blaxsoftware.directcallwidget.DirectCallWidgetApp
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider1x1
 import com.blaxsoftware.directcallwidget.findByComponent
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.shadows.ShadowApplication
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class LegacyWidgetsTest {
+
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
 
     private lateinit var context: Context
     private lateinit var contextShadow: ShadowApplication
@@ -33,8 +40,8 @@ class LegacyWidgetsTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        context = ApplicationProvider.getApplicationContext<DirectCallWidgetApp>()
-        contextShadow = shadowOf(context as DirectCallWidgetApp?)
+        context = ApplicationProvider.getApplicationContext<HiltTestApplication>()
+        contextShadow = shadowOf(context as HiltTestApplication)
         contextShadow.clearBroadcastIntents()
         every { appWidgetManagerMock.getAppWidgetIds(any()) } returns testWidgetIds
         legacyWidgets = LegacyWidgets(context, appWidgetManagerMock)

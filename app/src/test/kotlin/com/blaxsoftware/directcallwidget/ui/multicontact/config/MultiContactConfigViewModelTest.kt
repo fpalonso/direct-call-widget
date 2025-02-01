@@ -1,14 +1,26 @@
 package com.blaxsoftware.directcallwidget.ui.multicontact.config
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.core.net.toUri
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.blaxsoftware.directcallwidget.DirectCallWidgetApp
 import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.rules.MainDispatcherRule
-import com.blaxsoftware.directcallwidget.rules.WidgetPictureRepositoryRule
 import com.google.common.truth.Truth.assertThat
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
+import dagger.hilt.android.testing.UninstallModules
+import dagger.hilt.components.SingletonComponent
+import dev.ferp.dcw.core.di.CoroutinesModule
+import dev.ferp.dcw.core.di.IoDispatcher
+import dev.ferp.dcw.data.pictures.WidgetPictureRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -18,25 +30,41 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
+import javax.inject.Inject
 
+private val testDispatcher = StandardTestDispatcher()
+
+@UninstallModules(CoroutinesModule::class)
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class MultiContactConfigViewModelTest {
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    object TestCoroutinesModule {
+
+        @IoDispatcher
+        @Provides
+        fun provideTestDispatcher(): CoroutineDispatcher = testDispatcher
+    }
+
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
+    val mainDispatcherRule = MainDispatcherRule(testDispatcher)
+
+    @Inject
+    lateinit var pictureRepo: WidgetPictureRepository<Uri, Uri, Bitmap, Int>
 
     private lateinit var context: Context
     private lateinit var viewModel: MultiContactConfigViewModel
 
-    private val testDispatcher = StandardTestDispatcher()
-
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule(testDispatcher)
-
-    @get:Rule
-    val pictureRepositoryRule = WidgetPictureRepositoryRule(testDispatcher)
-
     @Before
     fun setUp() {
-        context = ApplicationProvider.getApplicationContext<DirectCallWidgetApp>()
-        viewModel = MultiContactConfigViewModel(pictureRepositoryRule.pictureRepository)
+        hiltRule.inject()
+        context = ApplicationProvider.getApplicationContext<HiltTestApplication>()
+        viewModel = MultiContactConfigViewModel(pictureRepo)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

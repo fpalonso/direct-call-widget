@@ -79,7 +79,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
             context.singleContactWidgetRepo.getWidgetById(id)?.let { widgetData ->
                 widgetData.pictureUri?.toUri()?.let { uri ->
                     context.appScope.launch {
-                        context.widgetPictureRepo.delete(uri)
+                        context.widgetPictureRepo.deletePicture(uri)
                     }
                 }
                 context.singleContactWidgetRepo.deleteWidgetById(id)

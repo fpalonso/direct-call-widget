@@ -22,6 +22,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -46,4 +47,7 @@ object GlideModule {
     ): RequestBuilder<Bitmap> = Glide
         .with(context)
         .asBitmap()
+
+    @Provides
+    fun provideDiskCacheStrategy(): DiskCacheStrategy = DiskCacheStrategy.NONE
 }
