@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+package com.blaxsoftware.directcallwidget
+
 import android.database.Cursor
 import android.net.Uri
 import androidx.core.net.toUri
 
 fun Cursor.getString(columnName: String): String? {
-    return getString(getColumnIndex(columnName))
+    val colIndex = getColumnIndex(columnName)
+    return if (colIndex in 0 until columnCount) {
+        getString(colIndex)
+    } else null
 }
 
 fun Cursor.getUri(columnName: String): Uri? {
@@ -29,5 +34,8 @@ fun Cursor.getUri(columnName: String): Uri? {
 }
 
 fun Cursor.getInt(columnName: String): Int? {
-    return getInt(getColumnIndex(columnName))
+    val colIndex = getColumnIndex(columnName)
+    return if (colIndex in 0 until columnCount) {
+        getInt(colIndex)
+    } else null
 }
