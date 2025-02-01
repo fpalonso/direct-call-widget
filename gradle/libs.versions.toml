@@ -26,9 +26,11 @@ compose = "2.0.0"
 kotlinStdlibJdk7 = "2.1.0"
 kotlinxCoroutinesTest = "1.9.0"
 kotlinxSerializationJson = "1.7.3"
+ksp = "2.0.21-1.0.27"
 legacySupportV4 = "1.0.0"
 lifecycleViewmodelKtx = "2.8.7"
 material = "1.12.0"
+mockk = "1.13.12"
 mockkAndroid = "1.13.12"
 multidex = "2.0.1"
 navigationCompose = "2.8.5"
@@ -40,6 +42,8 @@ roomRuntime = "2.6.1"
 runner = "1.6.2"
 truth = "1.6.0"
 jetbrainsKotlinJvm = "2.0.21"
+junitVersion = "4.13.2"
+junitJupiterVersion = "5.8.2"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -97,8 +101,11 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 androidx-legacy-support-v4 = { module = "androidx.legacy:legacy-support-v4", version.ref = "legacySupportV4" }
 google-material = { module = "com.google.android.material:material", version.ref = "material" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkAndroid" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+junit = { group = "junit", name = "junit", version.ref = "junitVersion" }
+jupiter-junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiterVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -109,3 +116,5 @@ hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "compose" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

@@ -111,6 +111,7 @@ composeCompiler {
 
 dependencies {
     implementation(project(":core:analytics"))
+    implementation(project(":core:util"))
 
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.appcompat)

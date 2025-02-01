@@ -1,12 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
-    alias(libs.plugins.hilt.android)
 }
 
 android {
-    namespace = "dev.ferp.dcw.core.di"
+    namespace = "dev.ferp.dcw.core.util"
     compileSdk = 35
 
     defaultConfig {
@@ -33,7 +31,5 @@ android {
 }
 
 dependencies {
-    // Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.core.ktx)
 }
