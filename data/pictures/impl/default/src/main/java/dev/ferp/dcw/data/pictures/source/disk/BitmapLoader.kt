@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.data.pictures.data.source.disk
+package dev.ferp.dcw.data.pictures.source.disk
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
