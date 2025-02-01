@@ -32,4 +32,8 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+
+    // For rules like MainDispatcherRule
+    implementation(libs.junit)
+    implementation(libs.kotlinx.coroutines.test)
 }
