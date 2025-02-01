@@ -26,9 +26,9 @@ import android.provider.ContactsContract.Contacts
 import androidx.annotation.WorkerThread
 import com.blaxsoftware.directcallwidget.data.Contact
 import com.blaxsoftware.directcallwidget.data.Phone
-import getInt
-import getString
-import getUri
+import com.blaxsoftware.directcallwidget.getInt
+import com.blaxsoftware.directcallwidget.getString
+import com.blaxsoftware.directcallwidget.getUri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

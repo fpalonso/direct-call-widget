@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import android.database.Cursor
-import android.net.Uri
-import androidx.core.net.toUri
+package dev.ferp.dcw.data.pictures.di
 
-fun Cursor.getString(columnName: String): String? {
-    return getString(getColumnIndex(columnName))
-}
+import android.content.Context
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import java.io.File
+import javax.inject.Qualifier
+import javax.inject.Singleton
 
-fun Cursor.getUri(columnName: String): Uri? {
-    return getString(columnName)?.toUri()
-}
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class PicturesDir
 
-fun Cursor.getInt(columnName: String): Int? {
-    return getInt(getColumnIndex(columnName))
+@Module
+@InstallIn(SingletonComponent::class)
+object PicturesModule {
+
+    @PicturesDir
+    @Singleton
+    @Provides
+    fun providePicturesDir(
+        @ApplicationContext appContext: Context
+    ) = File(appContext.filesDir, "pics")
 }

@@ -25,8 +25,8 @@ import androidx.core.net.toUri
 import dev.ferp.dcw.core.di.IoDispatcher
 import dev.ferp.dcw.core.util.Files
 import dev.ferp.dcw.core.util.Files.copyFile
-import dev.ferp.dcw.data.pictures.data.source.disk.PictureLoader
 import dev.ferp.dcw.data.pictures.di.PicturesDir
+import dev.ferp.dcw.data.pictures.source.disk.PictureLoader
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -34,12 +34,12 @@ import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 
-class DefaultPictureRepository @Inject constructor(
+class DefaultWidgetPictureRepository @Inject constructor(
     private val contentResolver: ContentResolver,
     @PicturesDir private val picturesDir: File,
-    private val pictureLoader: PictureLoader,
+    private val pictureLoader: PictureLoader<Bitmap>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : PictureRepository<Uri, Uri, Bitmap> {
+) : WidgetPictureRepository<Uri, Uri, Bitmap, Int> {
 
     override suspend fun addPicture(source: Uri): Uri {
         return withContext(ioDispatcher) {
@@ -53,11 +53,15 @@ class DefaultPictureRepository @Inject constructor(
         }
     }
 
-    override suspend fun getPicture(locator: Uri): Bitmap? {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getPicture(
+        locator: Uri, widthPx: Int, heightPx: Int, placeholder: Int?
+    ): Bitmap = pictureLoader.loadPicture(locator, widthPx, heightPx, placeholder ?: 0)
 
     override suspend fun deletePicture(locator: Uri): Boolean {
-        TODO("Not yet implemented")
+        return withContext(ioDispatcher) {
+            locator.path?.let {
+                File(it).delete()
+            } ?: false
+        }
     }
 }

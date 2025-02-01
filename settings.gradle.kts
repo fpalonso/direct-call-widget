@@ -2,6 +2,7 @@
 
 include(":core:di")
 include(":core:util")
+include(":data:pictures:impl:default")
 /*
 * Direct Call Widget - The widget that makes contacts accessible
 * Copyright (C) 2020 Fer P. A.
