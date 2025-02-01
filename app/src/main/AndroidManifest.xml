@@ -31,6 +31,9 @@
         tools:ignore="PermissionImpliesUnsupportedChromeOsHardware" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- https://github.com/bumptech/glide/issues/4940 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <uses-feature
         android:name="android.hardware.CAMERA"
         android:required="false" />
