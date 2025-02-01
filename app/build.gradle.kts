@@ -110,7 +110,10 @@ composeCompiler {
 }
 
 dependencies {
+    implementation(project(":data:pictures:api"))
+    implementation(project(":data:pictures:impl:default"))
     implementation(project(":core:analytics"))
+    implementation(project(":core:di"))
     implementation(project(":core:util"))
 
     implementation(libs.androidx.legacy.support.v4)
@@ -169,6 +172,8 @@ dependencies {
     testImplementation(libs.androidx.truth)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.hilt.android.testing)
+    kaptTest(libs.hilt.android.compiler)
 
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)

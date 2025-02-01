@@ -18,9 +18,8 @@
 
 package com.blaxsoftware.directcallwidget.viewmodel
 
+import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
-import androidx.annotation.UiThread
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
@@ -32,17 +31,16 @@ import com.blaxsoftware.directcallwidget.data.Phone
 import com.blaxsoftware.directcallwidget.data.SingleContactWidget
 import com.blaxsoftware.directcallwidget.data.source.ContactRepository
 import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
-import com.blaxsoftware.directcallwidget.data.pictures.WidgetPictureRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.ferp.dcw.data.pictures.WidgetPictureRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-@UiThread
 class WidgetConfigViewModel @Inject constructor(
     private val contactRepo: ContactRepository,
     private val singleContactWidgetRepo: SingleContactWidgetRepository,
-    private val widgetPictureRepo: WidgetPictureRepository
+    private val widgetPictureRepo: WidgetPictureRepository<Uri, Uri, Bitmap, Int>
 ) : ViewModel(), Observable {
 
     private val callbacks: PropertyChangeRegistry = PropertyChangeRegistry()
@@ -101,7 +99,7 @@ class WidgetConfigViewModel @Inject constructor(
     private suspend fun copyPictureToInternalFolder() {
         _picUri.value?.let { picUri ->
             try {
-                _picUri.value = widgetPictureRepo.copyFromUri(picUri)
+                _picUri.value = widgetPictureRepo.addPicture(picUri)
             } catch (e: Throwable) {
                 e.printStackTrace()
             }

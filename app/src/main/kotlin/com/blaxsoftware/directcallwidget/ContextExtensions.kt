@@ -19,16 +19,18 @@
 package com.blaxsoftware.directcallwidget
 
 import android.content.Context
-import com.blaxsoftware.directcallwidget.data.pictures.WidgetPictureRepository
+import android.graphics.Bitmap
+import android.net.Uri
 import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
 import com.blaxsoftware.directcallwidget.di.LegacyWidgetProviderDependencies
 import dagger.hilt.EntryPoints
+import dev.ferp.dcw.data.pictures.WidgetPictureRepository
 import kotlinx.coroutines.CoroutineScope
 
 val Context.singleContactWidgetRepo: SingleContactWidgetRepository
     get() = legacyWidgetProviderDependencies.singleContactWidgetRepo()
 
-val Context.widgetPictureRepo: WidgetPictureRepository
+val Context.widgetPictureRepo: WidgetPictureRepository<Uri, Uri, Bitmap, Int>
     get() = legacyWidgetProviderDependencies.widgetPictureRepo()
 
 val Context.appScope: CoroutineScope

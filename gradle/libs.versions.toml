@@ -13,6 +13,8 @@ espressoCore = "3.6.1"
 fragmentKtx = "1.8.5"
 glanceAppwidget = "1.1.1"
 glide = "4.11.0"
+hiltAndroidCompiler = "2.51.1"
+hiltAndroidTesting = "2.51.1"
 hiltNavigationCompose = "1.2.0"
 junit = "1.2.1"
 junitJupiter = "5.8.2"
@@ -93,6 +95,8 @@ firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx"
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 google-firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroidTesting" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom"}
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
