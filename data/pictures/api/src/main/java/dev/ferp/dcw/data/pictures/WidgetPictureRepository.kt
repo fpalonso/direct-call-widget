@@ -26,8 +26,9 @@ import java.io.IOException
  * @param S type for the source picture locator, e.g. Uri
  * @param L type for the repository picture locator, e.g. String
  * @param V type for the picture binary, e.g. Bitmap
+ * @param R type for the placeholder resource
  */
-interface PictureRepository<S, L, V> {
+interface WidgetPictureRepository<S, L, V, R> {
 
     /**
      * Adds the given picture to the repository.
@@ -40,14 +41,24 @@ interface PictureRepository<S, L, V> {
     suspend fun addPicture(source: S): L
 
     /**
-     * Returns the picture from its locator.
+     * Returns the picture from its locator, or the placeholder if the main image cannot be loaded.
+     *
+     * The main image will be centered and cropped by the passed in dimensions.
      *
      * @param locator the locator for the picture to get
-     * @return the picture, or null if it was not found
-     * @throws IOException if the operation fails
+     * @param widthPx width of the image to load, in pixels
+     * @param heightPx height of the image to load, in pixels
+     * @param placeholder resource to load when the picture fails to be loaded
+     * @return the picture
+     * @throws IOException if neither the picture nor the placeholder could be loaded
      */
     @Throws(IOException::class)
-    suspend fun getPicture(locator: L): V?
+    suspend fun getPicture(
+        locator: L,
+        widthPx: Int,
+        heightPx: Int,
+        placeholder: R? = null
+    ): V
 
     /**
      * Deletes the given picture from the repository.
