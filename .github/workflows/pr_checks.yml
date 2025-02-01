@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: PR checks
 
 on:
@@ -25,7 +23,7 @@ jobs:
         run: ./gradlew lint
 
       - name: build
-        run: ./gradlew build
+        run: ./gradlew assemble
 
       - name: unit tests
         run: ./gradlew test
