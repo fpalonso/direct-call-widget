@@ -22,7 +22,7 @@ jobs:
       - name: lint
         run: ./gradlew lint
 
-      - name: build
+      - name: assemble
         run: ./gradlew assemble
 
       - name: unit tests
