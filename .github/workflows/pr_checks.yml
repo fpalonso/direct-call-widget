@@ -21,6 +21,9 @@ jobs:
           java-version: 17
           distribution: temurin
 
+      - name: build
+        run: ./gradlew build
+
       - name: test
         run: ./gradlew test
 
