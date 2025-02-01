@@ -23,8 +23,8 @@ import android.net.Uri
 import androidx.core.net.toUri
 import com.blaxsoftware.directcallwidget.di.IODispatcher
 import com.blaxsoftware.directcallwidget.di.PicturesDir
-import com.blaxsoftware.directcallwidget.file.Files
-import com.blaxsoftware.directcallwidget.file.Files.copyFile
+import dev.ferp.dcw.core.util.Files
+import dev.ferp.dcw.core.util.Files.copyFile
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.io.File
