@@ -43,7 +43,7 @@ import com.blaxsoftware.directcallwidget.R
 import dev.ferp.dcw.core.analytics.Analytics
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
 import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
-import com.blaxsoftware.directcallwidget.file.Files
+import dev.ferp.dcw.core.util.Files
 import com.blaxsoftware.directcallwidget.viewmodel.ConfigResult
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
