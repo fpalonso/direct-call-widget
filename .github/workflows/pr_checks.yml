@@ -21,6 +21,9 @@ jobs:
           java-version: 17
           distribution: temurin
 
+      - name: lint
+        run: ./gradlew lint
+
       - name: build
         run: ./gradlew build
 
