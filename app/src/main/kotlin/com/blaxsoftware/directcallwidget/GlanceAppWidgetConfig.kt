@@ -19,10 +19,10 @@
 package com.blaxsoftware.directcallwidget
 
 import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
@@ -50,10 +50,10 @@ fun <T : GlanceAppWidget, S> GlanceAppWidgetConfig(
     provideState: suspend () -> S,
     content: @Composable (Activity, GlanceId, UpdateWidget) -> Unit
 ) {
-    val activity = LocalContext.current as Activity
-    val glanceId = remember { activity.getGlanceId() }
-    if (glanceId == null) {
-        activity.finish()
+    val activity = LocalActivity.current
+    val glanceId = remember { activity?.getGlanceId() }
+    if (activity == null || glanceId == null) {
+        activity?.finish()
         return
     }
     val scope = rememberCoroutineScope()
