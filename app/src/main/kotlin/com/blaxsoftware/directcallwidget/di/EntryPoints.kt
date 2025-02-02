@@ -24,6 +24,7 @@ import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetReposito
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dev.ferp.dcw.core.di.ApplicationScope
 import dev.ferp.dcw.data.pictures.WidgetPictureRepository
 import kotlinx.coroutines.CoroutineScope
 
