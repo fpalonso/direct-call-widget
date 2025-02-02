@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.data.source
+package dev.ferp.dcw.data.contacts
 
-import android.net.Uri
-import com.blaxsoftware.directcallwidget.data.Contact
-
-interface ContactRepository {
-
-    suspend fun getContactByUri(contactUri: Uri): Contact?
+/**
+ * Repository of contacts that can be picked
+ *
+ * @param T type for the contact id, e.g. Uri
+ */
+interface ContactRepository<T> {
+    suspend fun getContactById(id: T): Contact?
 }

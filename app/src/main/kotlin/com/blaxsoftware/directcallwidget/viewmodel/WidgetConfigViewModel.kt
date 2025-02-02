@@ -27,9 +27,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blaxsoftware.directcallwidget.data.Phone
+import dev.ferp.dcw.data.contacts.Phone
 import com.blaxsoftware.directcallwidget.data.SingleContactWidget
-import com.blaxsoftware.directcallwidget.data.source.ContactRepository
 import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.ferp.dcw.data.pictures.WidgetPictureRepository
@@ -54,8 +53,8 @@ class WidgetConfigViewModel @Inject constructor(
     @Bindable
     val displayName = MutableLiveData<String?>()
 
-    private val _phoneList = MutableLiveData<List<Phone>?>()
-    val phoneList: LiveData<List<Phone>?>
+    private val _phoneList = MutableLiveData<List<dev.ferp.dcw.data.contacts.Phone>?>()
+    val phoneList: LiveData<List<dev.ferp.dcw.data.contacts.Phone>?>
         get() = _phoneList
 
     @Bindable

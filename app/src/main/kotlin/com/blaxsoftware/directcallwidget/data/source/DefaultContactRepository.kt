@@ -21,26 +21,26 @@ package com.blaxsoftware.directcallwidget.data.source
 import android.content.ContentResolver
 import android.net.Uri
 import android.provider.ContactsContract
-import android.provider.ContactsContract.CommonDataKinds
+import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.Contacts
 import androidx.annotation.WorkerThread
-import com.blaxsoftware.directcallwidget.data.Contact
-import com.blaxsoftware.directcallwidget.data.Phone
 import com.blaxsoftware.directcallwidget.getInt
 import com.blaxsoftware.directcallwidget.getString
-import com.blaxsoftware.directcallwidget.getUri
+import dev.ferp.dcw.data.contacts.Contact
+import dev.ferp.dcw.data.contacts.Contact.PhoneType
+import dev.ferp.dcw.data.contacts.ContactRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class DefaultContactRepository @Inject constructor(
     private val contentResolver: ContentResolver
-) : ContactRepository {
+) : ContactRepository<Uri> {
 
-    override suspend fun getContactByUri(contactUri: Uri): Contact? {
+    override suspend fun getContactById(id: Uri): Contact? {
         return withContext(Dispatchers.IO) {
             contentResolver.query(
-                    contactUri,
+                    id,
                     arrayOf(Contacts.DISPLAY_NAME, Contacts.PHOTO_URI, Contacts.LOOKUP_KEY),
                     null,
                     null,
@@ -49,9 +49,9 @@ class DefaultContactRepository @Inject constructor(
                 with(cursor) {
                     if (moveToFirst()) {
                         return@withContext Contact(
-                                getString(Contacts.DISPLAY_NAME) ?: "",
-                                getUri(Contacts.PHOTO_URI),
-                                getPhoneListByLookupKey(getString(Contacts.LOOKUP_KEY))
+                            getString(Contacts.DISPLAY_NAME) ?: "",
+                            getString(Contacts.PHOTO_URI),
+                            getPhoneListByLookupKey(getString(Contacts.LOOKUP_KEY))
                         )
                     }
                 }
@@ -61,21 +61,20 @@ class DefaultContactRepository @Inject constructor(
     }
 
     @WorkerThread
-    private fun getPhoneListByLookupKey(lookupKey: String?): List<Phone> {
-        val phoneList = mutableListOf<Phone>()
+    private fun getPhoneListByLookupKey(lookupKey: String?): List<Contact.Phone> {
+        val phoneList = mutableListOf<Contact.Phone>()
         contentResolver.query(
                 ContactsContract.Data.CONTENT_URI,
-                arrayOf(CommonDataKinds.Phone.NUMBER, CommonDataKinds.Phone.TYPE),
-                "${CommonDataKinds.Phone.LOOKUP_KEY} = ? AND ${CommonDataKinds.Phone.MIMETYPE} = ?",
-                arrayOf(lookupKey, CommonDataKinds.Phone.CONTENT_ITEM_TYPE),
+                arrayOf(Phone.NUMBER, Phone.TYPE),
+                "${Phone.LOOKUP_KEY} = ? AND ${Phone.MIMETYPE} = ?",
+                arrayOf(lookupKey, Phone.CONTENT_ITEM_TYPE),
                 null
         )?.use { cursor ->
             with(cursor) {
                 while (moveToNext()) {
-                    Phone(
-                            getString(CommonDataKinds.Phone.NUMBER) ?: "",
-                            getInt(CommonDataKinds.Phone.TYPE)
-                                    ?: CommonDataKinds.Phone.TYPE_HOME
+                    Contact.Phone(
+                        getString(Phone.NUMBER) ?: "",
+                        phoneTypeFromCommonDataKinds(getInt(Phone.TYPE))
                     ).also {
                         phoneList.add(it)
                     }
@@ -83,5 +82,14 @@ class DefaultContactRepository @Inject constructor(
             }
         }
         return phoneList
+    }
+
+    // TODO extract to a separate class
+    private fun phoneTypeFromCommonDataKinds(type: Int?): PhoneType {
+        return when (type) {
+            Phone.TYPE_HOME -> PhoneType.HOME
+            Phone.TYPE_MOBILE -> PhoneType.MOBILE
+            else -> PhoneType.UNKNOWN
+        }
     }
 }

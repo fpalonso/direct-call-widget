@@ -25,7 +25,7 @@ import android.provider.ContactsContract.CommonDataKinds.Phone.NUMBER
 import android.provider.ContactsContract.CommonDataKinds.Phone.TYPE
 import android.provider.ContactsContract.Contacts
 import androidx.core.net.toUri
-import com.blaxsoftware.directcallwidget.data.Contact
+import dev.ferp.dcw.data.contacts.Contact
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
@@ -82,10 +82,10 @@ class LocalUiDefaultContactRepositoryTest {
             mockResolver.query(ContactsContract.Data.CONTENT_URI, any(), any(), any(), any())
         } returns fakePhoneCursor
         val expectedResult = with(fakeContact) {
-            Contact(
-                    displayName,
-                    photoUri,
-                    emptyList()
+            dev.ferp.dcw.data.contacts.Contact(
+                displayName,
+                photoUri,
+                emptyList()
             )
         }
 
@@ -109,10 +109,10 @@ class LocalUiDefaultContactRepositoryTest {
             mockResolver.query(ContactsContract.Data.CONTENT_URI, any(), any(), any(), any())
         } returns null
         val expectedResult = with(fakeContact) {
-            Contact(
-                    displayName,
-                    photoUri,
-                    emptyList()
+            dev.ferp.dcw.data.contacts.Contact(
+                displayName,
+                photoUri,
+                emptyList()
             )
         }
 
@@ -136,10 +136,10 @@ class LocalUiDefaultContactRepositoryTest {
             mockResolver.query(ContactsContract.Data.CONTENT_URI, any(), any(), any(), any())
         } returns fakePhoneCursor
         val expectedResult = with(fakeContact) {
-            Contact(
-                    displayName,
-                    photoUri,
-                    emptyList()
+            dev.ferp.dcw.data.contacts.Contact(
+                displayName,
+                photoUri,
+                emptyList()
             )
         }
 

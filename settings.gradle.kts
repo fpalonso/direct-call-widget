@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":data:contacts:api")
+
+
 include(":core:di")
 include(":core:util")
 include(":data:pictures:impl:default")
