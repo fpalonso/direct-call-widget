@@ -21,10 +21,10 @@ package com.blaxsoftware.directcallwidget.glance
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.updateAll
-import com.blaxsoftware.directcallwidget.di.ApplicationScope
-import com.blaxsoftware.directcallwidget.di.MainDispatcher
 import com.blaxsoftware.directcallwidget.ui.MultiContactAppWidget
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.ferp.dcw.core.di.ApplicationScope
+import dev.ferp.dcw.core.di.MainDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

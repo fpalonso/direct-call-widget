@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2024 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,41 +20,38 @@ package com.blaxsoftware.directcallwidget.di
 
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.hilt.testing.TestInstallIn
+import dev.ferp.dcw.core.di.ApplicationScope
+import dev.ferp.dcw.core.di.CoroutinesModule
+import dev.ferp.dcw.core.di.IoDispatcher
+import dev.ferp.dcw.core.di.MainDispatcher
+import dev.ferp.dcw.core.util.test.TestDispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import javax.inject.Qualifier
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class MainDispatcher
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class DefaultDispatcher
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class IODispatcher
-
 @Module
-@InstallIn(SingletonComponent::class)
-object CoroutineDispatchersModule {
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [CoroutinesModule::class]
+)
+object TestCoroutinesModule {
 
     @MainDispatcher
-    @Singleton
     @Provides
-    fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+    fun provideMainDispatcher(): CoroutineDispatcher = TestDispatcherProvider.testDispatcher
 
-    @DefaultDispatcher
-    @Singleton
+    @IoDispatcher
     @Provides
-    fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+    fun provideIoDispatcher(): CoroutineDispatcher = TestDispatcherProvider.testDispatcher
 
-    @IODispatcher
+    @ApplicationScope
     @Singleton
     @Provides
-    fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
+    fun provideAppScope(
+        @MainDispatcher dispatcher: CoroutineDispatcher
+    ): CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
 }
+
