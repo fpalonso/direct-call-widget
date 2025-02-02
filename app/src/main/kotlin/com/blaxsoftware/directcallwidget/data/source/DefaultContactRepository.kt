@@ -26,8 +26,8 @@ import android.provider.ContactsContract.Contacts
 import androidx.annotation.WorkerThread
 import com.blaxsoftware.directcallwidget.getInt
 import com.blaxsoftware.directcallwidget.getString
+import com.blaxsoftware.directcallwidget.phoneTypeFromCommonDataKinds
 import dev.ferp.dcw.data.contacts.Contact
-import dev.ferp.dcw.data.contacts.Contact.PhoneType
 import dev.ferp.dcw.data.contacts.ContactRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -82,14 +82,5 @@ class DefaultContactRepository @Inject constructor(
             }
         }
         return phoneList
-    }
-
-    // TODO extract to a separate class
-    private fun phoneTypeFromCommonDataKinds(type: Int?): PhoneType {
-        return when (type) {
-            Phone.TYPE_HOME -> PhoneType.HOME
-            Phone.TYPE_MOBILE -> PhoneType.MOBILE
-            else -> PhoneType.UNKNOWN
-        }
     }
 }

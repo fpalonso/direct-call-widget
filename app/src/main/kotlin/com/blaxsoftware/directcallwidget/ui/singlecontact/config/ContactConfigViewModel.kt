@@ -22,9 +22,11 @@ import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.ferp.dcw.data.contacts.ContactRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,7 +38,7 @@ data class ContactConfigUiState(
 
 @HiltViewModel
 class ContactConfigViewModel @Inject constructor(
-    private val contactRepo: ContactRepository
+    private val contactRepo: ContactRepository<Uri>
 ) : ViewModel() {
 
     var uiState: ContactConfigUiState by mutableStateOf(ContactConfigUiState())
@@ -57,9 +59,9 @@ class ContactConfigViewModel @Inject constructor(
     fun onContactPicked(contactUri: Uri?) {
         if (contactUri == null) return
         viewModelScope.launch {
-            val contact = contactRepo.getContactByUri(contactUri) ?: return@launch
+            val contact = contactRepo.getContactById(contactUri) ?: return@launch
             uiState = uiState.copy(
-                pictureUri = contact.photoUri,
+                pictureUri = contact.photoUri?.toUri(),
                 displayName = contact.displayName,
                 phoneNumber = contact.phoneList.firstOrNull()?.number ?: ""
             )
