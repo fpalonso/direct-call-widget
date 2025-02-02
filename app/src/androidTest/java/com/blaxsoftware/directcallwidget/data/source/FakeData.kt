@@ -19,10 +19,9 @@
 package com.blaxsoftware.directcallwidget.data.source
 
 import android.provider.ContactsContract.CommonDataKinds
-import androidx.core.net.toUri
-import dev.ferp.dcw.data.contacts.Contact
-import dev.ferp.dcw.data.contacts.Phone
 import com.blaxsoftware.directcallwidget.data.SingleContactWidget
+import dev.ferp.dcw.data.contacts.Contact
+import dev.ferp.dcw.data.contacts.Contact.PhoneType
 
 val fakeWidgetData = SingleContactWidget(
         widgetId = 3,
@@ -32,12 +31,12 @@ val fakeWidgetData = SingleContactWidget(
         pictureUri = "content://alice.jpg"
 )
 
-val fakeContact = dev.ferp.dcw.data.contacts.Contact(
+val fakeContact = Contact(
     "Alice",
-    "content://alice.jpg".toUri(),
+    "content://alice.jpg",
     listOf(
-        dev.ferp.dcw.data.contacts.Phone("+34 123", CommonDataKinds.Phone.TYPE_HOME),
-        dev.ferp.dcw.data.contacts.Phone("+34 124", CommonDataKinds.Phone.TYPE_MOBILE),
-        dev.ferp.dcw.data.contacts.Phone("+34 125", CommonDataKinds.Phone.TYPE_OTHER)
+        Contact.Phone("+34 123", PhoneType.HOME),
+        Contact.Phone("+34 124", PhoneType.MOBILE),
+        Contact.Phone("+34 125", PhoneType.UNKNOWN)
     )
 )

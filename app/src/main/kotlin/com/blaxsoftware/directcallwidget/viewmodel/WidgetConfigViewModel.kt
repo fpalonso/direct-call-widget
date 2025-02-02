@@ -20,6 +20,7 @@ package com.blaxsoftware.directcallwidget.viewmodel
 
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
@@ -27,17 +28,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.ferp.dcw.data.contacts.Phone
 import com.blaxsoftware.directcallwidget.data.SingleContactWidget
 import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.ferp.dcw.data.contacts.Contact
+import dev.ferp.dcw.data.contacts.ContactRepository
 import dev.ferp.dcw.data.pictures.WidgetPictureRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class WidgetConfigViewModel @Inject constructor(
-    private val contactRepo: ContactRepository,
+    private val contactRepo: ContactRepository<Uri>,
     private val singleContactWidgetRepo: SingleContactWidgetRepository,
     private val widgetPictureRepo: WidgetPictureRepository<Uri, Uri, Bitmap, Int>
 ) : ViewModel(), Observable {
@@ -53,8 +55,8 @@ class WidgetConfigViewModel @Inject constructor(
     @Bindable
     val displayName = MutableLiveData<String?>()
 
-    private val _phoneList = MutableLiveData<List<dev.ferp.dcw.data.contacts.Phone>?>()
-    val phoneList: LiveData<List<dev.ferp.dcw.data.contacts.Phone>?>
+    private val _phoneList = MutableLiveData<List<Contact.Phone>?>()
+    val phoneList: LiveData<List<Contact.Phone>?>
         get() = _phoneList
 
     @Bindable
@@ -73,8 +75,8 @@ class WidgetConfigViewModel @Inject constructor(
 
     fun loadContact(contactUri: Uri) {
         viewModelScope.launch {
-            contactRepo.getContactByUri(contactUri)?.let { contact ->
-                _picUri.value = contact.photoUri
+            contactRepo.getContactById(contactUri)?.let { contact ->
+                _picUri.value = contact.photoUri?.toUri()
                 displayName.value = contact.displayName
                 _phoneList.value = contact.phoneList
                 if (contact.phoneList.isNotEmpty()) {

@@ -25,7 +25,6 @@ import android.provider.ContactsContract.CommonDataKinds.Phone.NUMBER
 import android.provider.ContactsContract.CommonDataKinds.Phone.TYPE
 import android.provider.ContactsContract.Contacts
 import androidx.core.net.toUri
-import dev.ferp.dcw.data.contacts.Contact
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
@@ -63,7 +62,7 @@ class LocalUiDefaultContactRepositoryTest {
         val expectedResult = fakeContact
 
         runBlocking {
-            val contactList = repository.getContactByUri("content://contacts/alice".toUri())
+            val contactList = repository.getContactById("content://contacts/alice".toUri())
 
             Truth.assertThat(contactList).isEqualTo(expectedResult)
         }
@@ -90,7 +89,7 @@ class LocalUiDefaultContactRepositoryTest {
         }
 
         runBlocking {
-            val contactList = repository.getContactByUri("content://contacts/alice".toUri())
+            val contactList = repository.getContactById("content://contacts/alice".toUri())
 
             Truth.assertThat(contactList).isEqualTo(expectedResult)
         }
@@ -117,7 +116,7 @@ class LocalUiDefaultContactRepositoryTest {
         }
 
         runBlocking {
-            val contactList = repository.getContactByUri("content://contacts/alice".toUri())
+            val contactList = repository.getContactById("content://contacts/alice".toUri())
 
             Truth.assertThat(contactList).isEqualTo(expectedResult)
         }
@@ -144,7 +143,7 @@ class LocalUiDefaultContactRepositoryTest {
         }
 
         runBlocking {
-            val contactList = repository.getContactByUri("content://contacts/alice".toUri())
+            val contactList = repository.getContactById("content://contacts/alice".toUri())
 
             Truth.assertThat(contactList).isEqualTo(expectedResult)
         }
@@ -158,7 +157,7 @@ class LocalUiDefaultContactRepositoryTest {
         val expectedResult = null
 
         runBlocking {
-            val contactList = repository.getContactByUri("content://contacts/alice".toUri())
+            val contactList = repository.getContactById("content://contacts/alice".toUri())
 
             Truth.assertThat(contactList).isEqualTo(expectedResult)
         }
@@ -172,7 +171,7 @@ class LocalUiDefaultContactRepositoryTest {
         val expectedResult = null
 
         runBlocking {
-            val contactList = repository.getContactByUri("content://contacts/alice".toUri())
+            val contactList = repository.getContactById("content://contacts/alice".toUri())
 
             Truth.assertThat(contactList).isEqualTo(expectedResult)
         }
