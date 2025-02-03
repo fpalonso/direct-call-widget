@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("UnstableApiUsage")
+package com.blaxsoftware.directcallwidget
 
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
+import android.provider.ContactsContract.CommonDataKinds.Phone
+import dev.ferp.dcw.data.contacts.Contact.PhoneType
+
+// TODO extract to :data:contacts:impl:device
+fun phoneTypeFromCommonDataKinds(type: Any?): PhoneType {
+    return when (type) {
+        Phone.TYPE_HOME -> PhoneType.HOME
+        Phone.TYPE_MOBILE -> PhoneType.MOBILE
+        else -> PhoneType.UNKNOWN
     }
 }
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-include(":app")
-include(":data:contacts:api")
-include(":data:pictures:api")
-include(":data:pictures:impl:default")
-include(":core:di")
-include(":core:util")
-include(":core:analytics")

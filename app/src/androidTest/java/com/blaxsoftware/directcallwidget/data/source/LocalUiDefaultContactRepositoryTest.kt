@@ -19,162 +19,117 @@
 package com.blaxsoftware.directcallwidget.data.source
 
 import android.content.ContentResolver
-import android.database.MatrixCursor
 import android.provider.ContactsContract
-import android.provider.ContactsContract.CommonDataKinds.Phone.NUMBER
-import android.provider.ContactsContract.CommonDataKinds.Phone.TYPE
-import android.provider.ContactsContract.Contacts
 import androidx.core.net.toUri
-import com.blaxsoftware.directcallwidget.data.Contact
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
+// TODO replace with a Robolectric test
 class LocalUiDefaultContactRepositoryTest {
 
     private val mockResolver = mockk<ContentResolver>()
-
-    private val fakeContactCursor: MatrixCursor
-        get() = MatrixCursor(arrayOf(Contacts.DISPLAY_NAME, Contacts.PHOTO_URI, Contacts.LOOKUP_KEY))
-
-    private val fakePhoneCursor: MatrixCursor
-        get() = MatrixCursor(arrayOf(NUMBER, TYPE))
-
     private val repository = DefaultContactRepository(mockResolver)
 
     @Test
-    fun getContactByUri_dataFound_returnsIt() {
+    fun getContactByUri_dataFound_returnsIt() = runTest {
+        // Given
         every {
             mockResolver.query(any(), any(), any(), any(), any())
-        } returns fakeContactCursor.apply {
-            with(fakeContact) {
-                addRow(arrayOf(displayName, photoUri, "lookupKey"))
-            }
-        }
+        } returns TestContact.contactCursor()
         every {
             mockResolver.query(ContactsContract.Data.CONTENT_URI, any(), any(), any(), any())
-        } returns fakePhoneCursor.apply {
-            fakeContact.phoneList.forEach {
-                addRow(arrayOf(it.number, it.type))
-            }
-        }
-        val expectedResult = fakeContact
+        } returns TestContact.phonesCursor()
 
-        runBlocking {
-            val contactList = repository.getContactByUri("content://contacts/alice".toUri())
+        // When
+        val contact = repository.getContactById("content://contacts/alice".toUri())
 
-            Truth.assertThat(contactList).isEqualTo(expectedResult)
-        }
+        // Then
+        val expectedContact = TestContact.contact()
+        Truth.assertThat(contact).isEqualTo(expectedContact)
     }
 
     @Test
-    fun getContactByUri_noPhones_returnsContactWithEmptyPhoneList() {
+    fun getContactByUri_noPhones_returnsContactWithEmptyPhoneList() = runTest {
+        // Given
         every {
             mockResolver.query(any(), any(), any(), any(), any())
-        } returns fakeContactCursor.apply {
-            with(fakeContact) {
-                addRow(arrayOf(displayName, photoUri, "lookupKey"))
-            }
-        }
+        } returns TestContact.contactCursor()
         every {
             mockResolver.query(ContactsContract.Data.CONTENT_URI, any(), any(), any(), any())
-        } returns fakePhoneCursor
-        val expectedResult = with(fakeContact) {
-            Contact(
-                    displayName,
-                    photoUri,
-                    emptyList()
-            )
-        }
+        } returns TestContact.emptyPhonesCursor()
 
-        runBlocking {
-            val contactList = repository.getContactByUri("content://contacts/alice".toUri())
+        // When
+        val contact = repository.getContactById("content://contacts/alice".toUri())
 
-            Truth.assertThat(contactList).isEqualTo(expectedResult)
-        }
+        // Then
+        val expectedContact = TestContact.contactWithEmptyPhoneList()
+        Truth.assertThat(contact).isEqualTo(expectedContact)
     }
 
     @Test
-    fun getContactByUri_errorFetchingPhones_returnsContactWithEmptyPhoneList() {
+    fun getContactByUri_errorFetchingPhones_returnsContactWithEmptyPhoneList() = runTest {
+        // Given
         every {
             mockResolver.query(any(), any(), any(), any(), any())
-        } returns fakeContactCursor.apply {
-            with(fakeContact) {
-                addRow(arrayOf(displayName, photoUri, "lookupKey"))
-            }
-        }
+        } returns TestContact.contactCursor()
         every {
             mockResolver.query(ContactsContract.Data.CONTENT_URI, any(), any(), any(), any())
         } returns null
-        val expectedResult = with(fakeContact) {
-            Contact(
-                    displayName,
-                    photoUri,
-                    emptyList()
-            )
-        }
 
-        runBlocking {
-            val contactList = repository.getContactByUri("content://contacts/alice".toUri())
+        // When
+        val contact = repository.getContactById("content://contacts/alice".toUri())
 
-            Truth.assertThat(contactList).isEqualTo(expectedResult)
-        }
+        // Then
+        val expectedContact = TestContact.contactWithEmptyPhoneList()
+        Truth.assertThat(contact).isEqualTo(expectedContact)
     }
 
     @Test
-    fun getContactByUri_displayNameIsNull_returnsContactWithEmptyName() {
+    fun getContactByUri_displayNameIsNull_returnsContactWithEmptyName() = runTest {
+        // Given
         every {
             mockResolver.query(any(), any(), any(), any(), any())
-        } returns fakeContactCursor.apply {
-            with(fakeContact) {
-                addRow(arrayOf(displayName, photoUri, "lookupKey"))
-            }
-        }
+        } returns TestContact.contactWithEmptyNameCursor()
         every {
             mockResolver.query(ContactsContract.Data.CONTENT_URI, any(), any(), any(), any())
-        } returns fakePhoneCursor
-        val expectedResult = with(fakeContact) {
-            Contact(
-                    displayName,
-                    photoUri,
-                    emptyList()
-            )
-        }
+        } returns TestContact.phonesCursor()
 
-        runBlocking {
-            val contactList = repository.getContactByUri("content://contacts/alice".toUri())
+        // When
+        val contact = repository.getContactById("content://contacts/alice".toUri())
 
-            Truth.assertThat(contactList).isEqualTo(expectedResult)
-        }
+        // Then
+        val expectedContact = TestContact.contactWithEmptyName()
+        Truth.assertThat(contact).isEqualTo(expectedContact)
     }
 
     @Test
-    fun getContactByUri_notFound_returnsNull() {
+    fun getContactByUri_notFound_returnsNull() = runTest {
+        // Given
         every {
             mockResolver.query(any(), any(), any(), any(), any())
-        } returns fakeContactCursor
-        val expectedResult = null
+        } returns TestContact.emptyContactCursor()
 
-        runBlocking {
-            val contactList = repository.getContactByUri("content://contacts/alice".toUri())
+        // When
+        val contact = repository.getContactById("content://contacts/alice".toUri())
 
-            Truth.assertThat(contactList).isEqualTo(expectedResult)
-        }
+        // Then
+        Truth.assertThat(contact).isNull()
     }
 
     @Test
-    fun getContactByUri_errorFetchingContact_returnsNull() {
+    fun getContactByUri_errorFetchingContact_returnsNull() = runTest {
+        // Given
         every {
             mockResolver.query(any(), any(), any(), any(), any())
         } returns null
-        val expectedResult = null
 
-        runBlocking {
-            val contactList = repository.getContactByUri("content://contacts/alice".toUri())
+        // When
+        val contact = repository.getContactById("content://contacts/alice".toUri())
 
-            Truth.assertThat(contactList).isEqualTo(expectedResult)
-        }
+        // Then
+        Truth.assertThat(contact).isNull()
     }
 }
