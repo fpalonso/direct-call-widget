@@ -23,16 +23,5 @@ data class Contact(
     /** Displayed contact name */
     val displayName: String,
     /** Uri for the contact picture */
-    val photoUri: String?,
-    /** List of phones owned by this contact */
-    val phoneList: List<Phone>
-) {
-    enum class PhoneType {
-        HOME, MOBILE, UNKNOWN
-    }
-
-    data class Phone(
-        val number: String,
-        val type: PhoneType
-    )
-}
+    val photoUri: String?
+)
