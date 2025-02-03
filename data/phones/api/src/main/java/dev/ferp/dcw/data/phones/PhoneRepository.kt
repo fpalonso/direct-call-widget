@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,28 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("UnstableApiUsage")
+package dev.ferp.dcw.data.phones
 
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+/** Repository for contact phones. They can be queried by a contact's lookUp key. */
+interface PhoneRepository {
 
-include(":app")
-include(":data:contacts:api")
-include(":data:phones:api")
-include(":data:pictures:api")
-include(":data:pictures:impl:default")
-include(":core:di")
-include(":core:util")
-include(":core:analytics")
+    /**
+     * Returns the list of phones from the given lookUpKey. This list can be empty.
+     *
+     * @param lookUpKey lookUp key retrieved from a contact record.
+     * @return list of phones
+     */
+    suspend fun getPhoneListByLookUpKey(lookUpKey: String): List<Phone>
+}
