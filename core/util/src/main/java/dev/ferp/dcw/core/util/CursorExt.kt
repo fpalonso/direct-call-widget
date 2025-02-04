@@ -16,14 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.data.contacts
+package dev.ferp.dcw.core.util
 
-/** Contact information from the device */
-data class Contact(
-    /** Displayed contact name */
-    val displayName: String,
-    /** Uri for the contact picture */
-    val photoUri: String?,
-    /** LookUp key for finding contact phones */
-    val lookUpKey: String?
-)
+import android.database.Cursor
+
+fun Cursor.getStringOrNull(columnName: String): String? {
+    val colIndex = getColumnIndex(columnName)
+    if (colIndex !in 0 until columnCount) return null
+    return getString(colIndex)
+}

@@ -16,16 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget
+package dev.ferp.dcw.data.phones
 
-import android.provider.ContactsContract.CommonDataKinds.Phone
-import dev.ferp.dcw.data.contacts.Contact.PhoneType
+/** Repository for contact phones. They can be queried by a contact's lookUp key. */
+interface PhoneRepository {
 
-// TODO extract to :data:contacts:impl:device
-fun phoneTypeFromCommonDataKinds(type: Any?): PhoneType {
-    return when (type) {
-        Phone.TYPE_HOME -> PhoneType.HOME
-        Phone.TYPE_MOBILE -> PhoneType.MOBILE
-        else -> PhoneType.UNKNOWN
-    }
+    /**
+     * Returns the list of phones from the given lookUpKey. This list can be empty.
+     *
+     * @param lookUpKey lookUp key retrieved from a contact record.
+     * @return list of phones
+     */
+    suspend fun getPhoneListByLookUpKey(lookUpKey: String): List<Phone>
 }

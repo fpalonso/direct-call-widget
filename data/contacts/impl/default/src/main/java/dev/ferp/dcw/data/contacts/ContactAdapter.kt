@@ -16,26 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget
+package dev.ferp.dcw.data.contacts
 
 import android.database.Cursor
-import android.net.Uri
-import androidx.core.net.toUri
+import android.provider.ContactsContract.Contacts
+import dev.ferp.dcw.core.util.getStringOrNull
 
-fun Cursor.getString(columnName: String): String? {
-    val colIndex = getColumnIndex(columnName)
-    return if (colIndex in 0 until columnCount) {
-        getString(colIndex)
-    } else null
-}
-
-fun Cursor.getUri(columnName: String): Uri? {
-    return getString(columnName)?.toUri()
-}
-
-fun Cursor.getInt(columnName: String): Int? {
-    val colIndex = getColumnIndex(columnName)
-    return if (colIndex in 0 until columnCount) {
-        getInt(colIndex)
-    } else null
+internal fun Cursor.toContact(): Contact? {
+    if (!moveToFirst()) return null
+    return Contact(
+        displayName = getStringOrNull(Contacts.DISPLAY_NAME) ?: "",
+        photoUri = getStringOrNull(Contacts.PHOTO_URI),
+        lookUpKey = getStringOrNull(Contacts.LOOKUP_KEY)
+    )
 }

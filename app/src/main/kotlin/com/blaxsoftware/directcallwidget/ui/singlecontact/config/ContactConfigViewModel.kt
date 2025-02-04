@@ -63,7 +63,8 @@ class ContactConfigViewModel @Inject constructor(
             uiState = uiState.copy(
                 pictureUri = contact.photoUri?.toUri(),
                 displayName = contact.displayName,
-                phoneNumber = contact.phoneList.firstOrNull()?.number ?: ""
+                // FIXME
+                phoneNumber = ""
             )
         }
     }

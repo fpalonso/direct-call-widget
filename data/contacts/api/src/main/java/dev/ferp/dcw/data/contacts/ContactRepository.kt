@@ -24,5 +24,7 @@ package dev.ferp.dcw.data.contacts
  * @param T type for the contact id, e.g. Uri
  */
 interface ContactRepository<T> {
+
+    /** Returns a contact by its id, e.g. its URI */
     suspend fun getContactById(id: T): Contact?
 }

@@ -16,14 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.data.contacts
+package dev.ferp.dcw.data.phones
 
-/** Contact information from the device */
-data class Contact(
-    /** Displayed contact name */
-    val displayName: String,
-    /** Uri for the contact picture */
-    val photoUri: String?,
-    /** LookUp key for finding contact phones */
-    val lookUpKey: String?
+enum class PhoneType {
+    HOME, MOBILE, UNKNOWN
+}
+
+data class Phone(
+    val number: String,
+    val type: PhoneType
 )
