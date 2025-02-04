@@ -23,5 +23,7 @@ data class Contact(
     /** Displayed contact name */
     val displayName: String,
     /** Uri for the contact picture */
-    val photoUri: String?
+    val photoUri: String?,
+    /** LookUp key for finding contact phones */
+    val lookUpKey: String?
 )

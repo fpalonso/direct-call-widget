@@ -35,6 +35,7 @@ dependencyResolutionManagement {
 
 include(":app")
 include(":data:contacts:api")
+include(":data:contacts:impl:default")
 include(":data:phones:api")
 include(":data:pictures:api")
 include(":data:pictures:impl:default")

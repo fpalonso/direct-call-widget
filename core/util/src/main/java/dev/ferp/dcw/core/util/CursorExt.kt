@@ -16,16 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget
+package dev.ferp.dcw.core.util
 
-import android.provider.ContactsContract.CommonDataKinds.Phone
-import dev.ferp.dcw.data.contacts.Contact.PhoneType
+import android.database.Cursor
 
-// TODO extract to :data:contacts:impl:device
-fun phoneTypeFromCommonDataKinds(type: Any?): PhoneType {
-    return when (type) {
-        Phone.TYPE_HOME -> PhoneType.HOME
-        Phone.TYPE_MOBILE -> PhoneType.MOBILE
-        else -> PhoneType.UNKNOWN
-    }
+fun Cursor.getStringOrNull(columnName: String): String? {
+    val colIndex = getColumnIndex(columnName)
+    if (colIndex !in 0 until columnCount) return null
+    return getString(colIndex)
 }

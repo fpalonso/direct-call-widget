@@ -20,13 +20,8 @@ package com.blaxsoftware.directcallwidget.data.source
 
 import android.content.ContentResolver
 import android.net.Uri
-import android.provider.ContactsContract
-import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.Contacts
-import androidx.annotation.WorkerThread
-import com.blaxsoftware.directcallwidget.getInt
-import com.blaxsoftware.directcallwidget.getString
-import com.blaxsoftware.directcallwidget.phoneTypeFromCommonDataKinds
+import dev.ferp.dcw.core.util.getStringOrNull
 import dev.ferp.dcw.data.contacts.Contact
 import dev.ferp.dcw.data.contacts.ContactRepository
 import kotlinx.coroutines.Dispatchers
@@ -49,38 +44,14 @@ class DefaultContactRepository @Inject constructor(
                 with(cursor) {
                     if (moveToFirst()) {
                         return@withContext Contact(
-                            getString(Contacts.DISPLAY_NAME) ?: "",
-                            getString(Contacts.PHOTO_URI),
-                            getPhoneListByLookupKey(getString(Contacts.LOOKUP_KEY))
+                            getStringOrNull(Contacts.DISPLAY_NAME) ?: "",
+                            getStringOrNull(Contacts.PHOTO_URI),
+                            getStringOrNull(Contacts.LOOKUP_KEY)
                         )
                     }
                 }
             }
             return@withContext null
         }
-    }
-
-    @WorkerThread
-    private fun getPhoneListByLookupKey(lookupKey: String?): List<Contact.Phone> {
-        val phoneList = mutableListOf<Contact.Phone>()
-        contentResolver.query(
-                ContactsContract.Data.CONTENT_URI,
-                arrayOf(Phone.NUMBER, Phone.TYPE),
-                "${Phone.LOOKUP_KEY} = ? AND ${Phone.MIMETYPE} = ?",
-                arrayOf(lookupKey, Phone.CONTENT_ITEM_TYPE),
-                null
-        )?.use { cursor ->
-            with(cursor) {
-                while (moveToNext()) {
-                    Contact.Phone(
-                        getString(Phone.NUMBER) ?: "",
-                        phoneTypeFromCommonDataKinds(getInt(Phone.TYPE))
-                    ).also {
-                        phoneList.add(it)
-                    }
-                }
-            }
-        }
-        return phoneList
     }
 }

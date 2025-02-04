@@ -19,7 +19,6 @@
 package com.blaxsoftware.directcallwidget.data.source
 
 import android.content.ContentResolver
-import android.provider.ContactsContract
 import androidx.core.net.toUri
 import com.google.common.truth.Truth
 import io.mockk.every
@@ -39,9 +38,6 @@ class LocalUiDefaultContactRepositoryTest {
         every {
             mockResolver.query(any(), any(), any(), any(), any())
         } returns TestContact.contactCursor()
-        every {
-            mockResolver.query(ContactsContract.Data.CONTENT_URI, any(), any(), any(), any())
-        } returns TestContact.phonesCursor()
 
         // When
         val contact = repository.getContactById("content://contacts/alice".toUri())
@@ -52,50 +48,11 @@ class LocalUiDefaultContactRepositoryTest {
     }
 
     @Test
-    fun getContactByUri_noPhones_returnsContactWithEmptyPhoneList() = runTest {
-        // Given
-        every {
-            mockResolver.query(any(), any(), any(), any(), any())
-        } returns TestContact.contactCursor()
-        every {
-            mockResolver.query(ContactsContract.Data.CONTENT_URI, any(), any(), any(), any())
-        } returns TestContact.emptyPhonesCursor()
-
-        // When
-        val contact = repository.getContactById("content://contacts/alice".toUri())
-
-        // Then
-        val expectedContact = TestContact.contactWithEmptyPhoneList()
-        Truth.assertThat(contact).isEqualTo(expectedContact)
-    }
-
-    @Test
-    fun getContactByUri_errorFetchingPhones_returnsContactWithEmptyPhoneList() = runTest {
-        // Given
-        every {
-            mockResolver.query(any(), any(), any(), any(), any())
-        } returns TestContact.contactCursor()
-        every {
-            mockResolver.query(ContactsContract.Data.CONTENT_URI, any(), any(), any(), any())
-        } returns null
-
-        // When
-        val contact = repository.getContactById("content://contacts/alice".toUri())
-
-        // Then
-        val expectedContact = TestContact.contactWithEmptyPhoneList()
-        Truth.assertThat(contact).isEqualTo(expectedContact)
-    }
-
-    @Test
     fun getContactByUri_displayNameIsNull_returnsContactWithEmptyName() = runTest {
         // Given
         every {
             mockResolver.query(any(), any(), any(), any(), any())
         } returns TestContact.contactWithEmptyNameCursor()
-        every {
-            mockResolver.query(ContactsContract.Data.CONTENT_URI, any(), any(), any(), any())
-        } returns TestContact.phonesCursor()
 
         // When
         val contact = repository.getContactById("content://contacts/alice".toUri())

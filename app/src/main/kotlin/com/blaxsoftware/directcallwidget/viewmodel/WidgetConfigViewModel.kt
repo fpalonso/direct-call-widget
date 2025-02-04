@@ -31,8 +31,8 @@ import androidx.lifecycle.viewModelScope
 import com.blaxsoftware.directcallwidget.data.SingleContactWidget
 import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.ferp.dcw.data.contacts.Contact
 import dev.ferp.dcw.data.contacts.ContactRepository
+import dev.ferp.dcw.data.phones.Phone
 import dev.ferp.dcw.data.pictures.WidgetPictureRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -55,8 +55,8 @@ class WidgetConfigViewModel @Inject constructor(
     @Bindable
     val displayName = MutableLiveData<String?>()
 
-    private val _phoneList = MutableLiveData<List<Contact.Phone>?>()
-    val phoneList: LiveData<List<Contact.Phone>?>
+    private val _phoneList = MutableLiveData<List<Phone>?>()
+    val phoneList: LiveData<List<Phone>?>
         get() = _phoneList
 
     @Bindable
@@ -78,10 +78,13 @@ class WidgetConfigViewModel @Inject constructor(
             contactRepo.getContactById(contactUri)?.let { contact ->
                 _picUri.value = contact.photoUri?.toUri()
                 displayName.value = contact.displayName
-                _phoneList.value = contact.phoneList
+                _phoneList.value = emptyList() // FIXME
+                // TODO select the first phone by default
+                /*
                 if (contact.phoneList.isNotEmpty()) {
                     phoneNumber.value = contact.phoneList[0].number
                 }
+                 */
             }
         }
     }

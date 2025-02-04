@@ -16,6 +16,7 @@
       <module name="direct-call-widget.core.analytics" target="21" />
       <module name="direct-call-widget.core.di" target="21" />
       <module name="direct-call-widget.core.util" target="21" />
+      <module name="direct-call-widget.data.contacts.impl.default" target="21" />
       <module name="direct-call-widget.data.pictures.impl.default" target="21" />
     </bytecodeTargetLevel>
   </component>

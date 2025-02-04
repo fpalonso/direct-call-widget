@@ -111,6 +111,7 @@ composeCompiler {
 
 dependencies {
     implementation(project(":data:contacts:api"))
+    implementation(project(":data:phones:api"))
     implementation(project(":data:pictures:api"))
     implementation(project(":data:pictures:impl:default"))
     implementation(project(":core:analytics"))

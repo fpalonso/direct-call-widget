@@ -22,7 +22,6 @@ import android.database.MatrixCursor
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.Contacts
 import com.blaxsoftware.directcallwidget.data.SingleContactWidget
-import com.blaxsoftware.directcallwidget.phoneTypeFromCommonDataKinds
 import dev.ferp.dcw.data.contacts.Contact
 
 val fakeWidgetData = SingleContactWidget(
@@ -38,18 +37,6 @@ object TestContact {
     private const val CONTACT_NAME = "Alice"
     private const val CONTACT_PHOTO_URI = "content://alice.jpg"
     private const val CONTACT_LOOKUP_KEY = "lookupKey"
-    private val COMMON_DATA_KINDS_PHONES = listOf(
-        "+34 123" to Phone.TYPE_HOME,
-        "+34 124" to Phone.TYPE_MOBILE,
-        "+34 125" to Phone.TYPE_OTHER
-    )
-    private val CONTACT_PHONES = COMMON_DATA_KINDS_PHONES
-        .map { phone ->
-            Contact.Phone(
-                number = phone.first,
-                type = phoneTypeFromCommonDataKinds(phone.second)
-            )
-        }
 
     fun contactCursor(): MatrixCursor {
         val cursor = emptyContactCursor()
@@ -69,14 +56,6 @@ object TestContact {
         return cursor
     }
 
-    fun phonesCursor(): MatrixCursor {
-        val cursor = emptyPhonesCursor()
-        COMMON_DATA_KINDS_PHONES.forEach { phone ->
-            cursor.addRow(arrayOf(phone.first, phone.second))
-        }
-        return cursor
-    }
-
     fun emptyPhonesCursor(): MatrixCursor {
         val columns = arrayOf(Phone.NUMBER, Phone.TYPE)
         val cursor = MatrixCursor(columns)
@@ -86,18 +65,12 @@ object TestContact {
     fun contact(): Contact = Contact(
         displayName = CONTACT_NAME,
         photoUri = CONTACT_PHOTO_URI,
-        phoneList = CONTACT_PHONES
+        lookUpKey = CONTACT_LOOKUP_KEY
     )
 
     fun contactWithEmptyName(): Contact = Contact(
         displayName = "",
         photoUri = CONTACT_PHOTO_URI,
-        phoneList = CONTACT_PHONES
-    )
-
-    fun contactWithEmptyPhoneList(): Contact = Contact(
-        displayName = CONTACT_NAME,
-        photoUri = CONTACT_PHOTO_URI,
-        phoneList = emptyList()
+        lookUpKey = CONTACT_LOOKUP_KEY
     )
 }
