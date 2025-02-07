@@ -21,7 +21,7 @@ package com.blaxsoftware.directcallwidget.data.source
 import android.content.ContentResolver
 import android.net.Uri
 import android.provider.ContactsContract.Contacts
-import dev.ferp.dcw.core.util.getStringOrNull
+import dev.ferp.dcw.core.androidutil.getStringOrNull
 import dev.ferp.dcw.data.contacts.Contact
 import dev.ferp.dcw.data.contacts.ContactRepository
 import kotlinx.coroutines.Dispatchers

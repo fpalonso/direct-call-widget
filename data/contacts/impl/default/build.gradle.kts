@@ -37,6 +37,7 @@ dependencies {
     implementation(project(":data:contacts:api"))
     implementation(project(":core:di"))
     implementation(project(":core:util"))
+    implementation(project(":core:androidutil"))
 
     implementation(libs.androidx.core.ktx)
 
