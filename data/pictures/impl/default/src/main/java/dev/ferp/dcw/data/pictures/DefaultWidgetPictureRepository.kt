@@ -23,8 +23,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.core.net.toUri
 import dev.ferp.dcw.core.di.IoDispatcher
-import dev.ferp.dcw.core.util.Files
-import dev.ferp.dcw.core.util.Files.copyFile
 import dev.ferp.dcw.data.pictures.di.PicturesDir
 import dev.ferp.dcw.data.pictures.source.disk.PictureLoader
 import kotlinx.coroutines.CoroutineDispatcher
@@ -41,21 +39,40 @@ class DefaultWidgetPictureRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : WidgetPictureRepository<Uri, Uri, Bitmap, Int> {
 
-    override suspend fun addPicture(source: Uri): Uri {
-        return withContext(ioDispatcher) {
-            val targetFile = Files.createFile(
-                dir = picturesDir,
-                name = UUID.randomUUID().toString()
-            )
-            checkNotNull(targetFile)
-            contentResolver.copyFile(source, targetFile)
-            targetFile.toUri()
+    override suspend fun addPicture(source: Uri): Result<Uri> = withContext(ioDispatcher) {
+        try {
+            val destinationFile = createDestinationFile()
+            destinationFile.outputStream().use { outputStream ->
+                contentResolver.openInputStream(source)?.use { inputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+            Result.success(destinationFile.toUri())
+        } catch (e: Throwable) {
+            Result.failure(e)
         }
+    }
+
+    /** Creates an internal file to copy the source file to */
+    private fun createDestinationFile(): File {
+        picturesDir.mkdirs()
+        lateinit var targetFile: File
+        do {
+            targetFile = File(picturesDir, UUID.randomUUID().toString())
+        } while (targetFile.exists())
+        targetFile.createNewFile()
+        return targetFile
     }
 
     override suspend fun getPicture(
         locator: Uri, widthPx: Int, heightPx: Int, placeholder: Int?
-    ): Bitmap = pictureLoader.loadPicture(locator, widthPx, heightPx, placeholder ?: 0)
+    ): Result<Bitmap> = try {
+        Result.success(
+            pictureLoader.loadPicture(locator, widthPx, heightPx, placeholder ?: 0)
+        )
+    } catch (e: Throwable) {
+        Result.failure(e)
+    }
 
     override suspend fun deletePicture(locator: Uri): Boolean {
         return withContext(ioDispatcher) {

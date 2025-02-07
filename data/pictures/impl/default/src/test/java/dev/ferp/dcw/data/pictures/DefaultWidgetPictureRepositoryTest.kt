@@ -57,13 +57,14 @@ class DefaultWidgetPictureRepositoryTest {
         val sourceImage = imageRule.createSampleImageFile()
 
         // When
-        val internalFileUri = repo.addPicture(sourceImage.fileUri)
+        val addPictureResult = repo.addPicture(sourceImage.fileUri)
 
         // Then
-        val resultFile = internalFileUri.toFile()
-        assertThat(resultFile.exists()).isTrue()
-        assertThat(resultFile.parentFile).isEqualTo(picturesDir)
-        val resultBitmap = BitmapFactory.decodeFile(internalFileUri.path)
+        assertThat(addPictureResult.isSuccess).isTrue()
+        val resultFile = addPictureResult.getOrNull()?.toFile()
+        assertThat(resultFile?.exists()).isTrue()
+        assertThat(resultFile?.parentFile).isEqualTo(picturesDir)
+        val resultBitmap = BitmapFactory.decodeFile(addPictureResult.getOrNull()?.path)
         assertThat(resultBitmap.width).isEqualTo(sourceImage.width)
         assertThat(resultBitmap.height).isEqualTo(sourceImage.height)
         assertThat(resultBitmap.config).isEqualTo(sourceImage.config)
@@ -78,22 +79,24 @@ class DefaultWidgetPictureRepositoryTest {
         } returns expectedBitmap
 
         // When
-        val internalBitmap = repo.getPicture(locator = mockk(), 200, 200)
+        val getPictureResult = repo.getPicture(locator = mockk(), 200, 200)
 
         // Then
-        assertThat(internalBitmap).isEqualTo(expectedBitmap)
+        assertThat(getPictureResult.isSuccess).isTrue()
+        assertThat(getPictureResult.getOrNull()).isEqualTo(expectedBitmap)
     }
 
     @Test
     fun `deletePicture deletes the file from disk`() = runTest {
         // Given
         val sourceImage = imageRule.createSampleImageFile()
-        val internalFileUri = repo.addPicture(sourceImage.fileUri)
+        val addPictureResult = repo.addPicture(sourceImage.fileUri)
+        assertThat(addPictureResult.isSuccess).isTrue()
 
         // When
-        repo.deletePicture(internalFileUri)
+        repo.deletePicture(addPictureResult.getOrNull()!!)
 
         // Then
-        assertThat(internalFileUri.toFile().exists()).isFalse()
+        assertThat(addPictureResult.getOrNull()?.toFile()?.exists()).isFalse()
     }
 }

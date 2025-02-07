@@ -20,7 +20,7 @@ package dev.ferp.dcw.data.contacts
 
 import android.database.Cursor
 import android.provider.ContactsContract.Contacts
-import dev.ferp.dcw.core.util.getStringOrNull
+import dev.ferp.dcw.core.androidutil.getStringOrNull
 
 internal fun Cursor.toContact(): Contact? {
     if (!moveToFirst()) return null

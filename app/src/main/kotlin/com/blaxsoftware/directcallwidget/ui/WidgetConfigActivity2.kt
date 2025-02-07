@@ -26,38 +26,30 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickContact
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
-import androidx.activity.result.contract.ActivityResultContracts.TakePicture
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
-import androidx.lifecycle.lifecycleScope
 import com.blaxsoftware.directcallwidget.R
-import dev.ferp.dcw.core.analytics.Analytics
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
 import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
-import dev.ferp.dcw.core.util.Files
 import com.blaxsoftware.directcallwidget.viewmodel.ConfigResult
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import java.io.IOException
+import dev.ferp.dcw.core.analytics.Analytics
 import javax.inject.Inject
 
 // TODO deprecate this class
 @AndroidEntryPoint
 class WidgetConfigActivity2 : AppCompatActivity(),
-        ReadContactsPermissionExplanationDialog.Callback,
-        ChangePictureOptionsDialog.ChangePictureListener {
+        ReadContactsPermissionExplanationDialog.Callback {
 
     private val viewModel: WidgetConfigViewModel by viewModels()
 
@@ -87,15 +79,6 @@ class WidgetConfigActivity2 : AppCompatActivity(),
             firebaseAnalytics.logEvent(Analytics.Event.PICK_IMAGE_CANCEL, null)
         }
         viewModel.onPictureSelected(uri)
-    }
-
-    private val takePicture = registerForActivityResult(TakePicture()) { result: Boolean ->
-        if (result) {
-            firebaseAnalytics.logEvent(Analytics.Event.TAKE_PICTURE, null)
-            viewModel.onPictureSelected(cameraOutputUri)
-        } else {
-            firebaseAnalytics.logEvent(Analytics.Event.TAKE_PICTURE_CANCEL, null)
-        }
     }
 
     private var cameraOutputUri: Uri? = null
@@ -158,32 +141,7 @@ class WidgetConfigActivity2 : AppCompatActivity(),
         }
     }
 
-    override fun onTakePictureClick() {
-        lifecycleScope.launch {
-            try {
-                val outputFile = Files.createCameraOutputFile(this@WidgetConfigActivity2)
-                outputFile?.let {
-                    cameraOutputUri = FileProvider.getUriForFile(
-                            this@WidgetConfigActivity2,
-                            "$packageName.fileprovider",
-                            outputFile
-                    )
-                    cameraOutputUri?.let {
-                        takePicture.launch(it)
-                    }
-                }
-            } catch (e: IOException) {
-                Toast.makeText(
-                        this@WidgetConfigActivity2,
-                        R.string.error_using_camera,
-                        Toast.LENGTH_SHORT
-                ).show()
-                e.printStackTrace()
-            }
-        }
-    }
-
-    override fun onPickImageFromGalleryClick() {
+    fun onPickImageFromGalleryClick() {
         firebaseAnalytics.logEvent(Analytics.Event.PICK_IMAGE_CLICK, null)
         pickImage.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }

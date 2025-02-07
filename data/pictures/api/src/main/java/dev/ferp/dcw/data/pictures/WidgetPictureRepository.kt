@@ -37,8 +37,7 @@ interface WidgetPictureRepository<S, L, V, R> {
      * @return the repository picture locator
      * @throws IOException if the operation fails
      */
-    @Throws(IOException::class)
-    suspend fun addPicture(source: S): L
+    suspend fun addPicture(source: S): Result<L>
 
     /**
      * Returns the picture from its locator, or the placeholder if the main image cannot be loaded.
@@ -52,13 +51,12 @@ interface WidgetPictureRepository<S, L, V, R> {
      * @return the picture
      * @throws IOException if neither the picture nor the placeholder could be loaded
      */
-    @Throws(IOException::class)
     suspend fun getPicture(
         locator: L,
         widthPx: Int,
         heightPx: Int,
         placeholder: R? = null
-    ): V
+    ): Result<V>
 
     /**
      * Deletes the given picture from the repository.
@@ -67,6 +65,5 @@ interface WidgetPictureRepository<S, L, V, R> {
      * @return true if the file could be deleted, false if it didn't exist
      * @throws IOException if the operation fails
      */
-    @Throws(IOException::class)
     suspend fun deletePicture(locator: L): Boolean
 }

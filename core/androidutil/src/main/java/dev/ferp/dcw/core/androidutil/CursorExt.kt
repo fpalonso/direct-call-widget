@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.core.util
+package dev.ferp.dcw.core.androidutil
 
 import android.database.Cursor
 
