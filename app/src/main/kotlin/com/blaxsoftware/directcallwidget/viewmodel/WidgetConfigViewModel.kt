@@ -103,7 +103,7 @@ class WidgetConfigViewModel @Inject constructor(
     private suspend fun copyPictureToInternalFolder() {
         _picUri.value?.let { picUri ->
             try {
-                _picUri.value = widgetPictureRepo.addPicture(picUri)
+                _picUri.value = widgetPictureRepo.addPicture(picUri).getOrNull()
             } catch (e: Throwable) {
                 e.printStackTrace()
             }
