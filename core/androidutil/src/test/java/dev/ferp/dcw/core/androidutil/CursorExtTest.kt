@@ -14,8 +14,8 @@ class CursorExtTest {
 
     @Before
     fun setUp() {
-        cursor = MatrixCursor(arrayOf("col1", "col2"))
-        cursor.addRow(arrayOf("val1", "val2"))
+        cursor = MatrixCursor(arrayOf("col1", "col2", "col3"))
+        cursor.addRow(arrayOf("val1", "val2", 3))
         cursor.moveToFirst()
     }
 
@@ -26,6 +26,16 @@ class CursorExtTest {
 
     @Test
     fun `getStringOrNull returns null if column does not exist`() {
-        assertThat(cursor.getStringOrNull("col3")).isNull()
+        assertThat(cursor.getStringOrNull("col4")).isNull()
+    }
+
+    @Test
+    fun `getIntOrNull returns Int if column exists`() {
+        assertThat(cursor.getIntOrNull("col3")).isEqualTo(3)
+    }
+
+    @Test
+    fun `getIntOrNull returns null if column does not exist`() {
+        assertThat(cursor.getIntOrNull("col4")).isNull()
     }
 }

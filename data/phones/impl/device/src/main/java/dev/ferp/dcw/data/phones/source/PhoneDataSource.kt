@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("UnstableApiUsage")
+package dev.ferp.dcw.data.phones.source
 
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+import dev.ferp.dcw.data.phones.Phone
 
-include(":app")
-include(":data:contacts:api")
-include(":data:contacts:impl:default")
-include(":data:phones:api")
-include(":data:phones:impl:device")
-include(":data:pictures:api")
-include(":data:pictures:impl:default")
-include(":core:di")
-include(":core:util")
-include(":core:androidutil")
-include(":core:analytics")
+interface PhoneDataSource {
+    suspend fun getPhoneList(lookUpKey: String): List<Phone>
+}
