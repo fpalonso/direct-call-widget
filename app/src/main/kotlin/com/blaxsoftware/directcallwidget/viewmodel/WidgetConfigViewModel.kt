@@ -33,6 +33,7 @@ import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetReposito
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.ferp.dcw.data.contacts.ContactRepository
 import dev.ferp.dcw.data.phones.Phone
+import dev.ferp.dcw.data.phones.PhoneRepository
 import dev.ferp.dcw.data.pictures.WidgetPictureRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,6 +41,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WidgetConfigViewModel @Inject constructor(
     private val contactRepo: ContactRepository<Uri>,
+    private val phoneRepo: PhoneRepository,
     private val singleContactWidgetRepo: SingleContactWidgetRepository,
     private val widgetPictureRepo: WidgetPictureRepository<Uri, Uri, Bitmap, Int>
 ) : ViewModel(), Observable {
@@ -78,13 +80,12 @@ class WidgetConfigViewModel @Inject constructor(
             contactRepo.getContactById(contactUri)?.let { contact ->
                 _picUri.value = contact.photoUri?.toUri()
                 displayName.value = contact.displayName
-                _phoneList.value = emptyList() // FIXME
-                // TODO select the first phone by default
-                /*
-                if (contact.phoneList.isNotEmpty()) {
-                    phoneNumber.value = contact.phoneList[0].number
+                contact.lookUpKey?.let { lookUpKey ->
+                    _phoneList.value = phoneRepo.getPhoneListByLookUpKey(lookUpKey)
                 }
-                 */
+                if (!_phoneList.value.isNullOrEmpty()) {
+                    phoneNumber.value = _phoneList.value!![0].number
+                }
             }
         }
     }
