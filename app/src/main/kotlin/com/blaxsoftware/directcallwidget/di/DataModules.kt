@@ -34,6 +34,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.ferp.dcw.data.contacts.ContactRepository
+import dev.ferp.dcw.data.phones.DevicePhoneRepository
+import dev.ferp.dcw.data.phones.PhoneRepository
 import dev.ferp.dcw.data.pictures.DefaultWidgetPictureRepository
 import dev.ferp.dcw.data.pictures.WidgetPictureRepository
 import java.io.File
@@ -82,6 +84,12 @@ abstract class RepositoriesModule {
     abstract fun bindContactRepository(
         contactRepository: DefaultContactRepository
     ): ContactRepository<Uri>
+
+    @Singleton
+    @Binds
+    abstract fun bindPhoneRepository(
+        phoneRepository: DevicePhoneRepository
+    ): PhoneRepository
 
     @Singleton
     @Binds
