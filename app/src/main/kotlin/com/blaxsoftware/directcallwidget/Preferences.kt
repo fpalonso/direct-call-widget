@@ -19,13 +19,13 @@
 package com.blaxsoftware.directcallwidget
 
 import android.content.SharedPreferences
-import com.blaxsoftware.directcallwidget.di.LegacyWidgetInfo
+import com.blaxsoftware.directcallwidget.di.UserPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class Preferences @Inject constructor(
-    @LegacyWidgetInfo private val sharedPrefs: SharedPreferences
+    @UserPreferences private val sharedPrefs: SharedPreferences
 ) {
     fun getWidgetClickAction(): WidgetClickAction {
         val action = sharedPrefs.getString(PREF_ON_TAP_KEY, PREF_ON_TAP_CALL_VALUE)

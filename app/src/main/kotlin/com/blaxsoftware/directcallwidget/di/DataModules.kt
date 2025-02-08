@@ -50,6 +50,10 @@ annotation class PicturesDir
 @Retention(AnnotationRetention.BINARY)
 annotation class LegacyWidgetInfo
 
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class UserPreferences
+
 @Module
 @InstallIn(SingletonComponent::class)
 object FilesModule {
@@ -71,6 +75,16 @@ object FilesModule {
     @Singleton
     @Provides
     fun provideLegacyWidgetInfoPreferences(
+        @ApplicationContext appContext: Context
+    ): SharedPreferences = appContext.getSharedPreferences(
+        "widget_data",
+        Context.MODE_PRIVATE
+    )
+
+    @UserPreferences
+    @Singleton
+    @Provides
+    fun provideUserPreferences(
         @ApplicationContext appContext: Context
     ): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
 }
