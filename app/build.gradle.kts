@@ -36,8 +36,8 @@ android {
         applicationId = "com.blaxsoftware.directcallwidget"
         minSdk = 21
         targetSdk = 34
-        versionCode = 33
-        versionName = "1.5.0-dev1"
+        versionCode = 34
+        versionName = "1.5.0-beta1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
