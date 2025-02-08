@@ -87,5 +87,6 @@ lint/tmp/
 
 keystore.properties
 
-# .attach files
+# Other files
 .attach_pid*
+kotlin-compiler-*
