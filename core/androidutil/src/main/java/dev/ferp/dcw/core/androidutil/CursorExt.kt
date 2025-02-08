@@ -25,3 +25,9 @@ fun Cursor.getStringOrNull(columnName: String): String? {
     if (colIndex !in 0 until columnCount) return null
     return getString(colIndex)
 }
+
+fun Cursor.getIntOrNull(columnName: String): Int? {
+    val colIndex = getColumnIndex(columnName)
+    if (colIndex !in 0 until columnCount) return null
+    return getInt(colIndex)
+}
