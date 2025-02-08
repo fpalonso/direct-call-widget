@@ -16,21 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.data.phones
+package dev.ferp.dcw.core.di.qualifiers
 
-import dev.ferp.dcw.core.di.qualifiers.DeviceDataSource
-import dev.ferp.dcw.data.phones.source.PhoneDataSource
-import javax.inject.Inject
+import javax.inject.Qualifier
 
-class DevicePhoneRepository @Inject constructor(
-    @DeviceDataSource private val dataSource: PhoneDataSource
-) : PhoneRepository {
-
-    override suspend fun getPhoneListByLookUpKey(lookUpKey: String): List<Phone> {
-        return try {
-            dataSource.getPhoneList(lookUpKey)
-        } catch (e: Throwable) {
-            emptyList()
-        }
-    }
-}
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class DeviceDataSource

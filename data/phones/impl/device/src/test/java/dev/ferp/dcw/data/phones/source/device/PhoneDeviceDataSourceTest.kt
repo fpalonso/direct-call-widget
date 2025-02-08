@@ -16,7 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class DevicePhoneDataSourceTest {
+class PhoneDeviceDataSourceTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
@@ -29,7 +29,7 @@ class DevicePhoneDataSourceTest {
     @Before
     fun setUp() {
         contentResolver = mockk()
-        dataSource = DevicePhoneDataSource(
+        dataSource = PhoneDeviceDataSource(
             contentResolver = contentResolver,
             ioDispatcher = testDispatcher
         )
