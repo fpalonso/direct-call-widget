@@ -31,6 +31,7 @@ import android.util.Size
 import android.view.View
 import android.widget.RemoteViews
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
 import com.blaxsoftware.directcallwidget.Intents
 import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.WidgetClickReceiver
@@ -54,6 +55,7 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.crashlytics.setCustomKeys
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.EntryPointAccessors
+import dev.ferp.dcw.core.analytics.Analytics
 import dev.ferp.dcw.core.analytics.di.FirebaseEntryPoint
 import kotlinx.coroutines.launch
 
@@ -72,12 +74,22 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager,
                                            appWidgetId: Int, newOptions: Bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        val firebaseEntryPoint = EntryPointAccessors.fromApplication<FirebaseEntryPoint>(context)
+        val size = getAppWidgetSize(appWidgetManager, appWidgetId)
+        if (size.width > 0 && size.height > 0) {
+            firebaseEntryPoint.analytics().logEvent(
+                Analytics.Event.WIDGET_RESIZE,
+                bundleOf(
+                    "width_dp" to size.width,
+                    "height_dp" to size.height
+                )
+            )
+        }
         updateWidget(context, appWidgetManager, appWidgetId)
     }
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, id: Int) {
-        val dataEntryPoint = EntryPointAccessors
-            .fromApplication(context, DataEntryPoint::class.java)
+        val dataEntryPoint = EntryPointAccessors.fromApplication<DataEntryPoint>(context)
         val singleContactWidgetRepo = dataEntryPoint.singleContactWidgetRepository()
         singleContactWidgetRepo.getWidgetById(id)?.let { widgetData ->
             setWidgetData(context, singleContactWidgetRepo, appWidgetManager, id, widgetData)
