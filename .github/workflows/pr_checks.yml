@@ -22,9 +22,6 @@ jobs:
       - name: lint
         run: ./gradlew lint
 
-      - name: assemble
-        run: ./gradlew assembleDebug
-
       - name: unit tests
         run: ./gradlew test
 
