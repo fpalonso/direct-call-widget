@@ -2,12 +2,12 @@ name: PR checks
 
 on:
   push:
-    branches: [ '*' ]
+    branches: [ develop, master ]
   pull_request:
     branches: [ develop ]
 
 jobs:
-  unit-tests:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -22,7 +22,7 @@ jobs:
       - name: lint
         run: ./gradlew lint
 
-      - name: assemble
+      - name: assembleDebug
         run: ./gradlew assembleDebug
 
       - name: unit tests
@@ -33,18 +33,6 @@ jobs:
         with:
           name: test-reports
           path: '**/build/reports/tests'
-
-  instrumented-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-
-      - name: setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: temurin
 
       - name: enable KVM
         run: |
