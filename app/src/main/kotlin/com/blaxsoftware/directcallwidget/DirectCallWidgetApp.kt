@@ -22,6 +22,8 @@ import androidx.multidex.MultiDexApplication
 import com.blaxsoftware.directcallwidget.glance.MultiContactWidgets
 import com.blaxsoftware.directcallwidget.legacy.LegacyWidgets
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
+import timber.log.Timber.DebugTree
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -34,5 +36,8 @@ class DirectCallWidgetApp : MultiDexApplication() {
         super.onCreate()
         legacyWidgets.updateAll()
         multiContactWidgets.updateAll()
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree())
+        }
     }
 }

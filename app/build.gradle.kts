@@ -47,6 +47,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.txt")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
@@ -168,6 +169,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
     kapt(libs.androidx.room.compiler)
+
+    implementation(libs.jakewharton.timber)
 
     testImplementation(libs.mockk.android)
     testImplementation(libs.androidx.junit)
