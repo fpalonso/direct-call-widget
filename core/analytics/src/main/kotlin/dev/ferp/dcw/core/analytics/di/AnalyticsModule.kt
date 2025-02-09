@@ -19,7 +19,6 @@
 package dev.ferp.dcw.core.analytics.di
 
 import android.content.Context
-import android.util.Log
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -29,13 +28,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.ferp.dcw.core.analytics.R
+import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AnalyticsModule {
-
-    private const val TAG = "AnalyticsModule"
 
     @Singleton
     @Provides
@@ -43,8 +41,7 @@ object AnalyticsModule {
         @ApplicationContext context: Context
     ): FirebaseAnalytics = Firebase.analytics.apply {
         val collectAnalytics = context.resources.getBoolean(R.bool.collect_analytics)
-        // TODO use Timber: https://github.com/JakeWharton/timber/tree/trunk
-        Log.d(TAG, "firebaseAnalytics: collecting analytics: $collectAnalytics")
+        Timber.i("firebaseAnalytics: collecting analytics: $collectAnalytics")
         setAnalyticsCollectionEnabled(collectAnalytics)
     }
 }
