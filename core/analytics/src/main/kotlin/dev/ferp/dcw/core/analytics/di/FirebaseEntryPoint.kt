@@ -18,40 +18,15 @@
 
 package dev.ferp.dcw.core.analytics.di
 
-import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
-import dagger.Module
-import dagger.Provides
+import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dev.ferp.dcw.core.analytics.R
-import timber.log.Timber
-import javax.inject.Singleton
 
-@Module
+@EntryPoint
 @InstallIn(SingletonComponent::class)
-object AnalyticsModule {
-
-    @Singleton
-    @Provides
-    fun provideFirebaseAnalytics(
-        @ApplicationContext context: Context
-    ): FirebaseAnalytics = Firebase.analytics.apply {
-        val collectAnalytics = context.resources.getBoolean(R.bool.collect_analytics)
-        Timber.i("firebaseAnalytics: collecting analytics: $collectAnalytics")
-        setAnalyticsCollectionEnabled(collectAnalytics)
-    }
-
-    @Singleton
-    @Provides
-    fun provideFirebaseCrashlytics(
-        @ApplicationContext context: Context
-    ): FirebaseCrashlytics = Firebase.crashlytics.apply {
-        isCrashlyticsCollectionEnabled = true
-    }
+interface FirebaseEntryPoint {
+    fun analytics(): FirebaseAnalytics
+    fun crashlytics(): FirebaseCrashlytics
 }
