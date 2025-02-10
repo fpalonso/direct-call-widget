@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("UnstableApiUsage")
+package dev.ferp.dcw.data.contacts
 
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-include(":app")
-include(":data:contacts:api")
-include(":data:contacts:impl:default")
-include(":data:phones:api")
-include(":data:phones:impl:device")
-include(":data:pictures:api")
-include(":data:pictures:impl:default")
-include(":data:onecontactwidget:api")
-include(":core:di")
-include(":core:util")
-include(":core:androidutil")
-include(":core:analytics")
+data class OneContactWidget(
+    val displayName: String?,
+    val phoneNumber: String,
+    /**
+     * On Android, this field is the value as it comes from the contacts repository.
+     * For example: CommonDataKinds.Phone.TYPE_HOME
+     */
+    val phoneType: Int?,
+    val pictureUri: String?
+)
