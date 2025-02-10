@@ -48,6 +48,9 @@ object Analytics {
         const val TAKE_PICTURE_CANCEL = "take_picture_cancel"
         const val CANCEL_SETUP = "cancel_setup"
         const val SAVE_WIDGET = "save_widget"
+
+        // Widget
+        const val WIDGET_RESIZE = "resize_widget"
         const val WIDGET_CLICK = "widget_click"
     }
 

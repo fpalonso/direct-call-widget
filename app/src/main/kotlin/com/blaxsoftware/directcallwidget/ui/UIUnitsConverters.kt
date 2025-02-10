@@ -27,12 +27,12 @@ import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 
 fun Context.xdpToPx(xdp: Int): Int {
-    val scale: Float = resources.displayMetrics.xdpi / 160;
+    val scale: Float = resources.displayMetrics.xdpi / 160
     return (xdp * scale).toInt()
 }
 
 fun Context.ydpToPx(ydp: Int): Int {
-    val scale: Float = resources.displayMetrics.ydpi / 160;
+    val scale: Float = resources.displayMetrics.ydpi / 160
     return (ydp * scale).toInt()
 }
 
