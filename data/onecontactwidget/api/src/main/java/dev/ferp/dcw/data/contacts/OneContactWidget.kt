@@ -19,6 +19,7 @@
 package dev.ferp.dcw.data.contacts
 
 data class OneContactWidget(
+    val appWidgetId: Int,
     val displayName: String?,
     val phoneNumber: String,
     /**

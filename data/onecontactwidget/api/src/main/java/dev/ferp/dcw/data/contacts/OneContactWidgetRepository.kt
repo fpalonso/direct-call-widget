@@ -23,6 +23,7 @@ interface OneContactWidgetRepository {
 
     /** Adds the given widget information to the repository. */
     suspend fun createWidget(
+        appWidgetId: Int,
         displayName: String,
         phoneNumber: String,
         phoneType: Int,
@@ -30,11 +31,11 @@ interface OneContactWidgetRepository {
     )
 
     /** Returns the information of the given widget id. */
-    suspend fun getWidget(widgetId: Int): OneContactWidget?
+    suspend fun getWidget(appWidgetId: Int): OneContactWidget?
 
     /**
      * Deletes the information of the given widget id.
      * @return whether the widget existed and could be deleted
      */
-    suspend fun deleteWidget(widgetId: Int): Boolean
+    suspend fun deleteWidget(appWidgetId: Int): Boolean
 }
