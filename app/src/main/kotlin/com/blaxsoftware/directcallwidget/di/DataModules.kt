@@ -24,7 +24,6 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.preference.PreferenceManager
-import com.blaxsoftware.directcallwidget.data.source.DefaultContactRepository
 import com.blaxsoftware.directcallwidget.data.source.DefaultSingleContactWidgetRepository
 import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
 import dagger.Binds
@@ -34,6 +33,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.ferp.dcw.data.contacts.ContactRepository
+import dev.ferp.dcw.data.contacts.DefaultContactRepository
 import dev.ferp.dcw.data.phones.DevicePhoneRepository
 import dev.ferp.dcw.data.phones.PhoneRepository
 import dev.ferp.dcw.data.pictures.DefaultWidgetPictureRepository
