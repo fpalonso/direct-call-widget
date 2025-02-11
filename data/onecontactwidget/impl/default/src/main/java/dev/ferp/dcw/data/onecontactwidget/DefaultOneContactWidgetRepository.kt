@@ -52,4 +52,8 @@ class DefaultOneContactWidgetRepository @Inject constructor(
     override suspend fun deleteWidget(appWidgetId: Int): Boolean {
         return sharedPrefsDataSource.deleteWidget(appWidgetId)
     }
+
+    override suspend fun deleteWidgets(appWidgetIds: IntArray) {
+        appWidgetIds.forEach { deleteWidget(it) }
+    }
 }

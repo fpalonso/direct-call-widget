@@ -67,4 +67,32 @@ class DefaultOneContactWidgetRepositoryTest {
         assertThat(existed).isTrue()
         assertThat(repository.getWidget(1)).isNull()
     }
+
+    @Test
+    fun `deleteWidgets deletes a number of widgets`() = runTest {
+        // Given
+        repository.createWidget(
+            appWidgetId = 1,
+            displayName = "John Doe",
+            phoneNumber = "1234567890",
+            phoneType = 1,
+            pictureUri = "content://contacts/1"
+        )
+        repository.createWidget(
+            appWidgetId = 2,
+            displayName = "Jane Doe",
+            phoneNumber = "0987654321",
+            phoneType = 2,
+            pictureUri = "content://contacts/2"
+        )
+        assertThat(repository.getWidget(1)).isNotNull()
+        assertThat(repository.getWidget(2)).isNotNull()
+
+        // When
+        repository.deleteWidgets(intArrayOf(1, 2))
+
+        // Then
+        assertThat(repository.getWidget(1)).isNull()
+        assertThat(repository.getWidget(2)).isNull()
+    }
 }
