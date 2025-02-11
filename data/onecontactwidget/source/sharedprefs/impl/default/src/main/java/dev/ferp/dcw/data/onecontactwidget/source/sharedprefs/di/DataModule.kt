@@ -34,12 +34,12 @@ annotation class OneContactWidgetData
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object DataModule {
+object OneContactSharedPrefModule {
 
     @OneContactWidgetData
     @Singleton
     @Provides
-    internal fun provideWidgetDataSharedPrefs(
+    fun provideWidgetDataSharedPrefs(
         @ApplicationContext context: Context
     ): SharedPreferences = context.getSharedPreferences(
         "widget_data",
