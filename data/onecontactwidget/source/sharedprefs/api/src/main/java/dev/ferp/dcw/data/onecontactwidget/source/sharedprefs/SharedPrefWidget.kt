@@ -19,12 +19,13 @@
 package dev.ferp.dcw.data.onecontactwidget.source.sharedprefs
 
 data class SharedPrefWidget(
+    val appWidgetId: Int,
     val displayName: String?,
     val phoneNumber: String,
     /**
      * On Android, this field is the value as it comes from the contacts repository.
      * For example: CommonDataKinds.Phone.TYPE_HOME
      */
-    val phoneType: Int,
-    val pictureUri: String
+    val phoneType: Int?,
+    val pictureUri: String?
 )
