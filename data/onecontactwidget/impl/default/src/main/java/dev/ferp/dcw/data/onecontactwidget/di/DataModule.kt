@@ -29,16 +29,16 @@ import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class SharedPrefDS
+internal annotation class SharedPrefDS
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class OneContactWidgetDataModule {
+internal abstract class DataModule {
 
     @SharedPrefDS
     @Singleton
     @Binds
-    abstract fun bindSharedPrefDataSource(
+    internal abstract fun bindSharedPrefDataSource(
         sharedPrefDataSource: OneContactWidgetPrefDS
     ): SharedPrefDataSource
 }

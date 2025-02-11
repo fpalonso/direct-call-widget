@@ -30,16 +30,16 @@ import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class OneContactWidgetData
+internal annotation class OneContactWidgetData
 
 @Module
 @InstallIn(SingletonComponent::class)
-object OneContactSharedPrefModule {
+internal object DataModule {
 
     @OneContactWidgetData
     @Singleton
     @Provides
-    fun provideWidgetDataSharedPrefs(
+    internal fun provideWidgetDataSharedPrefs(
         @ApplicationContext context: Context
     ): SharedPreferences = context.getSharedPreferences(
         "widget_data",
