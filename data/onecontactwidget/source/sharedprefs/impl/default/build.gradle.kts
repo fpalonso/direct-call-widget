@@ -2,10 +2,11 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
+    alias(libs.plugins.hilt.android)
 }
 
 android {
-    namespace = "dev.ferp.dcw.data.contacts"
+    namespace = "dev.ferp.dcw.data.onecontactwidget.source.sharedprefs"
     compileSdk = 35
 
     defaultConfig {
@@ -34,10 +35,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":data:contacts:api"))
-    implementation(project(":core:di"))
-    implementation(project(":core:util"))
-    implementation(project(":core:androidutil"))
+    implementation(project(":data:onecontactwidget:source:sharedprefs:api"))
 
     implementation(libs.androidx.core.ktx)
 
@@ -45,10 +43,10 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
-    testImplementation(libs.junit)
-    testImplementation(libs.androidx.junit)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.mockk.android)
-    testImplementation(libs.androidx.truth)
+    testImplementation(libs.androidx.junit.ktx)
     testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.truth)
+
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
