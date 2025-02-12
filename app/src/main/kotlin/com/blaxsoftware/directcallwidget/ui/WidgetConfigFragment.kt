@@ -37,6 +37,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class WidgetConfigFragment : Fragment() {
 
+    interface Listener {
+        fun onAccept()
+        fun onCancel()
+    }
+
     private val viewModel: WidgetConfigViewModel by activityViewModels()
 
     @Inject lateinit var firebaseAnalytics: FirebaseAnalytics
@@ -55,7 +60,7 @@ class WidgetConfigFragment : Fragment() {
 
             topAppBar.setNavigationOnClickListener {
                 firebaseAnalytics.logEvent(Analytics.Event.CANCEL_SETUP, null)
-                this@WidgetConfigFragment.viewModel.onCancel()
+                (activity as? Listener)?.onCancel()
             }
 
             topAppBar.setOnMenuItemClickListener { item ->
@@ -63,6 +68,7 @@ class WidgetConfigFragment : Fragment() {
                     R.id.ok -> {
                         firebaseAnalytics.logEvent(Analytics.Event.SAVE_WIDGET, null)
                         this@WidgetConfigFragment.viewModel.onAccept()
+                        (activity as? Listener)?.onAccept()
                         return@setOnMenuItemClickListener true
                     }
                 }

@@ -24,7 +24,6 @@ import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickContact
@@ -36,12 +35,8 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import com.blaxsoftware.directcallwidget.R
-import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
-import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
-import com.blaxsoftware.directcallwidget.viewmodel.ConfigResult
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
 import dev.ferp.dcw.core.analytics.Analytics
 import javax.inject.Inject
@@ -49,12 +44,10 @@ import javax.inject.Inject
 // TODO deprecate this class
 @AndroidEntryPoint
 class WidgetConfigActivity2 : AppCompatActivity(),
-        ReadContactsPermissionExplanationDialog.Callback {
+    ReadContactsPermissionExplanationDialog.Callback,
+    WidgetConfigFragment.Listener {
 
     private val viewModel: WidgetConfigViewModel by viewModels()
-
-    // TODO inject this in viewModel
-    @Inject lateinit var singleContactWidgetRepo: SingleContactWidgetRepository
 
     private val requestContactPermission = registerForActivityResult(RequestPermission()) { isGranted: Boolean ->
         if (isGranted) {
@@ -75,13 +68,12 @@ class WidgetConfigActivity2 : AppCompatActivity(),
     private val pickImage = registerForActivityResult(PickVisualMedia()) { uri: Uri? ->
         if (uri != null) {
             firebaseAnalytics.logEvent(Analytics.Event.PICK_IMAGE, null)
+            viewModel.onPictureSelected(uri)
         } else {
             firebaseAnalytics.logEvent(Analytics.Event.PICK_IMAGE_CANCEL, null)
         }
-        viewModel.onPictureSelected(uri)
     }
 
-    private var cameraOutputUri: Uri? = null
     @Inject lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,29 +86,14 @@ class WidgetConfigActivity2 : AppCompatActivity(),
         setContentView(R.layout.activity_widget_config2)
 
         viewModel.widgetId = intent.getIntExtra(
-                AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID
+            AppWidgetManager.EXTRA_APPWIDGET_ID,
+            AppWidgetManager.INVALID_APPWIDGET_ID
         )
 
         setResult(Activity.RESULT_CANCELED)
         if (savedInstanceState != null) return
 
         pickContact()
-    }
-
-    @Suppress("DEPRECATION")
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        cameraOutputUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            savedInstanceState.getParcelable(STATE_CAMERA_OUTPUT_URI, Uri::class.java)
-        } else {
-            savedInstanceState.getParcelable(STATE_CAMERA_OUTPUT_URI)
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(STATE_CAMERA_OUTPUT_URI, cameraOutputUri)
-        super.onSaveInstanceState(outState)
     }
 
     private fun pickContact() {
@@ -146,40 +123,18 @@ class WidgetConfigActivity2 : AppCompatActivity(),
         pickImage.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        viewModel.result.observe(this) { result ->
-            if (result.accepted) {
-                updateWidget(result)
-                viewModel.widgetId?.let { widgetId ->
-                    Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId).also { data ->
-                        setResult(Activity.RESULT_OK, data)
-                    }
-                }
-            }
-            finish()
-        }
-    }
-
-    private fun updateWidget(result: ConfigResult) {
-        result.widgetData?.let { widgetData ->
-            FirebaseCrashlytics.getInstance().log("Widget data accepted from WidgetConfigActivity2")
-            DirectCallWidgetProvider.setWidgetData(
-                    applicationContext,
-                    singleContactWidgetRepo,
-                    AppWidgetManager.getInstance(this),
-                    widgetData.widgetId,
-                    widgetData
-            )
-        }
-    }
-
     override fun onReadContactExplanationClosed() {
         requestContactPermission.launch(Manifest.permission.READ_CONTACTS)
     }
 
-    companion object {
-        const val STATE_CAMERA_OUTPUT_URI = "cameraOutputUri"
+    override fun onAccept() {
+        val dataIntent = Intent()
+            .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, viewModel.widgetId)
+        setResult(Activity.RESULT_OK, dataIntent)
+        finish()
+    }
+
+    override fun onCancel() {
+        finish()
     }
 }
