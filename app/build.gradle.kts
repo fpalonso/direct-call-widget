@@ -117,6 +117,8 @@ dependencies {
     implementation(project(":data:phones:impl:device"))
     implementation(project(":data:pictures:api"))
     implementation(project(":data:pictures:impl:default"))
+    implementation(project(":data:onecontactwidget:api"))
+    implementation(project(":data:onecontactwidget:impl:default"))
     implementation(project(":core:analytics"))
     implementation(project(":core:di"))
     implementation(project(":core:util"))
@@ -182,6 +184,8 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.hilt.android.testing)
     kaptTest(libs.hilt.android.compiler)
+    testImplementation(project(":data:onecontactwidget:impl:mock"))
+    testImplementation(project(":data:pictures:impl:mock"))
 
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)

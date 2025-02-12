@@ -30,19 +30,13 @@ import android.os.Bundle
 import android.util.Size
 import android.view.View
 import android.widget.RemoteViews
-import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import com.blaxsoftware.directcallwidget.Intents
 import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.WidgetClickReceiver
-import com.blaxsoftware.directcallwidget.appScope
-import com.blaxsoftware.directcallwidget.data.SingleContactWidget
-import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
-import com.blaxsoftware.directcallwidget.di.DataEntryPoint
-import com.blaxsoftware.directcallwidget.singleContactWidgetRepo
+import com.blaxsoftware.directcallwidget.domain.DeleteOneContactWidgetUseCase
 import com.blaxsoftware.directcallwidget.ui.xdpToPx
 import com.blaxsoftware.directcallwidget.ui.ydpToPx
-import com.blaxsoftware.directcallwidget.widgetPictureRepo
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -54,14 +48,29 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.crashlytics.setCustomKeys
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 import dev.ferp.dcw.core.analytics.Analytics
 import dev.ferp.dcw.core.analytics.di.FirebaseEntryPoint
+import dev.ferp.dcw.core.di.CoroutinesEntryPoint
+import dev.ferp.dcw.data.contacts.OneContactWidget
+import dev.ferp.dcw.data.contacts.OneContactWidgetRepository
 import kotlinx.coroutines.launch
 
 // TODO have only one static setWidgetData (call it updateWidget)
 // TODO have it only have context, appWidgetManager and appWidgetId params.
+// TODO start a JobService for the async operations:
+//  https://developer.android.com/develop/background-work/background-tasks/broadcasts#effects-process-state
 open class DirectCallWidgetProvider : AppWidgetProvider() {
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface ProviderEntryPoint {
+        fun widgetRepository(): OneContactWidgetRepository
+        fun deleteWidgetUseCase(): DeleteOneContactWidgetUseCase
+    }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager,
                           appWidgetIds: IntArray) {
@@ -89,23 +98,27 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     }
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, id: Int) {
-        val dataEntryPoint = EntryPointAccessors.fromApplication<DataEntryPoint>(context)
-        val singleContactWidgetRepo = dataEntryPoint.singleContactWidgetRepository()
-        singleContactWidgetRepo.getWidgetById(id)?.let { widgetData ->
-            setWidgetData(context, singleContactWidgetRepo, appWidgetManager, id, widgetData)
+        // TODO launch a JobService
+        val entryPoint = EntryPointAccessors.fromApplication<ProviderEntryPoint>(context)
+        val widgetRepo = entryPoint.widgetRepository()
+        val coroutinesEntryPoint = EntryPointAccessors
+            .fromApplication<CoroutinesEntryPoint>(context)
+        coroutinesEntryPoint.appScope().launch {
+            widgetRepo.getWidget(id)?.let { widget ->
+                setWidgetData(context, appWidgetManager, id, widget)
+            }
         }
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         super.onDeleted(context, appWidgetIds)
-        appWidgetIds.forEach { id ->
-            context.singleContactWidgetRepo.getWidgetById(id)?.let { widgetData ->
-                widgetData.pictureUri?.toUri()?.let { uri ->
-                    context.appScope.launch {
-                        context.widgetPictureRepo.deletePicture(uri)
-                    }
-                }
-                context.singleContactWidgetRepo.deleteWidgetById(id)
+        val entryPoint = EntryPointAccessors.fromApplication<ProviderEntryPoint>(context)
+        val deleteWidgetUseCase = entryPoint.deleteWidgetUseCase()
+        val coroutinesEntryPoint = EntryPointAccessors
+            .fromApplication<CoroutinesEntryPoint>(context)
+        coroutinesEntryPoint.appScope().launch {
+            appWidgetIds.forEach { appWidgetId ->
+                deleteWidgetUseCase(appWidgetId)
             }
         }
     }
@@ -114,10 +127,9 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
 
         fun setWidgetData(
             context: Context,
-            singleContactWidgetRepo: SingleContactWidgetRepository,
             appWidgetManager: AppWidgetManager,
             widgetId: Int,
-            widgetData: SingleContactWidget
+            widgetData: OneContactWidget
         ) {
             val firebase = EntryPointAccessors
                 .fromApplication(context, FirebaseEntryPoint::class.java)
@@ -145,7 +157,6 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                     }
                     setWidgetDataWithPic(
                         context,
-                        singleContactWidgetRepo,
                         it,
                         widgetId,
                         size.width,
@@ -185,7 +196,6 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
 
         private fun setWidgetDataWithPic(
             context: Context,
-            singleContactWidgetRepo: SingleContactWidgetRepository,
             remoteViews: RemoteViews,
             appWidgetId: Int,
             widthDp: Int,
@@ -200,24 +210,31 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                 key("scr_xdpi", context.resources.displayMetrics.xdpi)
                 key("scr_ydpi", context.resources.displayMetrics.ydpi)
             }
-            singleContactWidgetRepo.getWidgetById(appWidgetId)?.let { widgetData ->
-                widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { picUri ->
-                    AppWidgetTarget(context, R.id.picture, remoteViews, appWidgetId).also { target ->
-                        val widthPx = context.xdpToPx(widthDp)
-                        val heightPx = context.ydpToPx(heightDp)
-                        crashlytics.log("setWidgetDataWithPic: Loading image. Required size (px): ${widthPx}x${heightPx}")
-                        val options = RequestOptions().override(widthPx, heightPx)
+            val providerEntryPoint = EntryPointAccessors
+                .fromApplication<ProviderEntryPoint>(context)
+            val coroutinesEntryPoint = EntryPointAccessors
+                .fromApplication<CoroutinesEntryPoint>(context)
+            coroutinesEntryPoint.appScope().launch {
+                providerEntryPoint.widgetRepository().getWidget(appWidgetId)?.let { widgetData ->
+                    widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { picUri ->
+                        AppWidgetTarget(context, R.id.picture, remoteViews, appWidgetId).also { target ->
+                            val widthPx = context.xdpToPx(widthDp)
+                            val heightPx = context.ydpToPx(heightDp)
+                            crashlytics.log("setWidgetDataWithPic: Loading image. Required size (px): ${widthPx}x${heightPx}")
+                            val options = RequestOptions().override(widthPx, heightPx)
                                 .placeholder(R.drawable.ic_default_picture)
-                        Glide.with(context.applicationContext)
+                            Glide.with(context.applicationContext)
                                 .asBitmap()
                                 .addListener(WidgetPictureRequestListener(crashlytics))
                                 .load(picUri)
                                 .centerCrop()
                                 .apply(options)
                                 .into(target)
+                        }
                     }
                 }
             }
+
         }
     }
 }

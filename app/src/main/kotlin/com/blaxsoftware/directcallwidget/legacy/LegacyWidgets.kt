@@ -28,6 +28,7 @@ import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider1x1
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+/** Utility class for updating one-contact widgets. */
 class LegacyWidgets @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val appWidgetManager: AppWidgetManager
@@ -35,13 +36,26 @@ class LegacyWidgets @Inject constructor(
     fun updateAll() = providerClasses.forEach { updateAll(it) }
 
     private fun <T : AppWidgetProvider> updateAll(providerClass: Class<T>) {
-        val widgetIds = appWidgetManager.getAppWidgetIds(
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(
             ComponentName(appContext, providerClass)
         )
-        Intent(appContext, providerClass)
+        update(appWidgetIds)
+    }
+
+    fun update(appWidgetIds: IntArray) {
+        providerClasses.forEach {
+            update(it, appWidgetIds)
+        }
+    }
+
+    private fun <T : AppWidgetProvider> update(
+        providerClass: Class<T>,
+        appWidgetIds: IntArray
+    ) {
+        val updateIntent = Intent(appContext, providerClass)
             .setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
-            .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
-            .also { appContext.sendBroadcast(it) }
+            .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
+        appContext.sendBroadcast(updateIntent)
     }
 
     companion object {

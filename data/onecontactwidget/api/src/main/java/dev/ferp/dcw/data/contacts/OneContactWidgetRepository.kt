@@ -21,7 +21,12 @@ package dev.ferp.dcw.data.contacts
 /** Repository for widgets information */
 interface OneContactWidgetRepository {
 
-    /** Adds the given widget information to the repository. */
+    /**
+     * Adds the given widget information to the repository.
+     *
+     * @param phoneType On Android, this field is the value as it comes from the contacts
+     * repository. For example: CommonDataKinds.Phone.TYPE_HOME
+     */
     suspend fun createWidget(
         appWidgetId: Int,
         displayName: String,
@@ -38,4 +43,7 @@ interface OneContactWidgetRepository {
      * @return whether the widget existed and could be deleted
      */
     suspend fun deleteWidget(appWidgetId: Int): Boolean
+
+    /** Deletes the information of the given widget ids. */
+    suspend fun deleteWidgets(appWidgetIds: IntArray)
 }

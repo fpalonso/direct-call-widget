@@ -20,13 +20,10 @@ package dev.ferp.dcw.data.onecontactwidget
 
 import dev.ferp.dcw.data.contacts.OneContactWidget
 import dev.ferp.dcw.data.contacts.OneContactWidgetRepository
-import dev.ferp.dcw.data.onecontactwidget.di.SharedPrefDS
-import dev.ferp.dcw.data.onecontactwidget.source.sharedprefs.SharedPrefDataSource
-import javax.inject.Inject
 
-class DefaultOneContactWidgetRepository @Inject constructor(
-    @SharedPrefDS private val sharedPrefsDataSource: SharedPrefDataSource
-) : OneContactWidgetRepository {
+class FakeOneContactWidgetRepository : OneContactWidgetRepository {
+
+    private val widgets = mutableMapOf<Int, OneContactWidget>()
 
     override suspend fun createWidget(
         appWidgetId: Int,
@@ -35,25 +32,24 @@ class DefaultOneContactWidgetRepository @Inject constructor(
         phoneType: Int,
         pictureUri: String
     ) {
-        val widget = OneContactWidget(
+        widgets[appWidgetId] = OneContactWidget(
             appWidgetId = appWidgetId,
             displayName = displayName,
             phoneNumber = phoneNumber,
             phoneType = phoneType,
             pictureUri = pictureUri
-        ).toSharedPrefsWidget()
-        sharedPrefsDataSource.saveWidget(widget)
+        )
     }
 
     override suspend fun getWidget(appWidgetId: Int): OneContactWidget? {
-        return sharedPrefsDataSource.getWidget(appWidgetId)?.toExternal()
+        return widgets[appWidgetId]
     }
 
     override suspend fun deleteWidget(appWidgetId: Int): Boolean {
-        return sharedPrefsDataSource.deleteWidget(appWidgetId)
+        return widgets.remove(appWidgetId) != null
     }
 
     override suspend fun deleteWidgets(appWidgetIds: IntArray) {
-        appWidgetIds.forEach { deleteWidget(it) }
+        appWidgetIds.forEach { widgets.remove(it) }
     }
 }

@@ -18,7 +18,6 @@
 
 package com.blaxsoftware.directcallwidget.viewmodel
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.core.net.toUri
 import androidx.databinding.Bindable
@@ -28,13 +27,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blaxsoftware.directcallwidget.data.SingleContactWidget
-import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
+import com.blaxsoftware.directcallwidget.domain.SaveOneContactWidgetUseCase
+import com.blaxsoftware.directcallwidget.legacy.LegacyWidgets
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.ferp.dcw.data.contacts.ContactRepository
 import dev.ferp.dcw.data.phones.Phone
 import dev.ferp.dcw.data.phones.PhoneRepository
-import dev.ferp.dcw.data.pictures.WidgetPictureRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,8 +40,8 @@ import javax.inject.Inject
 class WidgetConfigViewModel @Inject constructor(
     private val contactRepo: ContactRepository<Uri>,
     private val phoneRepo: PhoneRepository,
-    private val singleContactWidgetRepo: SingleContactWidgetRepository,
-    private val widgetPictureRepo: WidgetPictureRepository<Uri, Uri, Bitmap, Int>
+    private val saveWidgetUseCase: SaveOneContactWidgetUseCase,
+    private val legacyWidgets: LegacyWidgets
 ) : ViewModel(), Observable {
 
     private val callbacks: PropertyChangeRegistry = PropertyChangeRegistry()
@@ -63,9 +61,6 @@ class WidgetConfigViewModel @Inject constructor(
 
     @Bindable
     val phoneNumber = MutableLiveData<String?>()
-
-    private val _result = MutableLiveData<ConfigResult>()
-    val result: LiveData<ConfigResult> = _result
 
     override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {
         callbacks.add(callback)
@@ -95,44 +90,13 @@ class WidgetConfigViewModel @Inject constructor(
     }
 
     fun onAccept() {
-        viewModelScope.launch {
-            copyPictureToInternalFolder()
-            saveWidgetData()
-        }
-    }
-
-    private suspend fun copyPictureToInternalFolder() {
-        _picUri.value?.let { picUri ->
-            try {
-                _picUri.value = widgetPictureRepo.addPicture(picUri).getOrNull()
-            } catch (e: Throwable) {
-                e.printStackTrace()
+        widgetId?.let { appWidgetId ->
+            viewModelScope.launch {
+                saveWidgetUseCase(
+                    appWidgetId, displayName.value, phoneNumber.value ?: "", 0, _picUri.value
+                )
             }
+            legacyWidgets.update(intArrayOf(appWidgetId))
         }
-    }
-
-    private fun saveWidgetData() {
-        widgetId?.let { widgetId ->
-            val widgetData = SingleContactWidget(
-                    widgetId,
-                    displayName.value,
-                    phoneNumber.value ?: "",
-                    0, // FIXME this property is no longer valid
-                    picUri.value?.toString()
-            )
-            with(singleContactWidgetRepo) {
-                insertWidget(widgetData)
-                _result.value = ConfigResult(accepted = true, widgetData = widgetData)
-            }
-        }
-    }
-
-    fun onCancel() {
-        _result.value = ConfigResult(accepted = false)
     }
 }
-
-data class ConfigResult(
-        val accepted: Boolean,
-        val widgetData: SingleContactWidget? = null
-)

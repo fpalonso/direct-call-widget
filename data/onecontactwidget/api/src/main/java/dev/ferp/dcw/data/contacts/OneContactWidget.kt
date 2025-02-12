@@ -28,4 +28,10 @@ data class OneContactWidget(
      */
     val phoneType: Int?,
     val pictureUri: String?
-)
+) {
+    val hasDisplayName: Boolean
+        get() = !displayName.isNullOrBlank()
+
+    val hasPicture: Boolean
+        get() = !pictureUri.isNullOrBlank()
+}

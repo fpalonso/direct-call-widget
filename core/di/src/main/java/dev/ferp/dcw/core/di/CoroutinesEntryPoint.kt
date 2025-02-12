@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2020 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.data.source
+package dev.ferp.dcw.core.di
 
-import com.blaxsoftware.directcallwidget.data.SingleContactWidget
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
 
-interface SingleContactWidgetRepository {
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface CoroutinesEntryPoint {
 
-    fun getWidgetById(widgetId: Int): SingleContactWidget?
-
-    fun insertWidget(widget: SingleContactWidget)
-
-    fun deleteWidgetById(widgetId: Int)
+    @ApplicationScope
+    fun appScope(): CoroutineScope
 }

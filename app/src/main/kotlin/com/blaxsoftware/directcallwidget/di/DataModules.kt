@@ -24,8 +24,6 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.preference.PreferenceManager
-import com.blaxsoftware.directcallwidget.data.source.DefaultSingleContactWidgetRepository
-import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -34,6 +32,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.ferp.dcw.data.contacts.ContactRepository
 import dev.ferp.dcw.data.contacts.DefaultContactRepository
+import dev.ferp.dcw.data.contacts.OneContactWidgetRepository
+import dev.ferp.dcw.data.onecontactwidget.DefaultOneContactWidgetRepository
 import dev.ferp.dcw.data.phones.DevicePhoneRepository
 import dev.ferp.dcw.data.phones.PhoneRepository
 import dev.ferp.dcw.data.pictures.DefaultWidgetPictureRepository
@@ -107,9 +107,9 @@ abstract class RepositoriesModule {
 
     @Singleton
     @Binds
-    abstract fun bindSingleContactWidgetRepository(
-        singleContactWidgetRepository: DefaultSingleContactWidgetRepository
-    ): SingleContactWidgetRepository
+    abstract fun bindOneContactWidgetRepository(
+        oneContactWidgetRepository: DefaultOneContactWidgetRepository
+    ): OneContactWidgetRepository
 
     @Singleton
     @Binds
