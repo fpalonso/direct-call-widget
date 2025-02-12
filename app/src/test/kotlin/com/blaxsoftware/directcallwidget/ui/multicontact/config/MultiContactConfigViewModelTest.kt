@@ -7,11 +7,11 @@ import androidx.core.net.toUri
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.blaxsoftware.directcallwidget.data.ContactConfig
-import com.blaxsoftware.directcallwidget.rules.MainDispatcherRule
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
+import dev.ferp.dcw.core.util.test.MainDispatcherRule
 import dev.ferp.dcw.data.pictures.WidgetPictureRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
