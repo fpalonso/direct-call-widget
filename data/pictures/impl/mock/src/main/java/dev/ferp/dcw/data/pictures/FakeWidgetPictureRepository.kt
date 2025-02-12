@@ -18,5 +18,36 @@
 
 package dev.ferp.dcw.data.pictures
 
-class FakeWidgetPictureRepository {
+import android.graphics.Bitmap
+import android.net.Uri
+import androidx.core.net.toUri
+import java.util.UUID
+
+class FakeWidgetPictureRepository : WidgetPictureRepository<Uri, Uri, Bitmap, Int> {
+
+    private val pictures = mutableMapOf<Uri, Bitmap>()
+
+    override suspend fun addPicture(source: Uri): Result<Uri> {
+        val internalUri = "content://pictures/${UUID.randomUUID()}".toUri()
+        val bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+        pictures[internalUri] = bitmap
+        return Result.success(internalUri)
+    }
+
+    override suspend fun getPicture(
+        locator: Uri,
+        widthPx: Int,
+        heightPx: Int,
+        placeholder: Int?
+    ): Result<Bitmap> {
+        return pictures[locator]?.let {
+            Result.success(it)
+        } ?: Result.failure(Exception("Picture not found"))
+    }
+
+    override suspend fun deletePicture(locator: Uri): Boolean {
+        val result = pictures.containsKey(locator)
+        pictures.remove(locator)
+        return result
+    }
 }

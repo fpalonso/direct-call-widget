@@ -21,6 +21,7 @@
       <module name="direct-call-widget.data.onecontactwidget.source.sharedprefs.impl.default" target="21" />
       <module name="direct-call-widget.data.phones.impl.device" target="21" />
       <module name="direct-call-widget.data.pictures.impl.default" target="21" />
+      <module name="direct-call-widget.data.pictures.impl.mock" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>
