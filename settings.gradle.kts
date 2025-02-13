@@ -34,6 +34,7 @@ dependencyResolutionManagement {
 }
 
 include(":app")
+include(":feature:settings")
 include(":data:contacts:api")
 include(":data:contacts:impl:default")
 include(":data:phones:api")
