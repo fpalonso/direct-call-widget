@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Direct Call Widget - The widget that makes contacts accessible
+  ~ Copyright (C) 2025 Fer P. A.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="@string/pref_cat_widget">
+        <ListPreference
+            android:key="@string/pref_onTap_key"
+            android:icon="@drawable/baseline_contact_phone_24"
+            android:title="@string/pref_onTap"
+            android:summary="@string/pref_onTap_call_entry"
+            android:dialogTitle="@string/pref_onTap"
+            android:entries="@array/pref_onTap_entries"
+            android:entryValues="@array/pref_onTap_values"
+            android:defaultValue="@string/pref_onTap_default"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_cat_about">
+        <Preference
+            android:key="@string/pref_become_btester_key"
+            android:icon="@drawable/baseline_new_releases_24"
+            android:summary="@string/pref_become_btester_summary"
+            android:title="@string/pref_become_btester_title" />
+        <Preference
+            android:key="@string/pref_contribute_title_key"
+            android:icon="@drawable/baseline_code_24"
+            android:title="@string/pref_contribute_title" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Direct Call Widget - The widget that makes contacts accessible
+  ~ Copyright (C) 2025 Fer P. A.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <!-- Sections -->
+    <string name="pref_cat_widget">Widget</string>
+
+    <!-- Widget action -->
+    <string name="pref_onTap">Widget action</string>
+    <string name="pref_onTap_dial_entry">Dial the number</string>
+    <string name="pref_onTap_dial_value" translatable="false">"0"</string>
+    <string name="pref_onTap_call_entry">Call the contact</string>
+    <string name="pref_onTap_call_value" translatable="false">"1"</string>
+    <string name="pref_onTap_default" translatable="false">@string/pref_onTap_call_value</string>
+
+    <!-- Legacy options -->
+    <string name="pref_cat_about">About the app</string>
+    <string name="pref_become_btester_title">Become a beta user</string>
+    <string name="pref_become_btester_summary">Get updates before anybody else!</string>
+    <string name="pref_contribute_title">Get the source code</string>
+
+    <!-- URL -->
+    <string name="pref_btester_url" translatable="false">https://play.google.com/apps/testing/com.blaxsoftware.directcallwidget</string>
+    <string name="pref_contribute_url" translatable="false">"https://github.com/fpalonso/direct-call-widget"</string>
+</resources>

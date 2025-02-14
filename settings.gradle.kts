@@ -34,6 +34,7 @@ dependencyResolutionManagement {
 }
 
 include(":app")
+include(":feature:settings")
 include(":data:contacts:api")
 include(":data:contacts:impl:default")
 include(":data:phones:api")
@@ -47,6 +48,7 @@ include(":data:onecontactwidget:impl:mock")
 include(":data:onecontactwidget:source:sharedprefs:api")
 include(":data:onecontactwidget:source:sharedprefs:impl:default")
 include(":data:onecontactwidget:source:sharedprefs:impl:mock")
+include(":core:preferences")
 include(":core:di")
 include(":core:util")
 include(":core:androidutil")
