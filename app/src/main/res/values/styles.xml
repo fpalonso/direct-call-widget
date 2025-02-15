@@ -25,6 +25,7 @@
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorOnPrimary">@android:color/white</item>
         <item name="tint">?attr/colorControlNormal</item>
+        <item name="android:tint">?tint</item>
         <item name="colorOnSecondary">@color/secondaryTextColor</item>
         <item name="picPlaceholderBackground">@color/pic_placeholder_background</item>
         <item name="picPlaceholderForegroundTint">@color/pic_placeholder_foreground_tint</item>
