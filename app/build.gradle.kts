@@ -47,8 +47,8 @@ android {
         //   2: beta
         //   3: rc
         //   4: stable
-        versionCode = 10601301
-        versionName = "1.6.1-rc1"
+        versionCode = 10601401
+        versionName = "1.6.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
