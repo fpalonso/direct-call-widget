@@ -3,7 +3,7 @@
     "project_number": "672496972397",
     "firebase_url": "https://direct-call-widget.firebaseio.com",
     "project_id": "direct-call-widget",
-    "storage_bucket": "direct-call-widget.appspot.com"
+    "storage_bucket": "direct-call-widget.firebasestorage.app"
   },
   "client": [
     {

@@ -22,25 +22,42 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import dev.ferp.dcw.core.analytics.Analytics;
+
+@AndroidEntryPoint
 public class WidgetClickReceiver extends BroadcastReceiver {
 
+    @Inject FirebaseAnalytics firebaseAnalytics;
+
+    // TODO get constants from the Preferences class
     public static final String PREF_ONTAP_KEY = "pref_onTap";
     public static final String PREF_ONTAP_DIAL_VALUE = "0";
     public static final String PREF_ONTAP_CALL_VALUE = "1";
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Bundle params = new Bundle();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         String tapAction = pref.getString(PREF_ONTAP_KEY, PREF_ONTAP_CALL_VALUE);
         switch (tapAction) {
             case PREF_ONTAP_DIAL_VALUE:
+                params.putString(Analytics.Param.ACTION, Analytics.ParamValue.ACTION_DIAL);
+                firebaseAnalytics.logEvent(Analytics.Event.WIDGET_CLICK, params);
                 Intent dialIntent = new Intent(Intent.ACTION_DIAL, intent.getData());
                 dialIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(dialIntent);
                 break;
             case PREF_ONTAP_CALL_VALUE:
+                params.putString(Analytics.Param.ACTION, Analytics.ParamValue.ACTION_CALL);
+                firebaseAnalytics.logEvent(Analytics.Event.WIDGET_CLICK, params);
                 Intent callIntent = new Intent(context, CallActivity.class);
                 callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 callIntent.setData(intent.getData());

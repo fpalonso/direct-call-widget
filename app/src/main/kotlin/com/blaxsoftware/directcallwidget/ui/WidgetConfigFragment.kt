@@ -18,27 +18,28 @@
 
 package com.blaxsoftware.directcallwidget.ui
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.blaxsoftware.directcallwidget.R
+import dev.ferp.dcw.core.analytics.Analytics
 import com.blaxsoftware.directcallwidget.databinding.FragmentWidgetConfigBinding
-import com.blaxsoftware.directcallwidget.viewmodel.ViewModelFactory
 import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.analytics.FirebaseAnalytics
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @Suppress("unused")
+@AndroidEntryPoint
 class WidgetConfigFragment : Fragment() {
 
-    private val viewModel by activityViewModels<WidgetConfigViewModel> {
-        ViewModelFactory(requireContext().applicationContext)
-    }
+    private val viewModel: WidgetConfigViewModel by activityViewModels()
+
+    @Inject lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,19 +47,21 @@ class WidgetConfigFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         val binding = FragmentWidgetConfigBinding.inflate(inflater)
         with(binding) {
             viewModel = this@WidgetConfigFragment.viewModel
             lifecycleOwner = this@WidgetConfigFragment.viewLifecycleOwner
 
             topAppBar.setNavigationOnClickListener {
+                firebaseAnalytics.logEvent(Analytics.Event.CANCEL_SETUP, null)
                 this@WidgetConfigFragment.viewModel.onCancel()
             }
 
             topAppBar.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.ok -> {
+                        firebaseAnalytics.logEvent(Analytics.Event.SAVE_WIDGET, null)
                         this@WidgetConfigFragment.viewModel.onAccept()
                         return@setOnMenuItemClickListener true
                     }
@@ -67,7 +70,9 @@ class WidgetConfigFragment : Fragment() {
             }
 
             changePictureButton.setOnClickListener {
-                ChangePictureOptionsDialog().show(parentFragmentManager, "changePictureOptions")
+                firebaseAnalytics.logEvent(Analytics.Event.CHANGE_PICTURE_CLICK, null)
+                // TODO allow for camera capturing
+                (activity as WidgetConfigActivity2).onPickImageFromGalleryClick()
             }
 
             return root
@@ -76,32 +81,5 @@ class WidgetConfigFragment : Fragment() {
 
     companion object {
         const val TAG = "WidgetConfigFragment"
-    }
-}
-
-class ChangePictureOptionsDialog : DialogFragment() {
-
-    interface ChangePictureListener {
-        fun onTakePictureClick()
-        fun onPickImageFromGalleryClick()
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.change_picture)
-                .setItems(R.array.change_picture_options) { _, which ->
-                    (activity as? ChangePictureListener)?.let {
-                        when (which) {
-                            TAKE_PICTURE_INDEX -> it.onTakePictureClick()
-                            PICK_FROM_GALLERY_INDEX -> it.onPickImageFromGalleryClick()
-                        }
-                    }
-                }
-                .create()
-    }
-
-    companion object {
-        const val TAKE_PICTURE_INDEX = 0
-        const val PICK_FROM_GALLERY_INDEX = 1
     }
 }

@@ -18,8 +18,9 @@
 
 package com.blaxsoftware.directcallwidget.viewmodel
 
+import android.graphics.Bitmap
 import android.net.Uri
-import androidx.annotation.UiThread
+import androidx.core.net.toUri
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
@@ -27,18 +28,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blaxsoftware.directcallwidget.data.model.Phone
-import com.blaxsoftware.directcallwidget.data.model.WidgetData
-import com.blaxsoftware.directcallwidget.data.source.ContactDataSource
-import com.blaxsoftware.directcallwidget.data.source.WidgetDataSource
-import com.blaxsoftware.directcallwidget.data.source.WidgetPicDataSource
+import com.blaxsoftware.directcallwidget.data.SingleContactWidget
+import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.ferp.dcw.data.contacts.ContactRepository
+import dev.ferp.dcw.data.phones.Phone
+import dev.ferp.dcw.data.phones.PhoneRepository
+import dev.ferp.dcw.data.pictures.WidgetPictureRepository
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-@UiThread
-class WidgetConfigViewModel(
-        private val contactDataSource: ContactDataSource,
-        private val widgetDataSource: WidgetDataSource,
-        private val widgetPicDataSource: WidgetPicDataSource
+@HiltViewModel
+class WidgetConfigViewModel @Inject constructor(
+    private val contactRepo: ContactRepository<Uri>,
+    private val phoneRepo: PhoneRepository,
+    private val singleContactWidgetRepo: SingleContactWidgetRepository,
+    private val widgetPictureRepo: WidgetPictureRepository<Uri, Uri, Bitmap, Int>
 ) : ViewModel(), Observable {
 
     private val callbacks: PropertyChangeRegistry = PropertyChangeRegistry()
@@ -72,12 +77,14 @@ class WidgetConfigViewModel(
 
     fun loadContact(contactUri: Uri) {
         viewModelScope.launch {
-            contactDataSource.getContactByUri(contactUri)?.let { contact ->
-                _picUri.value = contact.photoUri
+            contactRepo.getContactById(contactUri)?.let { contact ->
+                _picUri.value = contact.photoUri?.toUri()
                 displayName.value = contact.displayName
-                _phoneList.value = contact.phoneList
-                if (contact.phoneList.isNotEmpty()) {
-                    phoneNumber.value = contact.phoneList[0].number
+                contact.lookUpKey?.let { lookUpKey ->
+                    _phoneList.value = phoneRepo.getPhoneListByLookUpKey(lookUpKey)
+                }
+                if (!_phoneList.value.isNullOrEmpty()) {
+                    phoneNumber.value = _phoneList.value!![0].number
                 }
             }
         }
@@ -97,8 +104,7 @@ class WidgetConfigViewModel(
     private suspend fun copyPictureToInternalFolder() {
         _picUri.value?.let { picUri ->
             try {
-                val internalFile = widgetPicDataSource.insertFromUri(picUri)
-                _picUri.value = Uri.fromFile(internalFile)
+                _picUri.value = widgetPictureRepo.addPicture(picUri).getOrNull()
             } catch (e: Throwable) {
                 e.printStackTrace()
             }
@@ -107,15 +113,15 @@ class WidgetConfigViewModel(
 
     private fun saveWidgetData() {
         widgetId?.let { widgetId ->
-            val widgetData = WidgetData(
+            val widgetData = SingleContactWidget(
                     widgetId,
                     displayName.value,
                     phoneNumber.value ?: "",
                     0, // FIXME this property is no longer valid
                     picUri.value?.toString()
             )
-            with(widgetDataSource) {
-                insertWidgetData(widgetData)
+            with(singleContactWidgetRepo) {
+                insertWidget(widgetData)
                 _result.value = ConfigResult(accepted = true, widgetData = widgetData)
             }
         }
@@ -128,5 +134,5 @@ class WidgetConfigViewModel(
 
 data class ConfigResult(
         val accepted: Boolean,
-        val widgetData: WidgetData? = null
+        val widgetData: SingleContactWidget? = null
 )

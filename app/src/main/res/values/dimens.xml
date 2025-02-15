@@ -46,4 +46,7 @@
     <dimen name="widget_2x2_text_padding">8dp</dimen>
     <dimen name="padding_default">16dp</dimen>
 
+    <!-- UI components -->
+    <dimen name="portrait_card_width">130dp</dimen>
+
 </resources>

@@ -18,7 +18,6 @@
 
 package com.blaxsoftware.directcallwidget;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -30,31 +29,42 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 
-import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import dev.ferp.dcw.core.analytics.Analytics;
+
+@AndroidEntryPoint
 public class SettingsActivity extends AppCompatActivity {
 
-    private static final String KEY_SUPPORT = "pref_support";
+    @Inject FirebaseAnalytics mFirebaseAnalytics;
+
+    private static final String KEY_ON_TAP = "pref_onTap";
     private static final String KEY_BETA = "pref_btester";
     private static final String KEY_CONTRIBUTE = "pref_contribute";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Settings");
+        params.putString(FirebaseAnalytics.Param.SCREEN_CLASS, SettingsActivity.class.getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, params);
         setContentView(R.layout.activity_settings);
         setSupportActionBar(findViewById(R.id.topAppBar));
-
-        Intent updateWidget = new Intent(this, DirectCallWidgetProvider.class);
-        updateWidget.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        sendBroadcast(updateWidget);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragContainer, new SettingsFragment())
                 .commit();
     }
 
+    @AndroidEntryPoint
     public static class SettingsFragment extends PreferenceFragmentCompat
             implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+        @Inject FirebaseAnalytics mFirebaseAnalytics;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -72,19 +82,17 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public boolean onPreferenceTreeClick(Preference preference) {
             switch (preference.getKey()) {
-                case KEY_SUPPORT:
-                    final String subject = getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME;
-                    final Uri supportUri = Uri.parse("mailto:blax.software@gmail.com?subject=" + subject /* Necessary for GMail */);
-                    final Intent supportIntent = new Intent(Intent.ACTION_SENDTO, supportUri)
-                            .putExtra(Intent.EXTRA_SUBJECT, subject);
-                    startActivity(supportIntent);
+                case KEY_ON_TAP:
+                    mFirebaseAnalytics.logEvent(Analytics.Event.SETTING_ON_TAP_CLICK, null);
                     break;
                 case KEY_BETA:
+                    mFirebaseAnalytics.logEvent(Analytics.Event.SETTING_BETA_CLICK, null);
                     final Uri joinBetaUri = Uri.parse("https://play.google.com/apps/testing/com.blaxsoftware.directcallwidget");
                     final Intent joinBetaIntent = new Intent(Intent.ACTION_VIEW, joinBetaUri);
                     startActivity(joinBetaIntent);
                     break;
                 case KEY_CONTRIBUTE:
+                    mFirebaseAnalytics.logEvent(Analytics.Event.SETTING_CONTRIBUTE_CLICK, null);
                     final Uri gitHubUri = Uri.parse("https://github.com/fpalonso/direct-call-widget");
                     final Intent gitHubIntent = new Intent(Intent.ACTION_VIEW, gitHubUri);
                     startActivity(gitHubIntent);
@@ -102,6 +110,18 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (KEY_ON_TAP.equals(key)) {
+                String value = sharedPreferences.getString(KEY_ON_TAP, WidgetClickReceiver.PREF_ONTAP_CALL_VALUE);
+                String paramValue;
+                if (WidgetClickReceiver.PREF_ONTAP_CALL_VALUE.equals(value)) {
+                    paramValue = Analytics.ParamValue.SETTING_ON_TAP_CALL;
+                } else {
+                    paramValue = Analytics.ParamValue.SETTING_ON_TAP_DIAL;
+                }
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.VALUE, paramValue);
+                mFirebaseAnalytics.logEvent(Analytics.Event.SETTING_ON_TAP_CHANGED, bundle);
+            }
             updatePreferenceSummaries(getPreferenceScreen());
         }
 

@@ -17,7 +17,6 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widgetLayout"
     android:layout_width="match_parent"
@@ -51,6 +50,7 @@
         android:layout_gravity="center"
         android:contentDescription="@string/choose_contact"
         android:src="@drawable/ic_default_picture"
+        android:scaleType="centerCrop"
         tools:ignore="VectorDrawableCompat" />
 
 </FrameLayout>

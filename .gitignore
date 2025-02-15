@@ -86,3 +86,8 @@ lint/tmp/
 # lint/reports/
 
 keystore.properties
+
+# Other files
+.attach_pid*
+kotlin-compiler-*
+app/collection*

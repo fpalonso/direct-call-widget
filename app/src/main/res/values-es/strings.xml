@@ -38,6 +38,7 @@
     <string name="phone_name_work">Trabajo</string>
     <string name="phone_name_other">Teléfono</string>
     <string name="choose_contact">Seleccionar contacto</string>
+    <string name="multicontact_widget_description">Varios contactos</string>
 
     <!-- Settings -->
     <string name="pref_cat_settings">Ajustes</string>
@@ -48,8 +49,6 @@
     <string name="pref_onTap_value_call">"1"</string>
     <string name="pref_cat_about">Acerca de la app</string>
     <string name="pref_onTap_default">@string/pref_onTap_value_call</string>
-    <string name="pref_support_title">¿Necesitas ayuda?</string>
-    <string name="pref_support_summary">Resuelve tus dudas o informa de un bug</string>
     <string name="pref_become_btester_title">Quiero ser beta tester</string>
     <string name="pref_become_btester_summary">¿Quieres ser el primero en recibir las actualizaciones? ¡Conviértete en beta tester!</string>
     <string name="pref_contribute_title">Colaborar</string>
@@ -59,5 +58,12 @@
     <string name="request_readContacts_permission_explanation">Direct Call Widget necesita permiso para mostrarte tus contactos.</string>
     <string name="request_call_permission_explanation">Direct Call Widget necesita permiso para llamar a este contacto.</string>
     <string name="request_external_storage_explanation">Direct Call Widget necesita permiso para mostrarte tus fotos.</string>
+
+    <!--Multicontact widget -->
+    <string name="title_activity_multi_contact_widget_config">Nuevo widget múltiple</string>
+    <string name="add_contact">Añadir contacto</string>
+    <string name="add_picture">Añadir foto</string>
+    <string name="save">Guardar</string>
+    <string name="search_contact">Buscar en la agenda</string>
 
 </resources>

@@ -19,7 +19,6 @@
 package com.blaxsoftware.directcallwidget;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -28,25 +27,41 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.view.ContextThemeWrapper;
 import android.widget.LinearLayout;
 
-public class CallActivity extends Activity {
+import androidx.activity.ComponentActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import dev.ferp.dcw.core.analytics.Analytics;
+
+@AndroidEntryPoint
+public class CallActivity extends ComponentActivity {
+
+    @Inject FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Call");
+        params.putString(FirebaseAnalytics.Param.SCREEN_CLASS, CallActivity.class.getName());
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, params);
         LinearLayout view = new LinearLayout(this);
         view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));
         view.setBackgroundColor(Color.TRANSPARENT);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
                 == PackageManager.PERMISSION_GRANTED) {
-            call(getIntent().getData());
+           call(getIntent().getData());
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.CALL_PHONE)) {
@@ -66,8 +81,10 @@ public class CallActivity extends Activity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == Constants.REQUEST_CALL_PERMISSION
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            mFirebaseAnalytics.logEvent(Analytics.Event.GRANT_CALL_PERMISSION, null);
             call(getIntent().getData());
         } else {
+            mFirebaseAnalytics.logEvent(Analytics.Event.DENY_CALL_PERMISSION, null);
             finish();
         }
     }
@@ -78,6 +95,7 @@ public class CallActivity extends Activity {
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
                 == PackageManager.PERMISSION_GRANTED) {
+            mFirebaseAnalytics.logEvent(Analytics.Event.START_CALL, null);
             Intent callIntent = new Intent(Intent.ACTION_CALL, phone);
             callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(callIntent);

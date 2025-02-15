@@ -24,19 +24,43 @@ import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Size
 import android.view.View
 import android.widget.RemoteViews
-import com.blaxsoftware.directcallwidget.*
-import com.blaxsoftware.directcallwidget.data.model.WidgetData
+import androidx.core.net.toUri
+import androidx.core.os.bundleOf
+import com.blaxsoftware.directcallwidget.Intents
+import com.blaxsoftware.directcallwidget.R
+import com.blaxsoftware.directcallwidget.WidgetClickReceiver
+import com.blaxsoftware.directcallwidget.appScope
+import com.blaxsoftware.directcallwidget.data.SingleContactWidget
+import com.blaxsoftware.directcallwidget.data.source.SingleContactWidgetRepository
+import com.blaxsoftware.directcallwidget.di.DataEntryPoint
+import com.blaxsoftware.directcallwidget.singleContactWidgetRepo
 import com.blaxsoftware.directcallwidget.ui.xdpToPx
 import com.blaxsoftware.directcallwidget.ui.ydpToPx
+import com.blaxsoftware.directcallwidget.widgetPictureRepo
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.AppWidgetTarget
+import com.bumptech.glide.request.target.Target
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.crashlytics.setCustomKeys
+import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.EntryPointAccessors
+import dev.ferp.dcw.core.analytics.Analytics
+import dev.ferp.dcw.core.analytics.di.FirebaseEntryPoint
+import kotlinx.coroutines.launch
 
+// TODO have only one static setWidgetData (call it updateWidget)
+// TODO have it only have context, appWidgetManager and appWidgetId params.
 open class DirectCallWidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager,
@@ -50,32 +74,55 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager,
                                            appWidgetId: Int, newOptions: Bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        val firebaseEntryPoint = EntryPointAccessors.fromApplication<FirebaseEntryPoint>(context)
+        val size = getAppWidgetSize(appWidgetManager, appWidgetId)
+        if (size.width > 0 && size.height > 0) {
+            firebaseEntryPoint.analytics().logEvent(
+                Analytics.Event.WIDGET_RESIZE,
+                bundleOf(
+                    "width_dp" to size.width,
+                    "height_dp" to size.height
+                )
+            )
+        }
         updateWidget(context, appWidgetManager, appWidgetId)
     }
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, id: Int) {
-        context.widgetRepository.getWidgetDataById(id)?.let { widgetData ->
-            setWidgetData(context, appWidgetManager, id, widgetData)
+        val dataEntryPoint = EntryPointAccessors.fromApplication<DataEntryPoint>(context)
+        val singleContactWidgetRepo = dataEntryPoint.singleContactWidgetRepository()
+        singleContactWidgetRepo.getWidgetById(id)?.let { widgetData ->
+            setWidgetData(context, singleContactWidgetRepo, appWidgetManager, id, widgetData)
         }
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         super.onDeleted(context, appWidgetIds)
         appWidgetIds.forEach { id ->
-            context.widgetRepository.getWidgetDataById(id)?.let { widgetData ->
-                widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { uri ->
-                    context.widgetPicRepository.delete(uri)
+            context.singleContactWidgetRepo.getWidgetById(id)?.let { widgetData ->
+                widgetData.pictureUri?.toUri()?.let { uri ->
+                    context.appScope.launch {
+                        context.widgetPictureRepo.deletePicture(uri)
+                    }
                 }
-                context.widgetRepository.deleteWidgetDataById(id)
+                context.singleContactWidgetRepo.deleteWidgetById(id)
             }
         }
     }
 
     companion object {
 
-        fun setWidgetData(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int,
-                          widgetData: WidgetData) {
-            FirebaseCrashlytics.getInstance().log("setWidgetData: widgetId=$widgetId")
+        fun setWidgetData(
+            context: Context,
+            singleContactWidgetRepo: SingleContactWidgetRepository,
+            appWidgetManager: AppWidgetManager,
+            widgetId: Int,
+            widgetData: SingleContactWidget
+        ) {
+            val firebase = EntryPointAccessors
+                .fromApplication(context, FirebaseEntryPoint::class.java)
+            val crashlytics = firebase.crashlytics()
+            crashlytics.log("setWidgetData: widgetId=$widgetId")
             RemoteViews(context.packageName, R.layout.widget_2x2).apply {
                 setViewVisibility(R.id.picture, View.VISIBLE)
                 setTextViewText(R.id.contactName, widgetData.displayName)
@@ -87,55 +134,118 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                         callContactIntent(context, widgetData.phoneNumber, widgetId))
             }.also {
                 if (widgetData.hasPicture) {
-                    setWidgetDataWithPic(context, appWidgetManager, it, widgetId)
+                    crashlytics.log("setWidgetData: has a picture")
+                    val size = getAppWidgetSize(appWidgetManager, widgetId)
+                    val sizePx = Size(
+                        context.xdpToPx(size.width),
+                        context.ydpToPx(size.height)
+                    )
+                    if (size.width > 0 && size.height > 0) {
+                        Firebase.crashlytics.log("setWidgetData: widget size in pixels: ${sizePx.width}x${sizePx.height} ")
+                    }
+                    setWidgetDataWithPic(
+                        context,
+                        singleContactWidgetRepo,
+                        it,
+                        widgetId,
+                        size.width,
+                        size.height,
+                        crashlytics
+                    )
                 } else {
+                    crashlytics.log("setWidgetData: no picture")
                     appWidgetManager.updateAppWidget(widgetId, it)
                 }
             }
         }
 
+        // TODO extract to :core:androidutil
+        /** Returns the upper bounds for the given [widgetId] size, in dp. */
+        private fun getAppWidgetSize(
+            appWidgetManager: AppWidgetManager,
+            widgetId: Int
+        ): Size {
+            val options = appWidgetManager.getAppWidgetOptions(widgetId)
+            val maxSize = Size(
+                options.getInt(OPTION_APPWIDGET_MAX_WIDTH),
+                options.getInt(OPTION_APPWIDGET_MAX_HEIGHT)
+            )
+            return maxSize
+        }
+
+        // TODO extract to :core:call
         private fun callContactIntent(context: Context, phoneNumber: String,
                                       widgetId: Int): PendingIntent {
             val callUri = Uri.parse("tel:" + Uri.encode(phoneNumber))
             val callIntent = Intent(Intents.ACTION_WIDGET_CLICK, callUri)
             callIntent.setClass(context, WidgetClickReceiver::class.java)
-            return PendingIntent.getBroadcast(context, widgetId, callIntent, 0)
+            return PendingIntent.getBroadcast(context, widgetId, callIntent,
+                PendingIntent.FLAG_IMMUTABLE)
         }
 
-        private fun setWidgetDataWithPic(context: Context, awm: AppWidgetManager,
-                                         remoteViews: RemoteViews, appWidgetId: Int) {
-            val options = awm.getAppWidgetOptions(appWidgetId)
-            val w = options.getInt(OPTION_APPWIDGET_MAX_WIDTH)
-            val h = options.getInt(OPTION_APPWIDGET_MAX_HEIGHT)
-            FirebaseCrashlytics.getInstance().log("updatePhoto: Updating photo for widget with id $appWidgetId")
-            setWidgetDataWithPic(context, remoteViews, appWidgetId, w, h)
-        }
-
-        private fun setWidgetDataWithPic(context: Context, remoteViews: RemoteViews,
-                                         appWidgetId: Int, widthDp: Int, heightDp: Int) {
-            FirebaseCrashlytics.getInstance().setCustomKey("scr_width_px", context.resources.displayMetrics.widthPixels)
-            FirebaseCrashlytics.getInstance().setCustomKey("scr_height_px", context.resources.displayMetrics.heightPixels)
-            FirebaseCrashlytics.getInstance().setCustomKey("scr_density", context.resources.displayMetrics.density)
-            FirebaseCrashlytics.getInstance().setCustomKey("scr_xdpi", context.resources.displayMetrics.xdpi)
-            FirebaseCrashlytics.getInstance().setCustomKey("scr_ydpi", context.resources.displayMetrics.ydpi)
-
-            context.widgetRepository.getWidgetDataById(appWidgetId)?.let { widgetData ->
+        private fun setWidgetDataWithPic(
+            context: Context,
+            singleContactWidgetRepo: SingleContactWidgetRepository,
+            remoteViews: RemoteViews,
+            appWidgetId: Int,
+            widthDp: Int,
+            heightDp: Int,
+            crashlytics: FirebaseCrashlytics
+        ) {
+            if (widthDp == 0 || heightDp == 0) return
+            crashlytics.setCustomKeys {
+                key("scr_width_px", context.resources.displayMetrics.widthPixels)
+                key("scr_height_px", context.resources.displayMetrics.heightPixels)
+                key("scr_density", context.resources.displayMetrics.density)
+                key("scr_xdpi", context.resources.displayMetrics.xdpi)
+                key("scr_ydpi", context.resources.displayMetrics.ydpi)
+            }
+            singleContactWidgetRepo.getWidgetById(appWidgetId)?.let { widgetData ->
                 widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { picUri ->
                     AppWidgetTarget(context, R.id.picture, remoteViews, appWidgetId).also { target ->
                         val widthPx = context.xdpToPx(widthDp)
                         val heightPx = context.ydpToPx(heightDp)
-                        FirebaseCrashlytics.getInstance().log("updatePhoto: Loading image. Required size: ${widthPx}px x ${heightPx}px")
+                        crashlytics.log("setWidgetDataWithPic: Loading image. Required size (px): ${widthPx}x${heightPx}")
                         val options = RequestOptions().override(widthPx, heightPx)
                                 .placeholder(R.drawable.ic_default_picture)
                         Glide.with(context.applicationContext)
                                 .asBitmap()
+                                .addListener(WidgetPictureRequestListener(crashlytics))
                                 .load(picUri)
-                                .centerInside()
                                 .apply(options)
                                 .into(target)
                     }
                 }
             }
         }
+    }
+}
+
+private class WidgetPictureRequestListener(
+    private val crashlytics: FirebaseCrashlytics
+) : RequestListener<Bitmap> {
+
+    override fun onLoadFailed(
+        e: GlideException?,
+        model: Any?,
+        target: Target<Bitmap>?,
+        isFirstResource: Boolean
+    ): Boolean {
+        crashlytics.log("Widget picture load failed with message: ${e?.message}")
+        return false
+    }
+
+    override fun onResourceReady(
+        resource: Bitmap?,
+        model: Any?,
+        target: Target<Bitmap>?,
+        dataSource: DataSource?,
+        isFirstResource: Boolean
+    ): Boolean {
+        crashlytics.setCustomKeys {
+            key("widget_pic_size_px", "${resource?.width}x${resource?.height}")
+            key("widget_pic_allocation_byte_count", "${resource?.allocationByteCount}")
+        }
+        return false
     }
 }
