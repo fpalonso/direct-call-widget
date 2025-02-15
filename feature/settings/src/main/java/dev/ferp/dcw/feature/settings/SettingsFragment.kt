@@ -32,9 +32,10 @@ import javax.inject.Inject
 
 // TODO add tests for this class - Hilt won't make it easy
 @AndroidEntryPoint
-class SettingsFragment @Inject constructor(
-    private val analytics: FirebaseAnalytics
-) : PreferenceFragmentCompat() {
+class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
+
+    @Inject
+    lateinit var analytics: FirebaseAnalytics
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)

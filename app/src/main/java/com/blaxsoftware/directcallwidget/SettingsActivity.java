@@ -47,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragContainer, new SettingsFragment(mFirebaseAnalytics))
+                .replace(R.id.fragContainer, new SettingsFragment())
                 .commit();
     }
 }
