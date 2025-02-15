@@ -18,10 +18,12 @@
 
 package com.blaxsoftware.directcallwidget;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import javax.inject.Inject;
@@ -30,7 +32,9 @@ import dagger.hilt.android.AndroidEntryPoint;
 import dev.ferp.dcw.feature.settings.SettingsFragment;
 
 @AndroidEntryPoint
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity
+        extends AppCompatActivity
+        implements SettingsFragment.Callback {
 
     @Inject
     FirebaseAnalytics mFirebaseAnalytics;
@@ -45,9 +49,23 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         setSupportActionBar(findViewById(R.id.topAppBar));
 
+        final SettingsFragment settingsFragment = new SettingsFragment();
+        final StringBuilder versionBuilder = new StringBuilder(BuildConfig.VERSION_NAME);
+        if (BuildConfig.DEBUG) {
+            versionBuilder.append(" (Debug)");
+        }
+        Bundle args = new Bundle();
+        args.putString(SettingsFragment.Arguments.VERSION_KEY, versionBuilder.toString());
+        settingsFragment.setArguments(args);
+
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragContainer, new SettingsFragment())
+                .replace(R.id.fragContainer, settingsFragment)
                 .commit();
+    }
+
+    @Override
+    public void onOssLicensesClicked() {
+        startActivity(new Intent(this, OssLicensesMenuActivity.class));
     }
 }

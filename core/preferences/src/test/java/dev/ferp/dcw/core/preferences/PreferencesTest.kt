@@ -1,6 +1,8 @@
 package dev.ferp.dcw.core.preferences
 
+import android.content.Context
 import android.content.SharedPreferences
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -12,21 +14,23 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PreferencesTest {
 
+    private lateinit var context: Context
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var preferences: Preferences
 
     @Before
     fun init() {
+        context = ApplicationProvider.getApplicationContext()
         sharedPrefs = mockk()
-        preferences = Preferences(sharedPrefs)
+        preferences = Preferences(ApplicationProvider.getApplicationContext(), sharedPrefs)
     }
 
     @Test
     fun `getWidgetClickAction returns DIAL when the preference is set to 0`() {
         // Given
         every {
-            sharedPrefs.getString(Preferences.KEY_ON_TAP, any())
-        } returns Preferences.ON_TAP_DIAL
+            sharedPrefs.getString(preferences.onTapKey, any())
+        } returns preferences.dialValue
 
         // When
         val result = preferences.getWidgetClickAction()
@@ -39,8 +43,8 @@ class PreferencesTest {
     fun `getWidgetClickAction returns CALL when the preference is set to 1`() {
         // Given
         every {
-            sharedPrefs.getString(Preferences.KEY_ON_TAP, any())
-        } returns Preferences.ON_TAP_CALL
+            sharedPrefs.getString(preferences.onTapKey, any())
+        } returns preferences.callValue
 
         // When
         val result = preferences.getWidgetClickAction()
@@ -53,7 +57,7 @@ class PreferencesTest {
     fun `getWidgetClickAction returns CALL when the preference is set to an unknown value`() {
         // Given
         every {
-            sharedPrefs.getString(Preferences.KEY_ON_TAP, any())
+            sharedPrefs.getString(preferences.onTapKey, any())
         } returns null
 
         // When

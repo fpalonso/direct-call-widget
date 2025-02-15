@@ -23,18 +23,20 @@
     <!-- Widget action -->
     <string name="pref_onTap">Widget action</string>
     <string name="pref_onTap_dial_entry">Dial the number</string>
-    <string name="pref_onTap_dial_value" translatable="false">"0"</string>
     <string name="pref_onTap_call_entry">Call the contact</string>
-    <string name="pref_onTap_call_value" translatable="false">"1"</string>
     <string name="pref_onTap_default" translatable="false">@string/pref_onTap_call_value</string>
 
-    <!-- Legacy options -->
+
+    <!-- Options -->
     <string name="pref_cat_about">About the app</string>
     <string name="pref_become_btester_title">Become a beta user</string>
     <string name="pref_become_btester_summary">Get updates before anybody else!</string>
     <string name="pref_contribute_title">Get the source code</string>
+    <string name="pref_privacy_policy_title">Privacy policy</string>
 
     <!-- URL -->
     <string name="pref_btester_url" translatable="false">https://play.google.com/apps/testing/com.blaxsoftware.directcallwidget</string>
     <string name="pref_contribute_url" translatable="false">"https://github.com/fpalonso/direct-call-widget"</string>
+    <string name="pref_oss_licenses_title">Open Source licenses</string>
+    <string name="pref_version">Version %s</string>
 </resources>

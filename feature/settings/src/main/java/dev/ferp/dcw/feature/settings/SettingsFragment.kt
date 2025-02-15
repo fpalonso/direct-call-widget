@@ -34,17 +34,24 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
 
+    interface Callback {
+        fun onOssLicensesClicked()
+    }
+
     @Inject
     lateinit var analytics: FirebaseAnalytics
+
+    @Inject
+    lateinit var preferences: Preferences
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
-        findPreference<ListPreference>(Preferences.KEY_ON_TAP)
+        findPreference<ListPreference>(preferences.onTapKey)
             ?.setOnPreferenceChangeListener { _, newValue ->
                 // Just log to Analytics
                 val paramValue = when (newValue) {
-                    Preferences.ON_TAP_DIAL -> Analytics.ParamValue.SETTING_ON_TAP_DIAL
+                    preferences.dialValue -> Analytics.ParamValue.SETTING_ON_TAP_DIAL
                     else -> Analytics.ParamValue.SETTING_ON_TAP_CALL
                 }
                 val bundle = bundleOf(
@@ -54,7 +61,15 @@ class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
                 true
             }
 
-        findPreference<Preference>(Preferences.KEY_BETA)
+        findPreference<Preference>(preferences.privacyPolicyKey)
+            ?.setOnPreferenceClickListener {
+                analytics.logEvent(Analytics.Event.SETTING_PRIVACY_POLICY_CLICK, null)
+                val privacyPolicyIntent = Intent(Intent.ACTION_VIEW, PRIVACY_POLICY_URL.toUri())
+                startActivity(privacyPolicyIntent)
+                true
+            }
+
+        findPreference<Preference>(preferences.betaKey)
             ?.setOnPreferenceClickListener {
                 analytics.logEvent(Analytics.Event.SETTING_BETA_CLICK, null)
                 val joinBetaIntent = Intent(Intent.ACTION_VIEW, JOIN_BETA_URL.toUri())
@@ -62,16 +77,35 @@ class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
                 true
             }
 
-        findPreference<Preference>(Preferences.KEY_CONTRIBUTE)
+        findPreference<Preference>(preferences.contributeKey)
             ?.setOnPreferenceClickListener {
                 analytics.logEvent(Analytics.Event.SETTING_CONTRIBUTE_CLICK, null)
                 val gitHubIntent = Intent(Intent.ACTION_VIEW, REPO_URL.toUri())
                 startActivity(gitHubIntent)
                 true
             }
+
+        findPreference<Preference>(preferences.ossLicensesKey)
+            ?.setOnPreferenceClickListener {
+                analytics.logEvent(Analytics.Event.OSS_LICENSES_CLICK, null)
+                (activity as? Callback)?.onOssLicensesClicked()
+                true
+            }
+
+        findPreference<Preference>(preferences.versionKey)
+            ?.title = activity
+                ?.getString(
+                    R.string.pref_version,
+                    arguments?.getString(Arguments.VERSION_KEY)
+                )
+    }
+
+    object Arguments {
+        const val VERSION_KEY = "version"
     }
 
     private companion object {
+        const val PRIVACY_POLICY_URL = "https://dcw.ferp.dev/privacy"
         const val JOIN_BETA_URL = "https://play.google.com/apps/testing/com.blaxsoftware.directcallwidget"
         const val REPO_URL = "https://github.com/fpalonso/direct-call-widget"
     }
