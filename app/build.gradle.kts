@@ -36,10 +36,19 @@ android {
         applicationId = "com.blaxsoftware.directcallwidget"
         minSdk = 21
         targetSdk = 34
+
         // Version code reflecting the version name
-        // because it's easier to update when switching branches.
-        versionCode = 10060000 // Major + 3 digits minor + 2 digits patch + 2 digits build
-        versionName = "1.6.0"
+        // because it's easier to update when switching branches
+        // with different versions.
+        // Format: Major + 2 digits minor + 2 digits patch + Channel + 2 digits build
+        // Channels:
+        //   0: dev
+        //   1: alpha
+        //   2: beta
+        //   3: rc
+        //   4: stable
+        versionCode = 10601301
+        versionName = "1.6.1-rc1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
