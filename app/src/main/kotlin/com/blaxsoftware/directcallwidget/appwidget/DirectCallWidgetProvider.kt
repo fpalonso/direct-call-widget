@@ -212,7 +212,6 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                                 .asBitmap()
                                 .addListener(WidgetPictureRequestListener(crashlytics))
                                 .load(picUri)
-                                .centerCrop()
                                 .apply(options)
                                 .into(target)
                     }
