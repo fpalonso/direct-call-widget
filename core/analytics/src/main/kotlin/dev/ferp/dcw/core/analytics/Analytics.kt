@@ -33,8 +33,10 @@ object Analytics {
         // Settings
         const val SETTING_ON_TAP_CLICK = "setting_on_tap_click"
         const val SETTING_ON_TAP_CHANGED = "setting_on_tap_changed"
+        const val SETTING_PRIVACY_POLICY_CLICK = "setting_privacy_policy_click"
         const val SETTING_BETA_CLICK = "setting_beta_click"
         const val SETTING_CONTRIBUTE_CLICK = "setting_contribute_click"
+        const val OSS_LICENSES_CLICK = "oss_licenses_click"
 
         // Setup
         const val PICK_CONTACT = "pick_contact"

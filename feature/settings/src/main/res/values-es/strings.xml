@@ -25,4 +25,7 @@
     <string name="pref_become_btester_title">Conviértete en usuario Beta</string>
     <string name="pref_become_btester_summary">¡Obtén actualizaciones antes que nadie!</string>
     <string name="pref_contribute_title">Explorar el código fuente</string>
+    <string name="pref_privacy_policy_title">Política de privacidad</string>
+    <string name="pref_oss_licenses_title">Licencias de código abierto</string>
+    <string name="pref_version">Versión %s</string>
 </resources>

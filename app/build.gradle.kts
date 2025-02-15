@@ -25,6 +25,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android {
@@ -175,6 +176,7 @@ dependencies {
     kapt(libs.androidx.room.compiler)
 
     implementation(libs.jakewharton.timber)
+    implementation(libs.play.services.oss.licenses)
 
     testImplementation(libs.mockk.android)
     testImplementation(libs.androidx.junit)

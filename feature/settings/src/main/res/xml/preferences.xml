@@ -32,13 +32,25 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_cat_about">
         <Preference
+            android:key="@string/pref_privacy_policy_key"
+            android:icon="@drawable/baseline_policy_24"
+            android:title="@string/pref_privacy_policy_title" />
+        <Preference
             android:key="@string/pref_become_btester_key"
             android:icon="@drawable/baseline_new_releases_24"
             android:summary="@string/pref_become_btester_summary"
             android:title="@string/pref_become_btester_title" />
         <Preference
-            android:key="@string/pref_contribute_title_key"
+            android:key="@string/pref_contribute_key"
             android:icon="@drawable/baseline_code_24"
             android:title="@string/pref_contribute_title" />
+        <Preference
+            android:key="@string/pref_oss_licenses_key"
+            android:icon="@drawable/baseline_info_outline_24"
+            android:title="@string/pref_oss_licenses_title" />
+        <Preference
+            android:key="@string/pref_version_key"
+            android:title="@string/pref_version"
+            android:enabled="false" />
     </PreferenceCategory>
 </PreferenceScreen>
