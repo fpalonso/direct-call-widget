@@ -218,8 +218,8 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
                 providerEntryPoint.widgetRepository().getWidget(appWidgetId)?.let { widgetData ->
                     widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { picUri ->
                         AppWidgetTarget(context, R.id.picture, remoteViews, appWidgetId).also { target ->
-                            val widthPx = context.xdpToPx(widthDp)
-                            val heightPx = context.ydpToPx(heightDp)
+                            val widthPx = minOf(context.xdpToPx(widthDp), MAX_IMAGE_WIDTH_PX)
+                            val heightPx = minOf(context.ydpToPx(heightDp), MAX_IMAGE_HEIGHT_PX)
                             crashlytics.log("setWidgetDataWithPic: Loading image. Required size (px): ${widthPx}x${heightPx}")
                             val options = RequestOptions().override(widthPx, heightPx)
                                 .placeholder(R.drawable.ic_default_picture)
@@ -235,6 +235,10 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
             }
 
         }
+
+        // TODO use remoteconfig for this
+        private const val MAX_IMAGE_WIDTH_PX = 800
+        private const val MAX_IMAGE_HEIGHT_PX = 600
     }
 }
 
