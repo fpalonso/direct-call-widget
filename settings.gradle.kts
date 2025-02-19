@@ -34,6 +34,7 @@ dependencyResolutionManagement {
 }
 
 include(":app")
+include(":feature:addwidget")
 include(":feature:settings")
 include(":data:contacts:api")
 include(":data:contacts:impl:default")
