@@ -40,7 +40,7 @@ fun SettingsScreen(
     versionName: String,
     canNavigateBack: Boolean,
     modifier: Modifier = Modifier,
-    navigateBack: () -> Unit = {},
+    navigateBack: () -> Unit = {}
 ) {
     Scaffold(
         modifier = modifier,

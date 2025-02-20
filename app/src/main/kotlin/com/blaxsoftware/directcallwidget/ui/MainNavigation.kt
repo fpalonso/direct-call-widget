@@ -18,6 +18,9 @@
 
 package com.blaxsoftware.directcallwidget.ui
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,10 +35,13 @@ import dev.ferp.dcw.feature.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
-object WidgetList
+data object WidgetList
 
 @Serializable
-class Settings(val appVersionName: String, val canNavigateBack: Boolean = false)
+data class Settings(
+    val appVersionName: String,
+    val canNavigateBack: Boolean = false
+)
 
 @Composable
 fun MainNavHost(
@@ -47,21 +53,39 @@ fun MainNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = startDestination
+        startDestination = startDestination,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None }
     ) {
-        composable<WidgetList> {
+        composable<WidgetList>(
+            enterTransition = {
+                slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.End)
+            },
+            exitTransition = {
+                slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start)
+            }
+        ) {
             WidgetListScreen(
                 modifier = modifier,
                 title = stringResource(R.string.app_name),
                 onSettingsActionClick = {
                     navController.navigate(
                         Settings(appVersionName, canNavigateBack = true)
-                    )
+                    ) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
 
-        composable<Settings> { backStackEntry ->
+        composable<Settings>(
+            enterTransition = {
+                slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start)
+            },
+            exitTransition = {
+                slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.End)
+            }
+        ) { backStackEntry ->
             val route: Settings = backStackEntry.toRoute()
             SettingsScreen(
                 modifier = modifier,
