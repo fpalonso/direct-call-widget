@@ -28,4 +28,5 @@
     <string name="pref_privacy_policy_title">Política de privacidad</string>
     <string name="pref_oss_licenses_title">Licencias de código abierto</string>
     <string name="pref_version">Versión %s</string>
+    <string name="settings">Ajustes</string>
 </resources>
