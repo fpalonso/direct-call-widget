@@ -48,19 +48,9 @@ public class SettingsActivity
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, params);
         setContentView(R.layout.activity_settings);
         setSupportActionBar(findViewById(R.id.topAppBar));
-
-        final SettingsFragment settingsFragment = new SettingsFragment();
-        final StringBuilder versionBuilder = new StringBuilder(BuildConfig.VERSION_NAME);
-        if (BuildConfig.DEBUG) {
-            versionBuilder.append(" (Debug)");
-        }
-        Bundle args = new Bundle();
-        args.putString(SettingsFragment.Arguments.VERSION_KEY, versionBuilder.toString());
-        settingsFragment.setArguments(args);
-
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragContainer, settingsFragment)
+                .replace(R.id.fragContainer, new SettingsFragment())
                 .commit();
     }
 
