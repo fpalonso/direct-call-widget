@@ -35,14 +35,14 @@ import kotlinx.serialization.Serializable
 object WidgetList
 
 @Serializable
-class Settings(val appVersionName: String)
+class Settings(val appVersionName: String, val canNavigateBack: Boolean = false)
 
 @Composable
 fun MainNavHost(
     appVersionName: String,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: Any = WidgetList,
+    startDestination: Any = WidgetList
 ) {
     NavHost(
         modifier = modifier,
@@ -54,7 +54,9 @@ fun MainNavHost(
                 modifier = modifier,
                 title = stringResource(R.string.app_name),
                 onSettingsActionClick = {
-                    navController.navigate(Settings(appVersionName))
+                    navController.navigate(
+                        Settings(appVersionName, canNavigateBack = true)
+                    )
                 }
             )
         }
@@ -63,7 +65,9 @@ fun MainNavHost(
             val route: Settings = backStackEntry.toRoute()
             SettingsScreen(
                 modifier = modifier,
-                versionName = route.appVersionName
+                versionName = route.appVersionName,
+                canNavigateBack = route.canNavigateBack,
+                navigateBack = { navController.popBackStack() }
             )
         }
     }
