@@ -32,6 +32,14 @@ class DirectCallWidgetApp : MultiDexApplication() {
     @Inject lateinit var legacyWidgets: LegacyWidgets
     @Inject lateinit var multiContactWidgets: MultiContactWidgets
 
+    val appVersionName: String by lazy {
+        StringBuilder(BuildConfig.VERSION_NAME).apply {
+            if (BuildConfig.DEBUG) {
+                append(" (DEBUG)")
+            }
+        }.toString()
+    }
+
     override fun onCreate() {
         super.onCreate()
         legacyWidgets.updateAll()

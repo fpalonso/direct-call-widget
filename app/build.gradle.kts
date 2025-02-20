@@ -123,6 +123,7 @@ composeCompiler {
 }
 
 dependencies {
+    implementation(project(":feature:addwidget"))
     implementation(project(":feature:settings"))
     implementation(project(":data:contacts:api"))
     implementation(project(":data:contacts:impl:default"))
