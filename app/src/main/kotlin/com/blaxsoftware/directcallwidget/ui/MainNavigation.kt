@@ -30,7 +30,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.blaxsoftware.directcallwidget.R
-import dev.ferp.dcw.feature.addwidget.WidgetListScreen
+import dev.ferp.dcw.feature.onecontactwidget.WidgetListScreen
 import dev.ferp.dcw.feature.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
