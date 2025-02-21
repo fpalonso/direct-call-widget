@@ -42,6 +42,7 @@ dependencies {
     val composeBom = platform("androidx.compose:compose-bom:2025.01.01")
     implementation(composeBom)
     implementation(libs.material3)
+    implementation(libs.androidx.activity.compose)
 
     // Android Studio Preview support for Compose
     implementation(libs.ui.tooling.preview)
@@ -58,6 +59,10 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     // Compose UI Tests
     androidTestImplementation(libs.ui.test.junit4)

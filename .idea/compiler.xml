@@ -23,7 +23,7 @@
       <module name="direct-call-widget.data.phones.impl.device" target="21" />
       <module name="direct-call-widget.data.pictures.impl.default" target="21" />
       <module name="direct-call-widget.data.pictures.impl.mock" target="21" />
-      <module name="direct-call-widget.feature.addwidget" target="21" />
+      <module name="direct-call-widget.feature.onecontactwidget" target="21" />
       <module name="direct-call-widget.feature.settings" target="21" />
     </bytecodeTargetLevel>
   </component>
