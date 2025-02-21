@@ -2,10 +2,12 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
+    alias(libs.plugins.hilt.android)
 }
 
 android {
-    namespace = "dev.ferp.dcw.feature.addwidget"
+    namespace = "dev.ferp.dcw.feature.onecontactwidget"
     compileSdk = 35
 
     defaultConfig {
@@ -52,6 +54,10 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(composeBom)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     // Compose UI Tests
     androidTestImplementation(libs.ui.test.junit4)
