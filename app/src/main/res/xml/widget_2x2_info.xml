@@ -17,7 +17,7 @@
   -->
 
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="com.blaxsoftware.directcallwidget.ui.WidgetConfigActivity2"
+    android:configure="dev.ferp.dcw.feature.onecontactwidget.config.OneContactConfigActivity"
     android:initialLayout="@layout/widget_2x2"
     android:minWidth="@dimen/widget_2x2_width"
     android:minHeight="@dimen/widget_2x2_height"

@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".OneContactConfigActivity"
+            android:name=".config.OneContactConfigActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />

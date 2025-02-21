@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.feature.onecontactwidget
+package dev.ferp.dcw.feature.onecontactwidget.config
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
