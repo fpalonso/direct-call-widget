@@ -15,6 +15,7 @@
       <module name="direct-call-widget.app" target="21" />
       <module name="direct-call-widget.core.analytics" target="21" />
       <module name="direct-call-widget.core.androidutil" target="21" />
+      <module name="direct-call-widget.core.ui.contactconfig" target="21" />
       <module name="direct-call-widget.core.di" target="21" />
       <module name="direct-call-widget.core.preferences" target="21" />
       <module name="direct-call-widget.data.contacts.impl.default" target="21" />
