@@ -17,6 +17,7 @@
   -->
 
 <resources>
-    <string name="pick_image">Elegir imagen</string>
-    <string name="clear_image">Borrar imagen</string>
+    <string name="add_image">Añadir imagen</string>
+    <string name="change_image">Cambiar</string>
+    <string name="delete_image">Borrar</string>
 </resources>

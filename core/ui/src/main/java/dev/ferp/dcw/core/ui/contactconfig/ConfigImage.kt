@@ -30,6 +30,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -79,14 +83,26 @@ internal fun ConfigImage(
                 )
             }
         }
-        Row {
-            TextButton(onClick = { pickMedia.launch(PickVisualMediaRequest(ImageOnly)) }) {
-                Text(stringResource(R.string.pick_image))
-            }
-            if (imageUri != null) {
-                TextButton(onClick = { onImageUriChanged(null) }) {
-                    Text(stringResource(R.string.clear_image))
+        if (imageUri != null) {
+            Row {
+                TextButton(onClick = { pickMedia.launch(PickVisualMediaRequest(ImageOnly)) }) {
+                    Icon(
+                        imageVector = Icons.Rounded.Edit,
+                        contentDescription = null
+                    )
+                    Text(stringResource(R.string.change_image))
                 }
+                TextButton(onClick = { onImageUriChanged(null) }) {
+                    Icon(
+                        imageVector = Icons.Rounded.Delete,
+                        contentDescription = null
+                    )
+                    Text(stringResource(R.string.delete_image))
+                }
+            }
+        } else {
+            TextButton(onClick = { pickMedia.launch(PickVisualMediaRequest(ImageOnly)) }) {
+                Text(stringResource(R.string.add_image))
             }
         }
     }
