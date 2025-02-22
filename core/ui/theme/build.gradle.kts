@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.ferp.dcw.core.ui.contactconfig"
+    namespace = "dev.ferp.dcw.core.ui.theme"
     compileSdk = 35
 
     defaultConfig {
