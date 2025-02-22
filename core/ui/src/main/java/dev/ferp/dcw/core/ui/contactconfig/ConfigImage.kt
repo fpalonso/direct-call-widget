@@ -52,7 +52,7 @@ internal fun ConfigImage(
     onImageUriChanged: (Uri?) -> Unit = {},
 ) {
     val pickMedia = rememberLauncherForActivityResult(PickVisualMedia()) { mediaUri ->
-        onImageUriChanged(mediaUri)
+        mediaUri?.let(onImageUriChanged)
     }
     Column(
         modifier = modifier,
