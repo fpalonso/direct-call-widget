@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.feature.onecontactwidget.config
+package dev.ferp.dcw.core.ui.contactconfig
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -43,7 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import dev.ferp.dcw.feature.onecontactwidget.R
+import dev.ferp.dcw.core.ui.R
 
 @Composable
 internal fun ConfigImage(

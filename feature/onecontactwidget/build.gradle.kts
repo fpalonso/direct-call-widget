@@ -39,6 +39,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:ui"))
+
     val composeBom = platform("androidx.compose:compose-bom:2025.01.01")
     implementation(composeBom)
     implementation(libs.material3)
@@ -59,10 +61,6 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-
-    // Coil
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
 
     // Compose UI Tests
     androidTestImplementation(libs.ui.test.junit4)

@@ -59,11 +59,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.ui.components.PickablePicture
-import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
-import com.blaxsoftware.directcallwidget.ui.theme.PortraitCardStyle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
+import dev.ferp.dcw.core.ui.theme.PortraitCardStyle
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

@@ -23,6 +23,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
 import dagger.hilt.android.AndroidEntryPoint
+import dev.ferp.dcw.core.ui.contactconfig.OneContactConfigScreen
 
 @AndroidEntryPoint
 class OneContactConfigActivity : AppCompatActivity() {

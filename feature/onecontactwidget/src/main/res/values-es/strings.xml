@@ -18,6 +18,4 @@
 
 <resources>
     <string name="settings">Ajustes</string>
-    <string name="pick_image">Elegir imagen</string>
-    <string name="clear_image">Borrar imagen</string>
 </resources>

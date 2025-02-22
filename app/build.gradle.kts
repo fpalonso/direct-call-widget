@@ -133,6 +133,7 @@ dependencies {
     implementation(project(":data:pictures:impl:default"))
     implementation(project(":data:onecontactwidget:api"))
     implementation(project(":data:onecontactwidget:impl:default"))
+    implementation(project(":core:ui"))
     implementation(project(":core:analytics"))
     implementation(project(":core:di"))
     implementation(project(":core:util"))

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.feature.onecontactwidget.config
+package dev.ferp.dcw.core.ui.contactconfig
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Column

@@ -39,9 +39,16 @@ android {
 dependencies {
     val composeBom = platform("androidx.compose:compose-bom:2025.02.00")
     implementation(composeBom)
-    androidTestImplementation(composeBom)
-
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3.material3)
+
+    // Android Studio Preview support for Compose
+    implementation(libs.ui.tooling.preview)
+    debugImplementation(libs.ui.tooling)
+
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -49,4 +56,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(composeBom)
 }

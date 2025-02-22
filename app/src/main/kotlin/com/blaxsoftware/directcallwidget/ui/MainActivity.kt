@@ -24,9 +24,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import com.blaxsoftware.directcallwidget.DirectCallWidgetApp
-import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
 import dagger.hilt.android.AndroidEntryPoint
 import dev.ferp.dcw.core.androidutil.AndroidVersions
+import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
