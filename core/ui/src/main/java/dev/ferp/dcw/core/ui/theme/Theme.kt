@@ -1,6 +1,6 @@
 /*
  * Direct Call Widget - The widget that makes contacts accessible
- * Copyright (C) 2024 Fer P. A.
+ * Copyright (C) 2025 Fer P. A.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

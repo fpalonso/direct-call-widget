@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.ferp.dcw.core.ui.theme"
+    namespace = "dev.ferp.dcw.core.ui"
     compileSdk = 35
 
     defaultConfig {
