@@ -24,20 +24,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 
 @Composable
-fun OneContactConfigScreen(
-    modifier: Modifier = Modifier
+fun ContactConfigScreen(
+    uiState: ContactConfigUiState,
+    modifier: Modifier = Modifier,
+    onImageUriChanged: (Uri?) -> Unit = {}
 ) {
-    var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     Scaffold(
         modifier = modifier.fillMaxSize()
     ) { paddingValues ->
@@ -49,8 +47,8 @@ fun OneContactConfigScreen(
         ) {
             ConfigImage(
                 modifier = Modifier.padding(paddingValues),
-                imageUri = imageUri?.toString(),
-                onImageUriChanged = { imageUri = it }
+                imageUri = uiState.imageUri?.toString(),
+                onImageUriChanged = onImageUriChanged
             )
         }
     }
@@ -58,6 +56,10 @@ fun OneContactConfigScreen(
 
 @Preview
 @Composable
-fun OneContactConfigScreenPreview() {
-    OneContactConfigScreen()
+fun ContactConfigScreenPreview() {
+    ContactConfigScreen(
+        ContactConfigUiState(
+            imageUri = "content://Alice.jpg".toUri()
+        )
+    )
 }
