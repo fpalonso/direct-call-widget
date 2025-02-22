@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.ui.theme
+package dev.ferp.dcw.core.ui.theme
 
 object PortraitCardStyle {
     const val WidthRatio: Float = 0.75f
