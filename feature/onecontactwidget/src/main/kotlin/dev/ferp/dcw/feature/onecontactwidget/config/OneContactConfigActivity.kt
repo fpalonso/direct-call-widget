@@ -43,7 +43,9 @@ class OneContactConfigActivity : AppCompatActivity() {
                     .collectAsStateWithLifecycle(ContactConfigUiState())
                 ContactConfigScreen(
                     uiState,
-                    onImageUriChanged = contactConfigViewModel::setImageUri
+                    onImageUriChanged = contactConfigViewModel::onImageUriChanged,
+                    onDisplayNameChanged = contactConfigViewModel::onDisplayNameChanged,
+                    onPhoneNumberChanged = contactConfigViewModel::onPhoneNumberChanged
                 )
             }
         }

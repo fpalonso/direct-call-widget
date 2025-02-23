@@ -20,7 +20,9 @@ package dev.ferp.dcw.core.ui.contactconfig
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -34,7 +36,9 @@ import androidx.core.net.toUri
 fun ContactConfigScreen(
     uiState: ContactConfigUiState,
     modifier: Modifier = Modifier,
-    onImageUriChanged: (Uri?) -> Unit = {}
+    onImageUriChanged: (Uri?) -> Unit = {},
+    onDisplayNameChanged: (String) -> Unit = {},
+    onPhoneNumberChanged: (String) -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize()
@@ -42,13 +46,21 @@ fun ContactConfigScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 64.dp),
+                .padding(64.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ConfigImage(
                 modifier = Modifier.padding(paddingValues),
                 imageUri = uiState.imageUri?.toString(),
                 onImageUriChanged = onImageUriChanged
+            )
+            Spacer(Modifier.height(64.dp))
+            ConfigDetails(
+                displayName = uiState.displayName,
+                phoneNumbers = emptyList(),
+                selectedPhoneNumber = uiState.selectedPhoneNumber,
+                onDisplayNameChanged = onDisplayNameChanged,
+                onPhoneNumberChanged = onPhoneNumberChanged
             )
         }
     }

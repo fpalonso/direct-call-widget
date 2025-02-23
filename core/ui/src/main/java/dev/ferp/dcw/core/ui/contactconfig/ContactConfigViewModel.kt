@@ -24,28 +24,46 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 data class ContactConfigUiState(
     val imageUri: Uri? = null,
+    val displayName: String = "",
+    val phoneNumbers: List<String> = emptyList(),
+    val selectedPhoneNumber: String = ""
 )
 
 @HiltViewModel
 class ContactConfigViewModel @Inject constructor() : ViewModel() {
 
     private val _imageUri = MutableStateFlow<Uri?>(null)
+    private val _displayName = MutableStateFlow("")
+    private val _phoneNumbers = MutableStateFlow(listOf(""))
+    private val _selectedPhoneNumber = MutableStateFlow("")
 
-    val uiState = _imageUri.map {
-        ContactConfigUiState(it)
+    val uiState = combine(
+        _imageUri, _displayName, _phoneNumbers, _selectedPhoneNumber
+    ) { imageUri, displayName, phoneNumbers, selectedPhoneNumber ->
+        ContactConfigUiState(
+            imageUri, displayName, phoneNumbers, selectedPhoneNumber
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
         initialValue = ContactConfigUiState()
     )
 
-    fun setImageUri(imageUri: Uri?) {
+    fun onImageUriChanged(imageUri: Uri?) {
         _imageUri.value = imageUri
+    }
+
+    fun onDisplayNameChanged(displayName: String) {
+        _displayName.value = displayName
+    }
+
+    fun onPhoneNumberChanged(phoneNumber: String) {
+        _selectedPhoneNumber.value = phoneNumber
     }
 }

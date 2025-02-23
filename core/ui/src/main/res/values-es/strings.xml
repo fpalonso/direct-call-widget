@@ -20,4 +20,6 @@
     <string name="add_image">Añadir imagen</string>
     <string name="change_image">Cambiar</string>
     <string name="delete_image">Borrar</string>
+    <string name="display_name">Nombre a mostrar</string>
+    <string name="phone_number">Teléfono</string>
 </resources>
