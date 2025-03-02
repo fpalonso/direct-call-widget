@@ -42,6 +42,7 @@ class OneContactConfigActivity : AppCompatActivity() {
                 val uiState by contactConfigViewModel.uiState
                     .collectAsStateWithLifecycle(ContactConfigUiState())
                 ContactConfigScreen(
+                    title = "", // FIXME
                     uiState,
                     onImageUriChanged = contactConfigViewModel::onImageUriChanged,
                     onDisplayNameChanged = contactConfigViewModel::onDisplayNameChanged,

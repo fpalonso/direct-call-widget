@@ -27,23 +27,34 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import dev.ferp.dcw.core.ui.R
 import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactConfigScreen(
+    title: String,
     uiState: ContactConfigUiState,
     modifier: Modifier = Modifier,
+    onCancelButtonClicked: () -> Unit = {},
+    onPickContactButtonClicked: () -> Unit = {},
+    onSaveButtonClicked: () -> Unit = {},
     onImageUriChanged: (Uri?) -> Unit = {},
     onDisplayNameChanged: (String) -> Unit = {},
     onPhoneNumberChanged: (String) -> Unit = {},
@@ -53,7 +64,29 @@ fun ContactConfigScreen(
             modifier = modifier.fillMaxSize(),
             topBar = {
                 TopAppBar(
-                    title = { Text("Contact Configuration") }
+                    title = { Text(title) },
+                    navigationIcon = {
+                        IconButton(onClick = onCancelButtonClicked) {
+                            Icon(
+                                imageVector = Icons.Rounded.Close,
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = onPickContactButtonClicked) {
+                            Icon(
+                                painter = painterResource(R.drawable.baseline_person_search_24),
+                                contentDescription = null
+                            )
+                        }
+                        Button(
+                            modifier = Modifier.padding(end = 16.dp),
+                            onClick = onSaveButtonClicked
+                        ) {
+                            Text("Save")
+                        }
+                    }
                 )
             }
         ) { paddingValues ->
@@ -86,9 +119,15 @@ fun ContactConfigScreen(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun ContactConfigScreenPreview() {
-    ContactConfigScreen(
-        ContactConfigUiState(
-            imageUri = "content://Alice.jpg".toUri()
-        )
-    )
+    DirectCallWidgetTheme {
+        Scaffold { paddingValues ->
+            ContactConfigScreen(
+                title = "Contact configuration",
+                modifier = Modifier.padding(paddingValues),
+                uiState = ContactConfigUiState(
+                    imageUri = "content://Alice.jpg".toUri()
+                )
+            )
+        }
+    }
 }
