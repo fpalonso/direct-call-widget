@@ -18,6 +18,7 @@
 
 package dev.ferp.dcw.core.ui.contactconfig
 
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -28,6 +29,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -35,6 +37,7 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -48,6 +51,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import dev.ferp.dcw.core.ui.R
+import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
 
 @Composable
 internal fun ConfigImage(
@@ -64,7 +68,7 @@ internal fun ConfigImage(
     ) {
         IconButton(
             modifier = Modifier
-                .background(Color.Gray, CircleShape)
+                .background(color = Color.LightGray, CircleShape)
                 .size(128.dp),
             onClick = { pickMedia.launch(PickVisualMediaRequest(ImageOnly)) }
         ) {
@@ -108,17 +112,27 @@ internal fun ConfigImage(
     }
 }
 
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun EmptyConfigImagePreview() {
-    ConfigImage(Modifier.fillMaxSize())
+    DirectCallWidgetTheme {
+        Scaffold { paddings ->
+            ConfigImage(Modifier.padding(paddings))
+        }
+    }
 }
 
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun SetConfigImagePreview() {
-    ConfigImage(
-        Modifier.fillMaxSize(),
-        imageUri = "content://fancyimage.jpg"
-    )
+    DirectCallWidgetTheme {
+        Scaffold { paddings ->
+            ConfigImage(
+                modifier = Modifier.padding(paddings),
+                imageUri = "content://fancyimage.jpg"
+            )
+        }
+    }
 }
