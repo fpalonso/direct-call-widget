@@ -91,3 +91,4 @@ keystore.properties
 .attach_pid*
 kotlin-compiler-*
 app/collection*
+studiobot.xml
