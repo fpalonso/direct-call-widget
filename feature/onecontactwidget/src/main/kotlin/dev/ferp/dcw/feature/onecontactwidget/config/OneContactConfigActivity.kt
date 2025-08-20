@@ -20,33 +20,22 @@ package dev.ferp.dcw.feature.onecontactwidget.config
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import dev.ferp.dcw.core.ui.contactconfig.ContactConfigScreen
-import dev.ferp.dcw.core.ui.contactconfig.ContactConfigUiState
-import dev.ferp.dcw.core.ui.contactconfig.ContactConfigViewModel
+import dev.ferp.dcw.core.ui.contactconfig.rememberContactConfigState
 
 @AndroidEntryPoint
 class OneContactConfigActivity : AppCompatActivity() {
-
-    private val contactConfigViewModel: ContactConfigViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                val uiState by contactConfigViewModel.uiState
-                    .collectAsStateWithLifecycle(ContactConfigUiState())
                 ContactConfigScreen(
                     title = "", // FIXME
-                    uiState,
-                    onImageUriChanged = contactConfigViewModel::onImageUriChanged,
-                    onDisplayNameChanged = contactConfigViewModel::onDisplayNameChanged,
-                    onPhoneNumberChanged = contactConfigViewModel::onPhoneNumberChanged
+                    state = rememberContactConfigState()
                 )
             }
         }
