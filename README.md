@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This is a very legacy project from 2014 and is currently undergoing a major refactor. If you are a contributor, please wait for the next version (probably 2.0) before pushing any PR.
+
 # Direct Call Widget
 An Android widget that makes it easier for people with vision problems to call their contacts.
 
