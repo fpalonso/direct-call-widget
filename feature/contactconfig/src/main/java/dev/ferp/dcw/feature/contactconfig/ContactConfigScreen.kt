@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.core.ui.contactconfig
+package dev.ferp.dcw.feature.contactconfig
 
 import android.content.res.Configuration
 import android.net.Uri
@@ -48,11 +48,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.ferp.dcw.core.ui.R
 import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
 
 /**
- * A state object that can be hoisted to observe the current state of the contact configuration.
+ * State object holding information about a contact that will be added to a widget.
  */
 @Stable
 interface ContactConfigState {
@@ -63,7 +62,7 @@ interface ContactConfigState {
 }
 
 @Stable
-private class ContactConfigStateImpl(
+private class SaveableContactConfigState(
     initialPictureUri: Uri? = null,
     initialDisplayName: String? = null,
     initialPhoneNumbers: List<String> = emptyList(),
@@ -112,10 +111,10 @@ private class ContactConfigStateImpl(
                     )
                 },
                 restore = { list ->
-                    ContactConfigStateImpl(
+                    SaveableContactConfigState(
                         initialPictureUri = list[0] as Uri?,
                         initialDisplayName = list[1] as String?,
-                        initialPhoneNumbers = list[2] as List<String>,
+                        initialPhoneNumbers = (list[2] as List<*>).filterIsInstance<String>(),
                         initialSelectedPhoneNumber = list[3] as String?
                     )
                 }
@@ -126,8 +125,8 @@ private class ContactConfigStateImpl(
 
 @Composable
 fun rememberContactConfigState(): ContactConfigState {
-    return rememberSaveable(saver = ContactConfigStateImpl.saver) {
-        ContactConfigStateImpl()
+    return rememberSaveable(saver = SaveableContactConfigState.saver) {
+        SaveableContactConfigState()
     }
 }
 
@@ -135,8 +134,8 @@ fun rememberContactConfigState(): ContactConfigState {
 @Composable
 fun ContactConfigScreen(
     title: String,
-    state: ContactConfigState = rememberContactConfigState(),
     modifier: Modifier = Modifier,
+    state: ContactConfigState = rememberContactConfigState(),
     onCancelButtonClicked: () -> Unit = {},
     onPickContactButtonClicked: () -> Unit = {},
     onSaveButtonClicked: () -> Unit = {}
@@ -179,7 +178,7 @@ fun ContactConfigScreen(
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ConfigImage(
+                ContactImage(
                     modifier = Modifier.padding(paddingValues),
                     imageUri = state.pictureUri?.toString(),
                     onImageUriChanged = { uri ->
@@ -187,7 +186,7 @@ fun ContactConfigScreen(
                     }
                 )
                 Spacer(Modifier.height(32.dp))
-                ConfigDetails(
+                ContactDetails(
                     displayName = state.displayName.orEmpty(),
                     phoneNumbers = emptyList(),
                     selectedPhoneNumber = state.selectedPhoneNumber.orEmpty(),

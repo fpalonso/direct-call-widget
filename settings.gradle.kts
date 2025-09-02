@@ -18,6 +18,12 @@
 
 @file:Suppress("UnstableApiUsage")
 
+include(":core:domain")
+
+
+include(":feature:contactconfig")
+
+
 pluginManagement {
     repositories {
         google()

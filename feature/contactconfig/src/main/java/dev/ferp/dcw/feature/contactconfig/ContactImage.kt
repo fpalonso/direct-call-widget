@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.core.ui.contactconfig
+package dev.ferp.dcw.feature.contactconfig
 
 import android.content.res.Configuration
 import android.net.Uri
@@ -29,7 +29,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -37,7 +36,7 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -50,11 +49,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import dev.ferp.dcw.core.ui.R
 import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
 
 @Composable
-internal fun ConfigImage(
+internal fun ContactImage(
     modifier: Modifier = Modifier,
     imageUri: String? = null,
     onImageUriChanged: (Uri?) -> Unit = {},
@@ -115,10 +113,10 @@ internal fun ConfigImage(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun EmptyConfigImagePreview() {
+private fun EmptyContactImagePreview() {
     DirectCallWidgetTheme {
-        Scaffold { paddings ->
-            ConfigImage(Modifier.padding(paddings))
+        Surface {
+            ContactImage()
         }
     }
 }
@@ -126,11 +124,10 @@ fun EmptyConfigImagePreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun SetConfigImagePreview() {
+private fun SetContactImagePreview() {
     DirectCallWidgetTheme {
-        Scaffold { paddings ->
-            ConfigImage(
-                modifier = Modifier.padding(paddings),
+        Surface {
+            ContactImage(
                 imageUri = "content://fancyimage.jpg"
             )
         }

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.core.ui.contactconfig
+package dev.ferp.dcw.feature.contactconfig
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,10 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.ferp.dcw.core.ui.R
 
 @Composable
-fun ConfigDetails(
+internal fun ContactDetails(
     displayName: String,
     phoneNumbers: List<String>,
     selectedPhoneNumber: String,
@@ -49,6 +48,8 @@ fun ConfigDetails(
             value = displayName,
             onValueChange = onDisplayNameChanged
         )
+        // TODO Display a list of options
+        // https://developer.android.com/reference/kotlin/androidx/compose/material/package-summary#ExposedDropdownMenuBox(kotlin.Boolean,kotlin.Function1,androidx.compose.ui.Modifier,kotlin.Function1)
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             label = { Text(stringResource(R.string.phone_number)) },
@@ -60,8 +61,8 @@ fun ConfigDetails(
 
 @Preview
 @Composable
-fun ConfigDetailsPreview() {
-    ConfigDetails(
+private fun ConfigDetailsPreview() {
+    ContactDetails(
         displayName = "Alice",
         phoneNumbers = listOf("123", "456"),
         selectedPhoneNumber = "123"

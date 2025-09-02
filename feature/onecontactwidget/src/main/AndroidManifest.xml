@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".config.OneContactConfigActivity"
+            android:name="com.blaxsoftware.directcallwidget.onecontactwidget.OneContactConfigActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
