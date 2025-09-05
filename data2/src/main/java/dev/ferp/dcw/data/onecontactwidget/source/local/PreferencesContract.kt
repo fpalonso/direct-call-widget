@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.core.preferences.widget
+package dev.ferp.dcw.data.onecontactwidget.source.local
 
 /** Contract used for accessing a widget data stored in SharedPreferences. */
 internal object PreferencesContract {

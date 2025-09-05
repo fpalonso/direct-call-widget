@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.core.preferences.widget
+package dev.ferp.dcw.data.onecontactwidget.source.local
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
@@ -27,7 +27,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class OneContactWidgetPrefDSTest {
+class OneContactWidgetPreferenceDataSourceTest {
 
     private val widget = LocalOneContactWidget(
         appWidgetId = 1,
@@ -49,7 +49,7 @@ class OneContactWidgetPrefDSTest {
     @Test
     fun `saveWidget and getWidget`() {
         // When
-        dataSource.saveWidget(
+        dataSource.addWidget(
             widget.appWidgetId,
             widget.displayName,
             widget.phoneNumber,
@@ -74,7 +74,7 @@ class OneContactWidgetPrefDSTest {
     @Test
     fun `deleteWidget deletes widget data`() {
         // Given
-        dataSource.saveWidget(
+        dataSource.addWidget(
             widget.appWidgetId,
             widget.displayName,
             widget.phoneNumber,

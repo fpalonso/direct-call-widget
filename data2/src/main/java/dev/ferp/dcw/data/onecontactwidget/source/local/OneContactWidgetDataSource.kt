@@ -16,16 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.core.preferences.widget
+package dev.ferp.dcw.data.onecontactwidget.source.local
 
-data class LocalOneContactWidget(
-    val appWidgetId: Int,
-    val displayName: String?,
-    val phoneNumber: String,
-    /**
-     * Value as it comes from the contact provider
-     * ([android.provider.ContactsContract.CommonDataKinds.Phone.TYPE_HOME])
-     */
-    val phoneType: Int?,
-    val pictureUri: String?
-)
+internal interface OneContactWidgetDataSource {
+
+    fun addWidget(
+        appWidgetId: Int,
+        displayName: String? = null,
+        phoneNumber: String,
+        /** One of the values in [LocalPhoneType] */
+        phoneType: Int? = null,
+        pictureUri: String? = null
+    )
+
+    fun getWidget(widgetId: Int): Result<LocalOneContactWidget>
+
+    fun deleteWidget(widgetId: Int): Boolean
+}

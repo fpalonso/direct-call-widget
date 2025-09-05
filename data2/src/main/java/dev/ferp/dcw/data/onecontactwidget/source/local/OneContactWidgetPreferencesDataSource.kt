@@ -16,23 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.core.preferences.widget
+package dev.ferp.dcw.data.onecontactwidget.source.local
 
 import android.content.SharedPreferences
 import android.provider.ContactsContract
 import androidx.core.content.edit
-import dev.ferp.dcw.core.preferences.widget.PreferencesContract.displayNameKey
-import dev.ferp.dcw.core.preferences.widget.PreferencesContract.phoneNumberKey
-import dev.ferp.dcw.core.preferences.widget.PreferencesContract.phoneTypeKey
-import dev.ferp.dcw.core.preferences.widget.PreferencesContract.pictureUriKey
-import dev.ferp.dcw.core.preferences.widget.di.OneContactWidget
+import dev.ferp.dcw.data.onecontactwidget.source.local.PreferencesContract.displayNameKey
+import dev.ferp.dcw.data.onecontactwidget.source.local.PreferencesContract.phoneNumberKey
+import dev.ferp.dcw.data.onecontactwidget.source.local.PreferencesContract.phoneTypeKey
+import dev.ferp.dcw.data.onecontactwidget.source.local.PreferencesContract.pictureUriKey
+import dev.ferp.dcw.data.onecontactwidget.di.OneContactWidget
 import javax.inject.Inject
 
 internal class OneContactWidgetPreferencesDataSource @Inject constructor(
     @OneContactWidget private val preferences: SharedPreferences
 ) : OneContactWidgetDataSource {
 
-    override fun saveWidget(
+    override fun addWidget(
         appWidgetId: Int,
         displayName: String?,
         phoneNumber: String,
