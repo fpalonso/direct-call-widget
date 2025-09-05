@@ -20,25 +20,25 @@ package com.blaxsoftware.directcallwidget.domain
 
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.core.net.toUri
 import dev.ferp.dcw.core.di.IoDispatcher
-import dev.ferp.dcw.data.contacts.OneContactWidgetRepository
+import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidgetRepository
 import dev.ferp.dcw.data.pictures.WidgetPictureRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@Deprecated("Use domain's one")
 class DeleteOneContactWidgetUseCase @Inject constructor(
     private val widgetRepository: OneContactWidgetRepository,
     private val pictureRepository: WidgetPictureRepository<Uri, Uri, Bitmap, Int>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
-    suspend operator fun invoke(appWidgetId: Int) = withContext(ioDispatcher) {
+    suspend operator fun invoke(appWidgetId: Int) = withContext(ioDispatcher) {/*
         val pictureUri = widgetRepository.getWidget(appWidgetId)?.pictureUri
         pictureUri?.toUri()?.let { picUri ->
             pictureRepository.deletePicture(picUri)
         }
         widgetRepository.deleteWidget(appWidgetId)
-    }
+    */}
 }

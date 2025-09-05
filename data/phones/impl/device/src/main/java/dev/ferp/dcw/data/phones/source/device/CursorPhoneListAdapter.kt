@@ -20,26 +20,26 @@ package dev.ferp.dcw.data.phones.source.device
 
 import android.database.Cursor
 import android.provider.ContactsContract.CommonDataKinds
-import dev.ferp.dcw.core.androidutil.getIntOrNull
-import dev.ferp.dcw.core.androidutil.getStringOrNull
-import dev.ferp.dcw.data.phones.Phone
+import dev.ferp.dcw.core.androidutil.getInt
+import dev.ferp.dcw.core.androidutil.getString
+import dev.ferp.dcw.data.phones.DevicePhone
 import dev.ferp.dcw.data.phones.PhoneType
 
 /**
  * Converts a cursor with [CommonDataKinds.Phone.NUMBER] and [CommonDataKinds.Phone.TYPE]
- * into a [Phone] list.
+ * into a [DevicePhone] list.
  *
  * @return a phone list, which may be null.
  */
-internal fun Cursor.toPhoneList(): List<Phone> {
-    val list = mutableListOf<Phone>()
+internal fun Cursor.toPhoneList(): List<DevicePhone> {
+    val list = mutableListOf<DevicePhone>()
     while (moveToNext()) {
-        val number = getStringOrNull(CommonDataKinds.Phone.NUMBER) ?: ""
+        val number = getString(CommonDataKinds.Phone.NUMBER) ?: ""
         if (number.isBlank()) continue
         list.add(
-            Phone(
+            DevicePhone(
                 number = number,
-                type = getPhoneType(getIntOrNull(CommonDataKinds.Phone.TYPE))
+                type = getPhoneType(getInt(CommonDataKinds.Phone.TYPE))
             )
         )
     }

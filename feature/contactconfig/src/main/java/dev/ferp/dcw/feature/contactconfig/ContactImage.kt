@@ -51,14 +51,23 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
 
+/**
+ * Contact picture that handles the image picker.
+ *
+ * @param pictureUri The URI of the picture
+ * @param onPictureUriChanged Callback to update the picture URI. If the URI is null,
+ * it means that the user has chosen to delete the picture. That is, if the image picker
+ * is opened but no picture is selected, this callback will not be invoked.
+ */
 @Composable
-internal fun ContactImage(
+internal fun ContactPicture(
     modifier: Modifier = Modifier,
-    imageUri: String? = null,
-    onImageUriChanged: (Uri?) -> Unit = {},
+    pictureUri: String? = null,
+    onPictureUriChanged: (Uri?) -> Unit = {},
 ) {
-    val pickMedia = rememberLauncherForActivityResult(PickVisualMedia()) { mediaUri ->
-        mediaUri?.let(onImageUriChanged)
+    val mediaPicker = rememberLauncherForActivityResult(PickVisualMedia()) { mediaUri ->
+        // If no new picture has been selected, keep the old one.
+        mediaUri?.let(onPictureUriChanged)
     }
     Column(
         modifier = modifier,
@@ -68,12 +77,12 @@ internal fun ContactImage(
             modifier = Modifier
                 .background(color = Color.LightGray, CircleShape)
                 .size(128.dp),
-            onClick = { pickMedia.launch(PickVisualMediaRequest(ImageOnly)) }
+            onClick = { mediaPicker.launch(PickVisualMediaRequest(ImageOnly)) }
         ) {
-            if (imageUri != null) {
+            if (pictureUri != null) {
                 AsyncImage(
                     modifier = Modifier.fillMaxSize(),
-                    model = imageUri,
+                    model = pictureUri,
                     contentDescription = null,
                     contentScale = ContentScale.Crop
                 )
@@ -85,16 +94,16 @@ internal fun ContactImage(
                 )
             }
         }
-        if (imageUri != null) {
+        if (pictureUri != null) {
             Row {
-                TextButton(onClick = { pickMedia.launch(PickVisualMediaRequest(ImageOnly)) }) {
+                TextButton(onClick = { mediaPicker.launch(PickVisualMediaRequest(ImageOnly)) }) {
                     Icon(
                         imageVector = Icons.Rounded.Edit,
                         contentDescription = null
                     )
                     Text(stringResource(R.string.change_image))
                 }
-                TextButton(onClick = { onImageUriChanged(null) }) {
+                TextButton(onClick = { onPictureUriChanged(null) }) {
                     Icon(
                         imageVector = Icons.Rounded.Delete,
                         contentDescription = null
@@ -103,7 +112,7 @@ internal fun ContactImage(
                 }
             }
         } else {
-            TextButton(onClick = { pickMedia.launch(PickVisualMediaRequest(ImageOnly)) }) {
+            TextButton(onClick = { mediaPicker.launch(PickVisualMediaRequest(ImageOnly)) }) {
                 Text(stringResource(R.string.add_image))
             }
         }
@@ -116,7 +125,7 @@ internal fun ContactImage(
 private fun EmptyContactImagePreview() {
     DirectCallWidgetTheme {
         Surface {
-            ContactImage()
+            ContactPicture()
         }
     }
 }
@@ -127,8 +136,8 @@ private fun EmptyContactImagePreview() {
 private fun SetContactImagePreview() {
     DirectCallWidgetTheme {
         Surface {
-            ContactImage(
-                imageUri = "content://fancyimage.jpg"
+            ContactPicture(
+                pictureUri = "content://fancyimage.jpg"
             )
         }
     }

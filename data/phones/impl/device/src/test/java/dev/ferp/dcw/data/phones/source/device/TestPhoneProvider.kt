@@ -21,7 +21,7 @@ package dev.ferp.dcw.data.phones.source.device
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.provider.ContactsContract.CommonDataKinds
-import dev.ferp.dcw.data.phones.Phone
+import dev.ferp.dcw.data.phones.DevicePhone
 import dev.ferp.dcw.data.phones.PhoneType
 
 object TestPhoneProvider {
@@ -43,11 +43,11 @@ object TestPhoneProvider {
         return MatrixCursor(CONTACT_PROJECTION)
     }
 
-    fun nonBlankNumbersPhoneList(): List<Phone> {
+    fun nonBlankNumbersPhoneList(): List<DevicePhone> {
         return listOf(
-            Phone(number = "123", type = PhoneType.MOBILE),
-            Phone(number = "456", type = PhoneType.HOME),
-            Phone(number = "789", type = PhoneType.UNKNOWN),
+            DevicePhone(number = "123", type = PhoneType.MOBILE),
+            DevicePhone(number = "456", type = PhoneType.HOME),
+            DevicePhone(number = "789", type = PhoneType.UNKNOWN),
         )
     }
 }

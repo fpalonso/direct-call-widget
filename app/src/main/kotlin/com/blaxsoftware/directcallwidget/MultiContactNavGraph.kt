@@ -62,9 +62,7 @@ fun MultiContactNavGraph(
         }
 
         composable<SingleContactConfig> {
-            ContactConfigScreen(
-                title = ""
-            )
+            ContactConfigScreen()
         }
     }
 }

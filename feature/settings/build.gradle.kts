@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:preferences"))
+    implementation(project(":core:preferences-user"))
     implementation(project(":core:analytics"))
 
     val composeBom = platform("androidx.compose:compose-bom:2025.01.01")

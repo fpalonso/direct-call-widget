@@ -23,4 +23,7 @@
 
     <string name="display_name">Display name</string>
     <string name="phone_number">Phone number</string>
+    <string name="read_contacts_rationale">Direct Call Widget needs permission to show you your contacts.</string>
+    <string name="error_loading_contact">Could not load contact details</string>
+    <string name="save">Save</string>
 </resources>

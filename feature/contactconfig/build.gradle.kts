@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:domain"))
     implementation(project(":core:ui"))
 
     // Compose
@@ -47,6 +48,7 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.ui.ui.tooling.preview2)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Coil
     implementation(libs.coil.compose)
@@ -60,6 +62,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.google.material)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

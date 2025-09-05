@@ -40,7 +40,7 @@ android {
 
 dependencies {
     implementation(project(":core:ui"))
-
+    implementation(project(":core:domain"))
     val composeBom = platform("androidx.compose:compose-bom:2025.01.01")
     implementation(composeBom)
     implementation(libs.material3)

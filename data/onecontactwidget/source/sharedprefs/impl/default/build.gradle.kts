@@ -35,7 +35,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":data:onecontactwidget:source:sharedprefs:api"))
+    implementation(project(":core:domain"))
 
     implementation(libs.androidx.core.ktx)
 

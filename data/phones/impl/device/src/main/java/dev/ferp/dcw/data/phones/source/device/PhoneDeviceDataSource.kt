@@ -22,7 +22,7 @@ import android.content.ContentResolver
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds
 import dev.ferp.dcw.core.di.IoDispatcher
-import dev.ferp.dcw.data.phones.Phone
+import dev.ferp.dcw.data.phones.DevicePhone
 import dev.ferp.dcw.data.phones.source.PhoneDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +34,7 @@ class PhoneDeviceDataSource @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : PhoneDataSource {
 
-    override suspend fun getPhoneList(lookUpKey: String): List<Phone> = withContext(ioDispatcher){
+    override suspend fun getPhoneList(lookUpKey: String): List<DevicePhone> = withContext(ioDispatcher){
         val cursor = contentResolver.query(
             ContactsContract.Data.CONTENT_URI,
             PHONE_PROJECTION,

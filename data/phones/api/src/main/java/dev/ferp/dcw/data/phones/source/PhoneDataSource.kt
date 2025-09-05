@@ -18,8 +18,8 @@
 
 package dev.ferp.dcw.data.phones.source
 
-import dev.ferp.dcw.data.phones.Phone
+import dev.ferp.dcw.data.phones.DevicePhone
 
 interface PhoneDataSource {
-    suspend fun getPhoneList(lookUpKey: String): List<Phone>
+    suspend fun getPhoneList(lookUpKey: String): List<DevicePhone>
 }

@@ -32,6 +32,10 @@ import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 
+@Deprecated(
+    replaceWith = ReplaceWith("DefaultPictureRepository"),
+    message = "Replace with DefaultPictureRepository"
+)
 class DefaultWidgetPictureRepository @Inject constructor(
     private val contentResolver: ContentResolver,
     @PicturesDir private val picturesDir: File,

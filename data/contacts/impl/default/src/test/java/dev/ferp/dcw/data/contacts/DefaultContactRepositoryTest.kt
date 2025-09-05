@@ -31,7 +31,7 @@ class DefaultContactRepositoryTest {
     @Before
     fun setUp() {
         contentResolver = mockk()
-        repo = DefaultContactRepository(
+        repo = DefaultDeviceContactRepository(
             contentResolver = contentResolver,
             ioDispatcher = testDispatcher
         )

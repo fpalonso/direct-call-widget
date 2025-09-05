@@ -20,9 +20,9 @@ package com.blaxsoftware.directcallwidget.domain
 
 import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.ContactsContract.CommonDataKinds
 import dev.ferp.dcw.core.di.IoDispatcher
-import dev.ferp.dcw.data.contacts.OneContactWidgetRepository
+import dev.ferp.dcw.core.domain.data.PhoneType
+import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidgetRepository
 import dev.ferp.dcw.data.pictures.WidgetPictureRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -44,11 +44,11 @@ class SaveOneContactWidgetUseCase @Inject constructor(
         val internalPictureUri = selectedPictureUri?.let {
             pictureRepository.addPicture(it)
         }?.getOrNull()
-        widgetRepository.createWidget(
+        widgetRepository.addWidget(
             appWidgetId = appWidgetId,
             displayName = displayName ?: "",
             phoneNumber = phoneNumber,
-            phoneType = phoneType ?: CommonDataKinds.Phone.TYPE_MAIN,
+            phoneType = PhoneType.UNKNOWN,
             pictureUri = internalPictureUri?.toString() ?: ""
         )
     }

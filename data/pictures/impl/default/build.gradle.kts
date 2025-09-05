@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":data:pictures:api"))
     implementation(project(":core:di"))
     implementation(project(":core:util"))
+    implementation(project(":core:domain"))
 
     // Hilt
     implementation(libs.hilt.android)

@@ -2,7 +2,7 @@ package dev.ferp.dcw.data.phones.source.device
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
-import dev.ferp.dcw.data.phones.Phone
+import dev.ferp.dcw.data.phones.DevicePhone
 import dev.ferp.dcw.data.phones.PhoneType
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,9 +19,9 @@ class CursorPhoneListAdapterTest {
         val phones = cursor.toPhoneList()
 
         // Then
-        assertThat(phones).contains(Phone("123", PhoneType.MOBILE))
-        assertThat(phones).contains(Phone("456", PhoneType.HOME))
-        assertThat(phones).contains(Phone("789", PhoneType.UNKNOWN))
+        assertThat(phones).contains(DevicePhone("123", PhoneType.MOBILE))
+        assertThat(phones).contains(DevicePhone("456", PhoneType.HOME))
+        assertThat(phones).contains(DevicePhone("789", PhoneType.UNKNOWN))
     }
 
     @Test
