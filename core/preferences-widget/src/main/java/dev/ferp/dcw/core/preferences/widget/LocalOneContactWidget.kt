@@ -16,20 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.data.onecontactwidget.source.sharedprefs
+package dev.ferp.dcw.core.preferences.widget
 
-/** Key prefixes used for accessing a widget data in SharedPreferences. */
-object SharedPrefKeys {
-    private const val DISPLAY_NAME_KEY_PREFIX = "name_"
-    private const val PHONE_NUMBER_KEY_PREFIX = "phone_"
-    private const val PHONE_TYPE_KEY_PREFIX = "phone_type_"
-    private const val PICTURE_URI_KEY_PREFIX = "pic_"
-
-    fun displayNameKey(appWidgetId: Int): String = "$DISPLAY_NAME_KEY_PREFIX$appWidgetId"
-
-    fun phoneNumberKey(appWidgetId: Int): String = "$PHONE_NUMBER_KEY_PREFIX$appWidgetId"
-
-    fun phoneTypeKey(appWidgetId: Int): String = "$PHONE_TYPE_KEY_PREFIX$appWidgetId"
-
-    fun pictureUriKey(appWidgetId: Int): String = "$PICTURE_URI_KEY_PREFIX$appWidgetId"
-}
+data class LocalOneContactWidget(
+    val appWidgetId: Int,
+    val displayName: String?,
+    val phoneNumber: String,
+    /**
+     * Value as it comes from the contact provider
+     * ([android.provider.ContactsContract.CommonDataKinds.Phone.TYPE_HOME])
+     */
+    val phoneType: Int?,
+    val pictureUri: String?
+)

@@ -16,16 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.data.phones
+package dev.ferp.dcw.core.preferences.widget
 
-/** Repository for contact phones. They can be queried by a contact's lookUp key. */
-interface PhoneRepository {
+interface OneContactWidgetDataSource {
 
-    /**
-     * Returns the list of phones from the given lookUpKey. This list can be empty.
-     *
-     * @param lookUpKey lookUp key retrieved from a contact record.
-     * @return list of phones
-     */
-    suspend fun getPhoneListByLookUpKey(lookUpKey: String): List<Phone>
+    fun saveWidget(
+        appWidgetId: Int,
+        displayName: String? = null,
+        phoneNumber: String,
+        /**
+         * Value as it comes from the contact provider
+         * ([android.provider.ContactsContract.CommonDataKinds.Phone.TYPE_HOME])
+         */
+        phoneType: Int? = null,
+        pictureUri: String? = null
+    )
+
+    fun getWidget(widgetId: Int): Result<LocalOneContactWidget>
+
+    fun deleteWidget(widgetId: Int): Boolean
 }

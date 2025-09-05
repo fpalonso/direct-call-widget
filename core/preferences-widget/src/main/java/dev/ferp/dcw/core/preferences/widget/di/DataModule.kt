@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.data.onecontactwidget.source.sharedprefs.di
+package dev.ferp.dcw.core.preferences.widget.di
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -25,24 +25,25 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import dev.ferp.dcw.core.preferences.widget.PreferencesContract
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-internal annotation class OneContactWidgetData
+internal annotation class OneContactWidget
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal object DataModule {
 
-    @OneContactWidgetData
+    @OneContactWidget
     @Singleton
     @Provides
-    internal fun provideWidgetDataSharedPrefs(
+    internal fun provideWidgetSharedPreferences(
         @ApplicationContext context: Context
     ): SharedPreferences = context.getSharedPreferences(
-        "widget_data",
+        PreferencesContract.FILE_NAME,
         Context.MODE_PRIVATE
     )
 }
