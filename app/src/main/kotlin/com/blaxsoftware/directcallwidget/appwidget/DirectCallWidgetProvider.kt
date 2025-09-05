@@ -70,7 +70,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     @InstallIn(SingletonComponent::class)
     interface ProviderEntryPoint {
         fun widgetRepository(): OneContactWidgetRepository
-        fun deleteWidgetUseCase(): DeleteOneContactWidgetUseCase
+        fun deleteWidgetUseCase(): DeleteOneContactWidgetUseCase<Bitmap>
     }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager,

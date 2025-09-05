@@ -38,8 +38,9 @@ internal class DefaultPictureRepository @Inject constructor(
     private val pictureLoader: PictureLoader<Bitmap>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ): PictureRepository<Bitmap> {
-    override suspend fun addPicture(pictureUri: String): Result<String> {
-        return try {
+
+    override suspend fun addPicture(pictureUri: String): Result<String> = withContext(ioDispatcher) {
+        try {
             val destinationFile = createDestinationFile()
             destinationFile.outputStream().use { outputStream ->
                 contentResolver.openInputStream(pictureUri.toUri())?.use { inputStream ->
@@ -53,14 +54,14 @@ internal class DefaultPictureRepository @Inject constructor(
     }
 
     /** Creates an internal file to copy the source file to */
-    private fun createDestinationFile(): File {
+    private suspend fun createDestinationFile(): File = withContext(ioDispatcher) {
         picturesDir.mkdirs()
         lateinit var targetFile: File
         do {
             targetFile = File(picturesDir, UUID.randomUUID().toString())
         } while (targetFile.exists())
         targetFile.createNewFile()
-        return targetFile
+        targetFile
     }
 
     override suspend fun getPicture(
@@ -68,8 +69,8 @@ internal class DefaultPictureRepository @Inject constructor(
         widthPx: Int,
         heightPx: Int,
         placeholder: Int?
-    ): Result<Bitmap> {
-        return try {
+    ): Result<Bitmap> = withContext(ioDispatcher) {
+        try {
             Result.success(
                 pictureLoader.loadPicture(
                     pictureUri.toUri(),
@@ -83,11 +84,9 @@ internal class DefaultPictureRepository @Inject constructor(
         }
     }
 
-    override suspend fun deletePicture(pictureUri: String): Boolean {
-        return withContext(ioDispatcher) {
-            pictureUri.toUri().path?.let {
-                File(it).delete()
-            } ?: false
-        }
+    override suspend fun deletePicture(pictureUri: String): Boolean = withContext(ioDispatcher) {
+        pictureUri.toUri().path?.let {
+            File(it).delete()
+        } ?: false
     }
 }

@@ -19,11 +19,17 @@
 package dev.ferp.dcw.core.domain.onecontactwidget
 
 import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidgetRepository
+import dev.ferp.dcw.core.domain.picture.DeletePictureUseCase
 
-class DeleteOneContactWidgetUseCase(
-    private val repository: OneContactWidgetRepository
+class DeleteOneContactWidgetUseCase<ImageType>(
+    private val repository: OneContactWidgetRepository,
+    private val deletePictureUseCase: DeletePictureUseCase<ImageType>
 ) {
     suspend operator fun invoke(appWidgetId: Int): Boolean {
+        val pictureUri = repository.getWidget(appWidgetId).getOrNull()?.pictureUri
+        pictureUri?.let { picUri ->
+            deletePictureUseCase(picUri)
+        }
         return repository.deleteWidget(appWidgetId)
     }
 }
