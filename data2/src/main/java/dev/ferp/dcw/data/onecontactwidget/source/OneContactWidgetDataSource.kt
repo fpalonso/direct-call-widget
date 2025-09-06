@@ -16,22 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.domain
+package dev.ferp.dcw.data.onecontactwidget.source
 
-import dev.ferp.dcw.core.di.IoDispatcher
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import dev.ferp.dcw.data.onecontactwidget.source.local.LocalOneContactWidget
 
-@Deprecated("Use domain's one")
-class DeleteOneContactWidgetUseCase(
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
-    suspend operator fun invoke(appWidgetId: Int) = withContext(ioDispatcher) {/*
-        val pictureUri = widgetRepository.getWidget(appWidgetId)?.pictureUri
-        pictureUri?.toUri()?.let { picUri ->
-            pictureRepository.deletePicture(picUri)
-        }
-        widgetRepository.deleteWidget(appWidgetId)
-    */}
+internal interface OneContactWidgetDataSource {
+
+    fun addWidget(
+        appWidgetId: Int,
+        displayName: String? = null,
+        phoneNumber: String,
+        /** One of the values in [dev.ferp.dcw.data.onecontactwidget.source.local.LocalPhoneType] */
+        phoneType: Int? = null,
+        pictureUri: String? = null
+    )
+
+    fun getWidget(widgetId: Int): Result<LocalOneContactWidget>
+
+    fun deleteWidget(widgetId: Int): Boolean
 }

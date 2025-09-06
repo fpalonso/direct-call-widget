@@ -16,22 +16,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.domain
+package dev.ferp.dcw.data.picture.source.local
 
-import dev.ferp.dcw.core.di.IoDispatcher
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import android.graphics.Bitmap
+import android.net.Uri
+import androidx.annotation.DrawableRes
+import java.io.IOException
 
-@Deprecated("Use domain's one")
-class DeleteOneContactWidgetUseCase(
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
-    suspend operator fun invoke(appWidgetId: Int) = withContext(ioDispatcher) {/*
-        val pictureUri = widgetRepository.getWidget(appWidgetId)?.pictureUri
-        pictureUri?.toUri()?.let { picUri ->
-            pictureRepository.deletePicture(picUri)
-        }
-        widgetRepository.deleteWidget(appWidgetId)
-    */}
+internal interface PictureLoader {
+
+    /**
+     * Loads a bitmap from the given [uri].
+     *
+     * @param uri uri to load the image from
+     * @param widthPx width of the resulting image, in pixels
+     * @param heightPx height of the resulting image, in pixels
+     * @param placeholderId id of the placeholder to set if the operation fails
+     * @return [Result] with the loaded bitmap
+     */
+    suspend fun loadPicture(
+        uri: Uri,
+        widthPx: Int,
+        heightPx: Int,
+        @DrawableRes placeholderId: Int
+    ): Result<Bitmap>
 }

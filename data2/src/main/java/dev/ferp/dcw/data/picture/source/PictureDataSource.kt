@@ -16,22 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.domain
+package dev.ferp.dcw.data.picture.source
 
-import dev.ferp.dcw.core.di.IoDispatcher
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import android.graphics.Bitmap
 
-@Deprecated("Use domain's one")
-class DeleteOneContactWidgetUseCase(
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
-    suspend operator fun invoke(appWidgetId: Int) = withContext(ioDispatcher) {/*
-        val pictureUri = widgetRepository.getWidget(appWidgetId)?.pictureUri
-        pictureUri?.toUri()?.let { picUri ->
-            pictureRepository.deletePicture(picUri)
-        }
-        widgetRepository.deleteWidget(appWidgetId)
-    */}
+interface PictureDataSource {
+
+    /**
+     * Adds a picture and returns a result with the internal URI.
+     */
+    suspend fun addPicture(pictureUri: String): Result<String>
+
+    /**
+     * Returns a picture from the URI given by [addPicture].
+     */
+    suspend fun getPicture(
+        pictureUri: String,
+        widthPx: Int,
+        heightPx: Int,
+        placeholder: Int?
+    ): Result<Bitmap>
+
+    /**
+     * @return True if the picture was deleted, false otherwise.
+     */
+    suspend fun deletePicture(pictureUri: String): Boolean
 }

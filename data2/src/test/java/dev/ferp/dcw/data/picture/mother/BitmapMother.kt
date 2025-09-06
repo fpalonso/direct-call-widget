@@ -16,22 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.blaxsoftware.directcallwidget.domain
+package dev.ferp.dcw.data.picture.mother
 
-import dev.ferp.dcw.core.di.IoDispatcher
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import android.graphics.Bitmap
 
-@Deprecated("Use domain's one")
-class DeleteOneContactWidgetUseCase(
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
-    suspend operator fun invoke(appWidgetId: Int) = withContext(ioDispatcher) {/*
-        val pictureUri = widgetRepository.getWidget(appWidgetId)?.pictureUri
-        pictureUri?.toUri()?.let { picUri ->
-            pictureRepository.deletePicture(picUri)
-        }
-        widgetRepository.deleteWidget(appWidgetId)
-    */}
+object BitmapMother {
+
+    fun bitmap() = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
 }

@@ -34,7 +34,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":data:contacts:api"))
     implementation(project(":core:domain"))
     implementation(project(":core:di"))
     implementation(project(":core:util"))

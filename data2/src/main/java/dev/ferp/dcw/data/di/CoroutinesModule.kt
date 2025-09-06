@@ -16,30 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.data.onecontactwidget.di
+package dev.ferp.dcw.data.di
 
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidgetRepository
-import dev.ferp.dcw.data.onecontactwidget.DefaultOneContactWidgetRepository
-import dev.ferp.dcw.data.onecontactwidget.source.OneContactWidgetDataSource
-import dev.ferp.dcw.data.onecontactwidget.source.local.OneContactWidgetPreferencesDataSource
-import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import javax.inject.Qualifier
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class IoDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class DataModule {
+object CoroutinesModule {
 
-    @Singleton
-    @Binds
-    abstract fun bindOneContactWidgetDataSource(
-        impl: OneContactWidgetPreferencesDataSource
-    ): OneContactWidgetDataSource
-
-    @Binds
-    abstract fun bindOneContactWidgetRepository(
-        impl: DefaultOneContactWidgetRepository
-    ): OneContactWidgetRepository
+    @IoDispatcher
+    @Provides
+    fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 }

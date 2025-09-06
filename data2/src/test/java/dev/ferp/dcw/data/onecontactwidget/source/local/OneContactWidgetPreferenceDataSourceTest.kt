@@ -22,6 +22,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
+import dev.ferp.dcw.data.onecontactwidget.source.OneContactWidgetDataSource
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -20,9 +20,9 @@ package dev.ferp.dcw.data.onecontactwidget
 
 import com.google.common.truth.Truth.assertThat
 import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidgetRepository
-import dev.ferp.dcw.data.onecontactwidget.doubles.MemoryOneContactWidgetDataSource
+import dev.ferp.dcw.data.onecontactwidget.doubles.OneContactWidgetMemoryDataSource
 import dev.ferp.dcw.data.onecontactwidget.mother.OneContactWidgetMother
-import dev.ferp.dcw.data.onecontactwidget.source.local.OneContactWidgetDataSource
+import dev.ferp.dcw.data.onecontactwidget.source.OneContactWidgetDataSource
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -34,7 +34,7 @@ class DefaultOneContactWidgetRepositoryTest {
 
     @Before
     fun init() {
-        fakeDataSource = MemoryOneContactWidgetDataSource()
+        fakeDataSource = OneContactWidgetMemoryDataSource()
         widgetRepository = DefaultOneContactWidgetRepository(fakeDataSource)
     }
 

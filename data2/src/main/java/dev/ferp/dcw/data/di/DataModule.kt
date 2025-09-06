@@ -16,30 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.data.onecontactwidget.di
+package dev.ferp.dcw.data.di
 
-import dagger.Binds
+import android.content.Context
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidgetRepository
-import dev.ferp.dcw.data.onecontactwidget.DefaultOneContactWidgetRepository
-import dev.ferp.dcw.data.onecontactwidget.source.OneContactWidgetDataSource
-import dev.ferp.dcw.data.onecontactwidget.source.local.OneContactWidgetPreferencesDataSource
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class DataModule {
+internal object DataModule {
 
-    @Singleton
-    @Binds
-    abstract fun bindOneContactWidgetDataSource(
-        impl: OneContactWidgetPreferencesDataSource
-    ): OneContactWidgetDataSource
-
-    @Binds
-    abstract fun bindOneContactWidgetRepository(
-        impl: DefaultOneContactWidgetRepository
-    ): OneContactWidgetRepository
+    @Provides
+    fun provideContentResolver(
+        @ApplicationContext appContext: Context
+    ) = appContext.contentResolver
 }

@@ -21,7 +21,7 @@ package dev.ferp.dcw.data.onecontactwidget
 import dev.ferp.dcw.core.domain.data.PhoneType
 import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidget
 import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidgetRepository
-import dev.ferp.dcw.data.onecontactwidget.source.local.OneContactWidgetDataSource
+import dev.ferp.dcw.data.onecontactwidget.source.OneContactWidgetDataSource
 import javax.inject.Inject
 
 internal class DefaultOneContactWidgetRepository @Inject constructor(

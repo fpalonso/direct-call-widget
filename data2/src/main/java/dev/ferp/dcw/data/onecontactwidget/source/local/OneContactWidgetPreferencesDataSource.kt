@@ -26,6 +26,7 @@ import dev.ferp.dcw.data.onecontactwidget.source.local.PreferencesContract.phone
 import dev.ferp.dcw.data.onecontactwidget.source.local.PreferencesContract.phoneTypeKey
 import dev.ferp.dcw.data.onecontactwidget.source.local.PreferencesContract.pictureUriKey
 import dev.ferp.dcw.data.onecontactwidget.di.OneContactWidget
+import dev.ferp.dcw.data.onecontactwidget.source.OneContactWidgetDataSource
 import javax.inject.Inject
 
 internal class OneContactWidgetPreferencesDataSource @Inject constructor(

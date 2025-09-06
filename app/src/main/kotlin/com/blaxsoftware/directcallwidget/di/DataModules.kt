@@ -18,7 +18,6 @@
 
 package com.blaxsoftware.directcallwidget.di
 
-import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
@@ -30,7 +29,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.ferp.dcw.core.domain.data.devicecontact.DeviceContactRepository
 import dev.ferp.dcw.data.contacts.DefaultDeviceContactRepository
-import java.io.File
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -49,19 +47,6 @@ annotation class UserPreferences
 @Module
 @InstallIn(SingletonComponent::class)
 object FilesModule {
-
-    @Singleton
-    @Provides
-    fun provideContentResolver(
-        @ApplicationContext appContext: Context
-    ): ContentResolver = appContext.contentResolver
-
-    @PicturesDir
-    @Singleton
-    @Provides
-    fun providePicturesDir(
-        @ApplicationContext appContext: Context
-    ) = File(appContext.filesDir, "pics")
 
     @LegacyWidgetInfo
     @Singleton

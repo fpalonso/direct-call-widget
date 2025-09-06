@@ -24,7 +24,7 @@ import android.provider.ContactsContract.Contacts
 import androidx.core.net.toUri
 
 object TestContactProvider {
-
+/*
     val CONTACT_URI = "content://contacts/2".toUri()
     private const val DISPLAY_NAME = "Alice"
     private const val PHOTO_URI = "content://dev.ferp.dcw/pics/alice.jpg"
@@ -46,5 +46,5 @@ object TestContactProvider {
         displayName = DISPLAY_NAME,
         photoUri = PHOTO_URI,
         lookUpKey = LOOKUP_KEY
-    )
+    )*/
 }

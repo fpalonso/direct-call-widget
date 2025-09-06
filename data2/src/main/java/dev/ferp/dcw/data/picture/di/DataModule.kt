@@ -16,30 +16,48 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.data.onecontactwidget.di
+package dev.ferp.dcw.data.picture.di
 
+import android.content.Context
+import android.graphics.Bitmap
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidgetRepository
-import dev.ferp.dcw.data.onecontactwidget.DefaultOneContactWidgetRepository
-import dev.ferp.dcw.data.onecontactwidget.source.OneContactWidgetDataSource
-import dev.ferp.dcw.data.onecontactwidget.source.local.OneContactWidgetPreferencesDataSource
+import dev.ferp.dcw.core.domain.data.picture.PictureRepository
+import dev.ferp.dcw.data.picture.DefaultPictureRepository
+import dev.ferp.dcw.data.picture.source.PictureDataSource
+import dev.ferp.dcw.data.picture.source.local.PictureDiskDataSource
+import java.io.File
+import javax.inject.Qualifier
 import javax.inject.Singleton
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+internal annotation class PicturesDir
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class DataModule {
 
-    @Singleton
-    @Binds
-    abstract fun bindOneContactWidgetDataSource(
-        impl: OneContactWidgetPreferencesDataSource
-    ): OneContactWidgetDataSource
+    companion object {
+        @PicturesDir
+        @Singleton
+        @Provides
+        fun providePicturesDir(
+            @ApplicationContext appContext: Context
+        ) = File(appContext.filesDir, "pics")
+    }
 
     @Binds
-    abstract fun bindOneContactWidgetRepository(
-        impl: DefaultOneContactWidgetRepository
-    ): OneContactWidgetRepository
+    abstract fun bindPictureDataSource(
+        impl: PictureDiskDataSource
+    ): PictureDataSource
+
+    @Binds
+    abstract fun bindPictureRepository(
+        impl: DefaultPictureRepository
+    ): PictureRepository<Bitmap>
 }
