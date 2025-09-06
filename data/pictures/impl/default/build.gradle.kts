@@ -37,7 +37,6 @@ android {
 
 dependencies {
     implementation(project(":core:di"))
-    implementation(project(":core:util"))
     implementation(project(":core:domain"))
 
     // Hilt

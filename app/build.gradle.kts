@@ -134,7 +134,6 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:analytics"))
     implementation(project(":core:di"))
-    implementation(project(":core:util"))
     implementation(project(":core:androidutil"))
     implementation(project(":core:domain"))
 

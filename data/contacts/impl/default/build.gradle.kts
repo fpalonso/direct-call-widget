@@ -36,7 +36,6 @@ android {
 dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:di"))
-    implementation(project(":core:util"))
     implementation(project(":core:androidutil"))
     implementation(project(":core:contactprovider"))
 
