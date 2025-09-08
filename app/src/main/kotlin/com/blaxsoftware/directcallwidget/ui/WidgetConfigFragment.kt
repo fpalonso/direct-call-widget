@@ -35,7 +35,7 @@ import javax.inject.Inject
 
 @Suppress("unused")
 @AndroidEntryPoint
-class WidgetConfigFragment : Fragment() {
+class WidgetConfigFragment : Fragment() {/*
 
     interface Listener {
         fun onAccept()
@@ -87,5 +87,5 @@ class WidgetConfigFragment : Fragment() {
 
     companion object {
         const val TAG = "WidgetConfigFragment"
-    }
+    }*/
 }

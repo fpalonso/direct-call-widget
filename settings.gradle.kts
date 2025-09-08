@@ -18,6 +18,9 @@
 
 @file:Suppress("UnstableApiUsage")
 
+include(":data3:devicecontact")
+
+
 pluginManagement {
     repositories {
         google()
@@ -37,15 +40,12 @@ include(":app")
 include(":feature:onecontactwidget")
 include(":feature:contactconfig")
 include(":feature:settings")
-include(":data:contacts:impl:default")
 include(":data:phones:api")
-include(":data:phones:impl:device")
 include(":data:pictures:impl:default")
 include(":data:onecontactwidget:source:sharedprefs:impl:default")
 include(":data:onecontactwidget:source:sharedprefs:impl:mock")
 include(":data2")
 include(":core:domain")
-include(":core:contactprovider")
 include(":core:preferences-user")
 include(":core:ui")
 include(":core:di")

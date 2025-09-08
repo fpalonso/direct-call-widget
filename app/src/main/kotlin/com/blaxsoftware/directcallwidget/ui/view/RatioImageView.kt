@@ -27,7 +27,7 @@ import com.blaxsoftware.directcallwidget.R
 class RatioImageView(
         context: Context,
         attributes: AttributeSet
-) : AppCompatImageView(context, attributes) {
+) : AppCompatImageView(context, attributes) {/*
 
     private var widthFactor: Float? = null
     private var heightFactor: Float? = null
@@ -78,4 +78,4 @@ class RatioImageView(
             throw IllegalStateException("Only widthFactor or heightFactor may be not null")
         }
     }
-}
+*/}

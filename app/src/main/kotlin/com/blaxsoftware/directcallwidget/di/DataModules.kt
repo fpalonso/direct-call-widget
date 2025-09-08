@@ -21,14 +21,11 @@ package com.blaxsoftware.directcallwidget.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dev.ferp.dcw.core.domain.data.devicecontact.DeviceContactRepository
-import dev.ferp.dcw.data.contacts.DefaultDeviceContactRepository
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -64,16 +61,4 @@ object FilesModule {
     fun provideUserPreferences(
         @ApplicationContext appContext: Context
     ): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
-}
-
-// TODO make each module inject their dependencies
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class RepositoriesModule {
-
-    @Singleton
-    @Binds
-    abstract fun bindContactRepository(
-        contactRepository: DefaultDeviceContactRepository
-    ): DeviceContactRepository
 }
