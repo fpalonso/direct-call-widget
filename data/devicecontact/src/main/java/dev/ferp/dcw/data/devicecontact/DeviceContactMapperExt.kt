@@ -28,7 +28,7 @@ import dev.ferp.dcw.data.devicecontact.source.local.LocalPhoneType
 internal fun LocalContact.toDomain() = DeviceContact(
     displayName = displayName,
     pictureUri = pictureUri,
-    phones = phones.toDevicePhoneList()
+    phones = phones.toDomain()
 )
 
 private fun LocalPhone.toDomain() = DevicePhone(
@@ -36,7 +36,7 @@ private fun LocalPhone.toDomain() = DevicePhone(
     type = type.toDomain()
 )
 
-private fun List<LocalPhone>.toDevicePhoneList() = map {
+private fun List<LocalPhone>.toDomain() = map {
     localPhone -> localPhone.toDomain()
 }
 
