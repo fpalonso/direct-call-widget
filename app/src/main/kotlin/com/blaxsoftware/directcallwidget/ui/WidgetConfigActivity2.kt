@@ -18,28 +18,8 @@
 
 package com.blaxsoftware.directcallwidget.ui
 
-import android.Manifest
-import android.app.Activity
-import android.appwidget.AppWidgetManager
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Bundle
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts.PickContact
-import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
-import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
-import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
-import com.blaxsoftware.directcallwidget.R
-import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
-import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.AndroidEntryPoint
-import dev.ferp.dcw.core.analytics.Analytics
-import javax.inject.Inject
 
 // TODO deprecate this class
 @AndroidEntryPoint

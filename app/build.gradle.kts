@@ -126,7 +126,6 @@ dependencies {
     implementation(project(":feature:onecontactwidget"))
     implementation(project(":feature:contactconfig"))
     implementation(project(":feature:settings"))
-    implementation(project(":data:phones:api"))
     implementation(project(":data:pictures:impl:default"))
     implementation(project(":data2"))
     implementation(project(":data3:devicecontact"))

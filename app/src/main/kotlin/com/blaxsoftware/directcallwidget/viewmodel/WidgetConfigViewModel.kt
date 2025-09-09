@@ -28,7 +28,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blaxsoftware.directcallwidget.legacy.LegacyWidgets
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.ferp.dcw.data.phones.DevicePhone
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,9 +49,10 @@ class WidgetConfigViewModel @Inject constructor(
     @Bindable
     val displayName = MutableLiveData<String?>()
 
+    /*
     private val _phoneList = MutableLiveData<List<DevicePhone>?>()
     val phoneList: LiveData<List<DevicePhone>?>
-        get() = _phoneList
+        get() = _phoneList*/
 
     @Bindable
     val phoneNumber = MutableLiveData<String?>()

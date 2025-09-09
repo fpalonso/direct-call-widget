@@ -50,15 +50,6 @@
             android:value="false" />
 
         <activity
-            android:name=".ui.WidgetConfigActivity2"
-            android:exported="true"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".ui.multicontact.config.MultiContactWidgetConfigActivity"
             android:exported="false"
             android:label="@string/title_activity_multi_contact_widget_config"

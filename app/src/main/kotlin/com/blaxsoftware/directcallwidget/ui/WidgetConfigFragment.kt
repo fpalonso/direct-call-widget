@@ -18,20 +18,8 @@
 
 package com.blaxsoftware.directcallwidget.ui
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import com.blaxsoftware.directcallwidget.R
-import dev.ferp.dcw.core.analytics.Analytics
-import com.blaxsoftware.directcallwidget.databinding.FragmentWidgetConfigBinding
-import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
-import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @Suppress("unused")
 @AndroidEntryPoint
