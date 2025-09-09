@@ -21,7 +21,6 @@ package dev.ferp.dcw.data.picture.source.local
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.annotation.DrawableRes
-import java.io.IOException
 
 internal interface PictureLoader {
 

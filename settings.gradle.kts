@@ -18,6 +18,9 @@
 
 @file:Suppress("UnstableApiUsage")
 
+include(":data3:picture")
+
+
 include(":data3:devicecontact")
 
 

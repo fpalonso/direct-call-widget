@@ -28,8 +28,8 @@ import androidx.core.net.toUri
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
+import dev.ferp.dcw.data.picture.rules.MainDispatcherRule
 import dev.ferp.dcw.data.picture.source.PictureDataSource
-import dev.ferp.dcw.data.rules.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.StandardTestDispatcher

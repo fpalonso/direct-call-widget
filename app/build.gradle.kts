@@ -129,6 +129,7 @@ dependencies {
     implementation(project(":data:pictures:impl:default"))
     implementation(project(":data2"))
     implementation(project(":data3:devicecontact"))
+    implementation(project(":data3:picture"))
     implementation(project(":core:ui"))
     implementation(project(":core:analytics"))
     implementation(project(":core:di"))

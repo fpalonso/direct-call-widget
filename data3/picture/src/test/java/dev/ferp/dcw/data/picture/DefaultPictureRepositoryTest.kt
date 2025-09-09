@@ -20,7 +20,7 @@ package dev.ferp.dcw.data.picture
 
 import android.graphics.Bitmap
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import dev.ferp.dcw.core.domain.data.picture.PictureRepository
 import dev.ferp.dcw.data.picture.doubles.PictureMemoryDataSource
 import dev.ferp.dcw.data.picture.source.PictureDataSource
@@ -44,17 +44,17 @@ class DefaultPictureRepositoryTest {
     @Test
     fun `Add and retrieve picture`() = runTest {
         val addPictureResult = repository.addPicture("uri")
-        assertThat(addPictureResult.isSuccess).isTrue()
+        Truth.assertThat(addPictureResult.isSuccess).isTrue()
         val pictureUri = addPictureResult.getOrNull()
         val getPictureResult = repository.getPicture(pictureUri.orEmpty(), 100, 100)
-        assertThat(getPictureResult.isSuccess).isTrue()
-        assertThat(getPictureResult.getOrNull()).isNotNull()
+        Truth.assertThat(getPictureResult.isSuccess).isTrue()
+        Truth.assertThat(getPictureResult.getOrNull()).isNotNull()
     }
 
     @Test
     fun `getPicture returns failure for non-existing URI`() = runTest {
         val getPictureResult = repository.getPicture("fakeUri", 100, 100)
-        assertThat(getPictureResult.isFailure).isTrue()
+        Truth.assertThat(getPictureResult.isFailure).isTrue()
     }
 
     @Test
@@ -63,6 +63,6 @@ class DefaultPictureRepositoryTest {
         val pictureUri = addPictureResult.getOrNull()
         repository.deletePicture(pictureUri.orEmpty())
         val getPictureResult = repository.getPicture(pictureUri.orEmpty(), 100, 100)
-        assertThat(getPictureResult.isFailure).isTrue()
+        Truth.assertThat(getPictureResult.isFailure).isTrue()
     }
 }

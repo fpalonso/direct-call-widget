@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.ferp.dcw.data.devicecontact"
+    namespace = "dev.ferp.dcw.data.picture"
     compileSdk = 36
 
     defaultConfig {
@@ -38,20 +38,27 @@ dependencies {
     implementation(project(":core:di"))
     implementation(project(":core:domain"))
 
-    // Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.google.material)
 
-    testImplementation(libs.mockk.android)
+    // Hilt
+    implementation(libs.hilt.android)
+    debugImplementation(libs.androidx.compose.ui.ui.tooling2)
+    kapt(libs.hilt.compiler)
+
+    // Glide
+    implementation(libs.glide)
+    //noinspection KaptUsageInsteadOfKsp
+    kapt(libs.glide.compiler)
+
+    testImplementation(libs.androidx.junit.ktx)
+    testImplementation(libs.robolectric)
     testImplementation(libs.androidx.truth)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.androidx.junit)
-    testImplementation(libs.robolectric)
+    testImplementation(libs.mockk)
 
+    testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

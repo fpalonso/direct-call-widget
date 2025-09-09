@@ -21,7 +21,7 @@ package dev.ferp.dcw.data.picture.source.local
 import android.content.ContentResolver
 import android.graphics.Bitmap
 import androidx.core.net.toUri
-import dev.ferp.dcw.data.di.IoDispatcher
+import dev.ferp.dcw.core.di.IoDispatcher
 import dev.ferp.dcw.data.picture.di.PicturesDir
 import dev.ferp.dcw.data.picture.source.PictureDataSource
 import kotlinx.coroutines.CoroutineDispatcher
