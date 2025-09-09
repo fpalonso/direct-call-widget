@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.data.pictures.source.disk
+package dev.ferp.dcw.data.picture.source.local
 
 import android.graphics.Bitmap
 import com.bumptech.glide.load.engine.GlideException
@@ -30,7 +30,7 @@ import kotlin.coroutines.resumeWithException
 
 class BitmapLoaderTest {
 
-    private lateinit var continuation: Continuation<Bitmap>
+    private lateinit var continuation: Continuation<Result<Bitmap>>
     private lateinit var requestListener: BitmapLoader.ContinuationRequestListener
 
     @Before
@@ -43,7 +43,7 @@ class BitmapLoaderTest {
     fun `onResourceReady resumes continuation with bitmap`() {
         val expectedBitmap: Bitmap = mockk()
         requestListener.onResourceReady(expectedBitmap, null, null, null, true)
-        verify { continuation.resume(expectedBitmap) }
+        verify { continuation.resume(Result.success(expectedBitmap)) }
     }
 
     @Test
