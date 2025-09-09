@@ -18,12 +18,6 @@
 
 @file:Suppress("UnstableApiUsage")
 
-include(":data3:picture")
-
-
-include(":data3:devicecontact")
-
-
 pluginManagement {
     repositories {
         google()
@@ -44,6 +38,8 @@ include(":feature:onecontactwidget")
 include(":feature:contactconfig")
 include(":feature:settings")
 include(":data2")
+include(":data:picture")
+include(":data:devicecontact")
 include(":core:domain")
 include(":core:preferences-user")
 include(":core:ui")
