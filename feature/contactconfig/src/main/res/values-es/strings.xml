@@ -24,4 +24,5 @@
     <string name="phone_number">Teléfono</string>
     <string name="read_contacts_rationale">Direct Call Widget necesita permiso para mostrarte tus contactos.</string>
     <string name="error_loading_contact">No se pudo leer el contacto</string>
+    <string name="save">Guardar</string>
 </resources>
