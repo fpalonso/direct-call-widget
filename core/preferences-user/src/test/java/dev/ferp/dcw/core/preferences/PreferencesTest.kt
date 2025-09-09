@@ -14,12 +14,12 @@ import org.junit.runner.RunWith
 class PreferencesTest {
 
     private lateinit var sharedPrefs: SharedPreferences
-    private lateinit var preferences: UserPreferences
+    private lateinit var preferences: Preferences
 
     @Before
     fun init() {
         sharedPrefs = mockk()
-        preferences = UserPreferences(ApplicationProvider.getApplicationContext(), sharedPrefs)
+        preferences = Preferences(ApplicationProvider.getApplicationContext(), sharedPrefs)
     }
 
     @Test
@@ -33,7 +33,7 @@ class PreferencesTest {
         val result = preferences.getWidgetClickAction()
 
         // Then
-        assertThat(result).isEqualTo(UserPreferences.WidgetClickAction.DIAL)
+        assertThat(result).isEqualTo(Preferences.WidgetClickAction.DIAL)
     }
 
     @Test
@@ -47,7 +47,7 @@ class PreferencesTest {
         val result = preferences.getWidgetClickAction()
 
         // Then
-        assertThat(result).isEqualTo(UserPreferences.WidgetClickAction.CALL)
+        assertThat(result).isEqualTo(Preferences.WidgetClickAction.CALL)
     }
 
     @Test
@@ -61,6 +61,6 @@ class PreferencesTest {
         val result = preferences.getWidgetClickAction()
 
         // Then
-        assertThat(result).isEqualTo(UserPreferences.WidgetClickAction.CALL)
+        assertThat(result).isEqualTo(Preferences.WidgetClickAction.CALL)
     }
 }
