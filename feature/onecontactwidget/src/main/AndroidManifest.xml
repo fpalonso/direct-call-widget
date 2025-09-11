@@ -1,14 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <application>
-        <activity
-            android:name="com.blaxsoftware.directcallwidget.onecontactwidget.OneContactConfigActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-    </application>
+<manifest>
 </manifest>
