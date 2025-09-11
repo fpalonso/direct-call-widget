@@ -30,11 +30,11 @@ import android.os.Bundle
 import android.util.Size
 import android.view.View
 import android.widget.RemoteViews
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import com.blaxsoftware.directcallwidget.Intents
 import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.WidgetClickReceiver
-import com.blaxsoftware.directcallwidget.domain.DeleteOneContactWidgetUseCase
 import com.blaxsoftware.directcallwidget.ui.xdpToPx
 import com.blaxsoftware.directcallwidget.ui.ydpToPx
 import com.bumptech.glide.Glide
@@ -55,8 +55,9 @@ import dagger.hilt.components.SingletonComponent
 import dev.ferp.dcw.core.analytics.Analytics
 import dev.ferp.dcw.core.analytics.di.FirebaseEntryPoint
 import dev.ferp.dcw.core.di.CoroutinesEntryPoint
-import dev.ferp.dcw.data.contacts.OneContactWidget
-import dev.ferp.dcw.data.contacts.OneContactWidgetRepository
+import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidget
+import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidgetRepository
+import dev.ferp.dcw.core.domain.onecontactwidget.DeleteOneContactWidgetUseCase
 import kotlinx.coroutines.launch
 
 // TODO have only one static setWidgetData (call it updateWidget)
@@ -69,7 +70,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     @InstallIn(SingletonComponent::class)
     interface ProviderEntryPoint {
         fun widgetRepository(): OneContactWidgetRepository
-        fun deleteWidgetUseCase(): DeleteOneContactWidgetUseCase
+        fun deleteWidgetUseCase(): DeleteOneContactWidgetUseCase<Bitmap>
     }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager,
@@ -104,9 +105,10 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
         val coroutinesEntryPoint = EntryPointAccessors
             .fromApplication<CoroutinesEntryPoint>(context)
         coroutinesEntryPoint.appScope().launch {
-            widgetRepo.getWidget(id)?.let { widget ->
-                setWidgetData(context, appWidgetManager, id, widget)
-            }
+            widgetRepo.getWidget(id)
+                .onSuccess { widget ->
+                    setWidgetData(context, appWidgetManager, id, widget)
+                }
         }
     }
 
@@ -187,7 +189,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
         // TODO extract to :core:call
         private fun callContactIntent(context: Context, phoneNumber: String,
                                       widgetId: Int): PendingIntent {
-            val callUri = Uri.parse("tel:" + Uri.encode(phoneNumber))
+            val callUri = ("tel:" + Uri.encode(phoneNumber)).toUri()
             val callIntent = Intent(Intents.ACTION_WIDGET_CLICK, callUri)
             callIntent.setClass(context, WidgetClickReceiver::class.java)
             return PendingIntent.getBroadcast(context, widgetId, callIntent,
@@ -215,25 +217,26 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
             val coroutinesEntryPoint = EntryPointAccessors
                 .fromApplication<CoroutinesEntryPoint>(context)
             coroutinesEntryPoint.appScope().launch {
-                providerEntryPoint.widgetRepository().getWidget(appWidgetId)?.let { widgetData ->
-                    widgetData.pictureUri?.let { uriStr -> Uri.parse(uriStr) }?.let { picUri ->
-                        AppWidgetTarget(context, R.id.picture, remoteViews, appWidgetId).also { target ->
-                            val widthPx = minOf(context.xdpToPx(widthDp), MAX_IMAGE_WIDTH_PX)
-                            val heightPx = minOf(context.ydpToPx(heightDp), MAX_IMAGE_HEIGHT_PX)
-                            crashlytics.log("setWidgetDataWithPic: Loading image. Required size (px): ${widthPx}x${heightPx}")
-                            val options = RequestOptions().override(widthPx, heightPx)
-                                .placeholder(R.drawable.ic_default_picture)
-                            Glide.with(context.applicationContext)
-                                .asBitmap()
-                                .addListener(WidgetPictureRequestListener(crashlytics))
-                                .load(picUri)
-                                .apply(options)
-                                .into(target)
+                providerEntryPoint.widgetRepository()
+                    .getWidget(appWidgetId)
+                    .onSuccess { widget ->
+                        widget.pictureUri?.toUri()?.let { picUri ->
+                            AppWidgetTarget(context, R.id.picture, remoteViews, appWidgetId).also { target ->
+                                val widthPx = minOf(context.xdpToPx(widthDp), MAX_IMAGE_WIDTH_PX)
+                                val heightPx = minOf(context.ydpToPx(heightDp), MAX_IMAGE_HEIGHT_PX)
+                                crashlytics.log("setWidgetDataWithPic: Loading image. Required size (px): ${widthPx}x${heightPx}")
+                                val options = RequestOptions().override(widthPx, heightPx)
+                                    .placeholder(R.drawable.ic_default_picture)
+                                Glide.with(context.applicationContext)
+                                    .asBitmap()
+                                    .addListener(WidgetPictureRequestListener(crashlytics))
+                                    .load(picUri)
+                                    .apply(options)
+                                    .into(target)
+                            }
                         }
                     }
-                }
             }
-
         }
 
         // TODO use remoteconfig for this

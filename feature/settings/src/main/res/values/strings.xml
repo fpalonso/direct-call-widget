@@ -39,4 +39,6 @@
     <string name="pref_contribute_url" translatable="false">"https://github.com/fpalonso/direct-call-widget"</string>
     <string name="pref_oss_licenses_title">Open Source licenses</string>
     <string name="pref_version">Version %s</string>
+
+    <string name="settings">Settings</string>
 </resources>

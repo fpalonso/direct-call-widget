@@ -29,7 +29,7 @@ import com.blaxsoftware.directcallwidget.ui.MultiContactAppWidget
 import com.blaxsoftware.directcallwidget.ui.MultiContactStateDefinition
 import com.blaxsoftware.directcallwidget.ui.multicontact.config.MultiContactConfigViewModel
 import com.blaxsoftware.directcallwidget.ui.multicontact.config.MultiContactWidgetConfigScreen
-import com.blaxsoftware.directcallwidget.ui.singlecontact.config.ContactConfigScreen
+import dev.ferp.dcw.feature.contactconfig.ContactConfigScreen
 
 @Composable
 fun MultiContactNavGraph(
@@ -62,12 +62,7 @@ fun MultiContactNavGraph(
         }
 
         composable<SingleContactConfig> {
-            ContactConfigScreen(
-                onOkButtonClick = { contactConfig ->
-                    multiContactConfigViewModel.addContact(contactConfig)
-                    navController.popBackStack(MultiContactConfig, inclusive = false)
-                }
-            )
+            ContactConfigScreen()
         }
     }
 }

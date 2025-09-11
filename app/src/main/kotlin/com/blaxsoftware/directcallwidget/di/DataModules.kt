@@ -18,27 +18,14 @@
 
 package com.blaxsoftware.directcallwidget.di
 
-import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.net.Uri
 import androidx.preference.PreferenceManager
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dev.ferp.dcw.data.contacts.ContactRepository
-import dev.ferp.dcw.data.contacts.DefaultContactRepository
-import dev.ferp.dcw.data.contacts.OneContactWidgetRepository
-import dev.ferp.dcw.data.onecontactwidget.DefaultOneContactWidgetRepository
-import dev.ferp.dcw.data.phones.DevicePhoneRepository
-import dev.ferp.dcw.data.phones.PhoneRepository
-import dev.ferp.dcw.data.pictures.DefaultWidgetPictureRepository
-import dev.ferp.dcw.data.pictures.WidgetPictureRepository
-import java.io.File
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -58,19 +45,6 @@ annotation class UserPreferences
 @InstallIn(SingletonComponent::class)
 object FilesModule {
 
-    @Singleton
-    @Provides
-    fun provideContentResolver(
-        @ApplicationContext appContext: Context
-    ): ContentResolver = appContext.contentResolver
-
-    @PicturesDir
-    @Singleton
-    @Provides
-    fun providePicturesDir(
-        @ApplicationContext appContext: Context
-    ) = File(appContext.filesDir, "pics")
-
     @LegacyWidgetInfo
     @Singleton
     @Provides
@@ -87,33 +61,4 @@ object FilesModule {
     fun provideUserPreferences(
         @ApplicationContext appContext: Context
     ): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class RepositoriesModule {
-
-    @Singleton
-    @Binds
-    abstract fun bindContactRepository(
-        contactRepository: DefaultContactRepository
-    ): ContactRepository<Uri>
-
-    @Singleton
-    @Binds
-    abstract fun bindPhoneRepository(
-        phoneRepository: DevicePhoneRepository
-    ): PhoneRepository
-
-    @Singleton
-    @Binds
-    abstract fun bindOneContactWidgetRepository(
-        oneContactWidgetRepository: DefaultOneContactWidgetRepository
-    ): OneContactWidgetRepository
-
-    @Singleton
-    @Binds
-    abstract fun bindWidgetPictureRepository(
-        widgetPictureRepository: DefaultWidgetPictureRepository
-    ): WidgetPictureRepository<Uri, Uri, Bitmap, Int>
 }

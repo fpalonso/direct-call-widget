@@ -123,19 +123,17 @@ composeCompiler {
 }
 
 dependencies {
+    implementation(project(":feature:onecontactwidget"))
+    implementation(project(":feature:contactconfig"))
     implementation(project(":feature:settings"))
-    implementation(project(":data:contacts:api"))
-    implementation(project(":data:contacts:impl:default"))
-    implementation(project(":data:phones:api"))
-    implementation(project(":data:phones:impl:device"))
-    implementation(project(":data:pictures:api"))
-    implementation(project(":data:pictures:impl:default"))
-    implementation(project(":data:onecontactwidget:api"))
-    implementation(project(":data:onecontactwidget:impl:default"))
+    implementation(project(":data2"))
+    implementation(project(":data:devicecontact"))
+    implementation(project(":data:picture"))
+    implementation(project(":core:ui"))
     implementation(project(":core:analytics"))
     implementation(project(":core:di"))
-    implementation(project(":core:util"))
     implementation(project(":core:androidutil"))
+    implementation(project(":core:domain"))
 
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.appcompat)
@@ -198,8 +196,6 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.hilt.android.testing)
     kaptTest(libs.hilt.android.compiler)
-    testImplementation(project(":data:onecontactwidget:impl:mock"))
-    testImplementation(project(":data:pictures:impl:mock"))
 
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)

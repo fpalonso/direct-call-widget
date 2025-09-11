@@ -45,7 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.blaxsoftware.directcallwidget.R
-import com.blaxsoftware.directcallwidget.ui.theme.PortraitCardStyle
+import dev.ferp.dcw.core.ui.theme.PortraitCardStyle
 
 @Composable
 fun PickablePicture(

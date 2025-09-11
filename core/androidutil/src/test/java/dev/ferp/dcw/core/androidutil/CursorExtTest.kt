@@ -21,21 +21,21 @@ class CursorExtTest {
 
     @Test
     fun `getStringOrNull returns string if column exists`() {
-        assertThat(cursor.getStringOrNull("col2")).isEqualTo("val2")
+        assertThat(cursor.getString("col2")).isEqualTo("val2")
     }
 
     @Test
     fun `getStringOrNull returns null if column does not exist`() {
-        assertThat(cursor.getStringOrNull("col4")).isNull()
+        assertThat(cursor.getString("col4")).isNull()
     }
 
     @Test
     fun `getIntOrNull returns Int if column exists`() {
-        assertThat(cursor.getIntOrNull("col3")).isEqualTo(3)
+        assertThat(cursor.getInt("col3")).isEqualTo(3)
     }
 
     @Test
     fun `getIntOrNull returns null if column does not exist`() {
-        assertThat(cursor.getIntOrNull("col4")).isNull()
+        assertThat(cursor.getInt("col4")).isNull()
     }
 }

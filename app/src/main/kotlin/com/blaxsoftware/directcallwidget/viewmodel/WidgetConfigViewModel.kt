@@ -19,7 +19,6 @@
 package com.blaxsoftware.directcallwidget.viewmodel
 
 import android.net.Uri
-import androidx.core.net.toUri
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
@@ -27,20 +26,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blaxsoftware.directcallwidget.domain.SaveOneContactWidgetUseCase
 import com.blaxsoftware.directcallwidget.legacy.LegacyWidgets
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.ferp.dcw.data.contacts.ContactRepository
-import dev.ferp.dcw.data.phones.Phone
-import dev.ferp.dcw.data.phones.PhoneRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Deprecated("Delete")
 @HiltViewModel
 class WidgetConfigViewModel @Inject constructor(
-    private val contactRepo: ContactRepository<Uri>,
-    private val phoneRepo: PhoneRepository,
-    private val saveWidgetUseCase: SaveOneContactWidgetUseCase,
+    //private val saveWidgetUseCase: SaveOneContactWidgetUseCase,
     private val legacyWidgets: LegacyWidgets
 ) : ViewModel(), Observable {
 
@@ -55,9 +49,10 @@ class WidgetConfigViewModel @Inject constructor(
     @Bindable
     val displayName = MutableLiveData<String?>()
 
-    private val _phoneList = MutableLiveData<List<Phone>?>()
-    val phoneList: LiveData<List<Phone>?>
-        get() = _phoneList
+    /*
+    private val _phoneList = MutableLiveData<List<DevicePhone>?>()
+    val phoneList: LiveData<List<DevicePhone>?>
+        get() = _phoneList*/
 
     @Bindable
     val phoneNumber = MutableLiveData<String?>()
@@ -71,7 +66,7 @@ class WidgetConfigViewModel @Inject constructor(
     }
 
     fun loadContact(contactUri: Uri) {
-        viewModelScope.launch {
+        viewModelScope.launch {/*
             contactRepo.getContactById(contactUri)?.let { contact ->
                 _picUri.value = contact.photoUri?.toUri()
                 displayName.value = contact.displayName
@@ -81,7 +76,7 @@ class WidgetConfigViewModel @Inject constructor(
                 if (!_phoneList.value.isNullOrEmpty()) {
                     phoneNumber.value = _phoneList.value!![0].number
                 }
-            }
+            }*/
         }
     }
 
@@ -92,9 +87,9 @@ class WidgetConfigViewModel @Inject constructor(
     fun onAccept() {
         widgetId?.let { appWidgetId ->
             viewModelScope.launch {
-                saveWidgetUseCase(
+                /*saveWidgetUseCase(
                     appWidgetId, displayName.value, phoneNumber.value ?: "", 0, _picUri.value
-                )
+                )*/
             }
             legacyWidgets.update(intArrayOf(appWidgetId))
         }

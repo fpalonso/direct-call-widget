@@ -91,17 +91,11 @@ class SettingsFragment @Inject constructor() : PreferenceFragmentCompat() {
                 (activity as? Callback)?.onOssLicensesClicked()
                 true
             }
-
-        findPreference<Preference>(preferences.versionKey)
-            ?.title = activity
-                ?.getString(
-                    R.string.pref_version,
-                    arguments?.getString(Arguments.VERSION_KEY)
-                )
     }
 
-    object Arguments {
-        const val VERSION_KEY = "version"
+    fun setVersionName(versionName: String) {
+        findPreference<Preference>(preferences.versionKey)
+            ?.title = activity?.getString(R.string.pref_version, versionName)
     }
 
     private companion object {
