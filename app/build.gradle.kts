@@ -124,8 +124,8 @@ composeCompiler {
 
 dependencies {
     implementation(project(":feature:onecontactwidget"))
-    implementation(project(":feature:contactconfig"))
     implementation(project(":feature:settings"))
+    implementation(project(":shared:contactconfig"))
     implementation(project(":data2"))
     implementation(project(":data:devicecontact"))
     implementation(project(":data:picture"))
