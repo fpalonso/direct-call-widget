@@ -38,19 +38,6 @@ object Analytics {
         const val SETTING_CONTRIBUTE_CLICK = "setting_contribute_click"
         const val OSS_LICENSES_CLICK = "oss_licenses_click"
 
-        // Setup
-        const val PICK_CONTACT = "pick_contact"
-        const val PICK_CONTACT_CANCEL = "pick_contact_cancel"
-        const val CHANGE_PICTURE_CLICK = "change_picture_click"
-        const val TAKE_PICTURE_CLICK = "take_picture_click"
-        const val PICK_IMAGE_CLICK = "take_picture_click"
-        const val PICK_IMAGE = "pick_image"
-        const val PICK_IMAGE_CANCEL = "pick_image_cancel"
-        const val TAKE_PICTURE = "take_picture"
-        const val TAKE_PICTURE_CANCEL = "take_picture_cancel"
-        const val CANCEL_SETUP = "cancel_setup"
-        const val SAVE_WIDGET = "save_widget"
-
         // Widget
         const val WIDGET_RESIZE = "resize_widget"
         const val WIDGET_CLICK = "widget_click"
