@@ -69,6 +69,10 @@ import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
 
 /**
  * State holder with information about a contact that will be added to a widget.
+ *
+ * @property pictureUri The URI of the contact picture
+ * @property displayName The display name of the contact
+ * @property selectedPhoneNumber The selected phone number of the contact
  */
 @Stable
 interface ContactConfigState {
@@ -132,6 +136,9 @@ private class SaveableContactConfigState(
     }
 }
 
+/**
+ * Remembers a [ContactConfigState] that will be saved across activity and configuration changes.
+ */
 @Composable
 fun rememberContactConfigState(): ContactConfigState {
     return rememberSaveable(saver = SaveableContactConfigState.saver) {
@@ -139,6 +146,15 @@ fun rememberContactConfigState(): ContactConfigState {
     }
 }
 
+/**
+ * Screen that allows the user to configure a contact to be added to a widget.
+ *
+ * @param modifier Optional [Modifier] for this screen
+ * @param state The [ContactConfigState] that will hold the configured contact information
+ * @param viewModel The [ContactConfigViewModel] that will hold the UI state
+ * @param onDismiss Callback invoked when the user wants to dismiss the screen
+ * @param onSave Callback invoked when the user wants to save the contact configuration
+ */
 @Composable
 fun ContactConfigScreen(
     modifier: Modifier = Modifier,
@@ -153,6 +169,11 @@ fun ContactConfigScreen(
     val contactPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.PickContact()
     ) { pickedContactUri ->
+        if (pickedContactUri != null) {
+            viewModel.logContactPicked()
+        } else {
+            viewModel.logContactPickerDismissed()
+        }
         viewModel.onPickedContact(pickedContactUri)
     }
 
@@ -162,7 +183,11 @@ fun ContactConfigScreen(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
+            viewModel.logContactPermissionGranted()
+            viewModel.logContactPickerLaunched()
             contactPicker.launch(null)
+        } else {
+            viewModel.logContactPermissionDenied()
         }
     }
 
@@ -194,6 +219,7 @@ fun ContactConfigScreen(
             ContextCompat.checkSelfPermission(
                 activity, readContactsPermission
             ) == PackageManager.PERMISSION_GRANTED -> {
+                viewModel.logContactPickerLaunched()
                 contactPicker.launch(null)
             }
 
@@ -212,20 +238,27 @@ fun ContactConfigScreen(
         modifier = modifier,
         title = "",
         state = uiState,
-        onPictureChanged = {
-            viewModel.onPictureChanged(it)
+        onPicturePickerLaunched = viewModel::logPicturePickerLaunched,
+        onPictureChanged = { pictureUri ->
+            if (pictureUri != null) {
+                viewModel.logPicturePicked()
+            } else {
+                viewModel.logPicturePickerDismissed()
+            }
+            viewModel.onPictureChanged(pictureUri)
         },
-        onDisplayNameChanged = {
-            viewModel.onDisplayNameChanged(it)
-        },
-        onPhoneNumberChanged = {
-            viewModel.onPhoneNumberChanged(it)
-        },
+        onDisplayNameChanged = viewModel::onDisplayNameChanged,
+        onPhoneNumberChanged = viewModel::onPhoneNumberChanged,
         onPickContactButtonClick = {
+            viewModel.logPickContactClick()
             launchContactPicker()
         },
-        onNavigationIconClick = onDismiss,
+        onNavigationIconClick = {
+            viewModel.logDismiss()
+            onDismiss()
+        },
         onSaveButtonClick = {
+            viewModel.logSave()
             state.pictureUri = uiState.pictureUri
             state.displayName = uiState.displayName
             state.selectedPhoneNumber = uiState.phoneNumber
@@ -240,6 +273,7 @@ private fun ContactConfigContent(
     title: String,
     modifier: Modifier = Modifier,
     state: InternalContactConfigUiState = InternalContactConfigUiState(),
+    onPicturePickerLaunched: () -> Unit = {},
     onPictureChanged: (String?) -> Unit = {},
     onDisplayNameChanged: (String) -> Unit = {},
     onPhoneNumberChanged: (String) -> Unit = {},
@@ -291,6 +325,7 @@ private fun ContactConfigContent(
                         pictureUri = state.pictureUri,
                         displayName = state.displayName,
                         phoneNumber = state.phoneNumber,
+                        onPicturePickerLaunched = onPicturePickerLaunched,
                         onPictureChanged = onPictureChanged,
                         onDisplayNameChanged = onDisplayNameChanged,
                         onPhoneNumberChanged = onPhoneNumberChanged
@@ -302,6 +337,7 @@ private fun ContactConfigContent(
                         pictureUri = state.pictureUri,
                         displayName = state.displayName,
                         phoneNumber = state.phoneNumber,
+                        onPicturePickerLaunched = onPicturePickerLaunched,
                         onPictureChanged = onPictureChanged,
                         onDisplayNameChanged = onDisplayNameChanged,
                         onPhoneNumberChanged = onPhoneNumberChanged
@@ -318,6 +354,7 @@ private fun PortraitContent(
     displayName: String,
     phoneNumber: String,
     modifier: Modifier = Modifier,
+    onPicturePickerLaunched: () -> Unit = {},
     onPictureChanged: (String?) -> Unit = {},
     onDisplayNameChanged: (String) -> Unit = {},
     onPhoneNumberChanged: (String) -> Unit = {}
@@ -331,6 +368,7 @@ private fun PortraitContent(
     ) {
         ContactPicture(
             pictureUri = pictureUri,
+            onPicturePickerLaunched = onPicturePickerLaunched,
             onPictureUriChanged = { uri ->
                 onPictureChanged(uri?.toString())
             }
@@ -352,6 +390,7 @@ private fun LandscapeContent(
     displayName: String,
     phoneNumber: String,
     modifier: Modifier = Modifier,
+    onPicturePickerLaunched: () -> Unit = {},
     onPictureChanged: (String?) -> Unit = {},
     onDisplayNameChanged: (String) -> Unit = {},
     onPhoneNumberChanged: (String) -> Unit = {}
@@ -363,6 +402,7 @@ private fun LandscapeContent(
     ) {
         ContactPicture(
             pictureUri = pictureUri,
+            onPicturePickerLaunched = onPicturePickerLaunched,
             onPictureUriChanged = { uri ->
                 onPictureChanged(uri?.toString())
             }

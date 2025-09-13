@@ -63,6 +63,7 @@ import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
 internal fun ContactPicture(
     modifier: Modifier = Modifier,
     pictureUri: String? = null,
+    onPicturePickerLaunched: () -> Unit = {},
     onPictureUriChanged: (Uri?) -> Unit = {},
 ) {
     val mediaPicker = rememberLauncherForActivityResult(PickVisualMedia()) { mediaUri ->
@@ -77,7 +78,10 @@ internal fun ContactPicture(
             modifier = Modifier
                 .background(color = Color.LightGray, CircleShape)
                 .size(128.dp),
-            onClick = { mediaPicker.launch(PickVisualMediaRequest(ImageOnly)) }
+            onClick = {
+                onPicturePickerLaunched()
+                mediaPicker.launch(PickVisualMediaRequest(ImageOnly))
+            }
         ) {
             if (pictureUri != null) {
                 AsyncImage(
@@ -96,7 +100,10 @@ internal fun ContactPicture(
         }
         if (pictureUri != null) {
             Row {
-                TextButton(onClick = { mediaPicker.launch(PickVisualMediaRequest(ImageOnly)) }) {
+                TextButton(onClick = {
+                    onPicturePickerLaunched()
+                    mediaPicker.launch(PickVisualMediaRequest(ImageOnly))
+                }) {
                     Icon(
                         imageVector = Icons.Rounded.Edit,
                         contentDescription = null
@@ -112,7 +119,10 @@ internal fun ContactPicture(
                 }
             }
         } else {
-            TextButton(onClick = { mediaPicker.launch(PickVisualMediaRequest(ImageOnly)) }) {
+            TextButton(onClick = {
+                onPicturePickerLaunched()
+                mediaPicker.launch(PickVisualMediaRequest(ImageOnly))
+            }) {
                 Text(stringResource(R.string.add_image))
             }
         }

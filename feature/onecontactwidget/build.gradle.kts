@@ -26,6 +26,19 @@ android {
             )
         }
     }
+
+    flavorDimensions += "analytics"
+    productFlavors {
+        create("collectionEnabled") {
+            dimension = "analytics"
+            resValue("bool", "collect_analytics", "true")
+        }
+        create("collectionDisabled") {
+            dimension = "analytics"
+            resValue("bool", "collect_analytics", "false")
+        }
+    }
+
     buildFeatures {
         compose = true
     }
@@ -39,6 +52,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:analytics"))
     implementation(project(":core:ui"))
     implementation(project(":core:domain"))
     val composeBom = platform("androidx.compose:compose-bom:2025.01.01")
@@ -61,6 +75,11 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.crashlytics.ktx)
 
     // Compose UI Tests
     androidTestImplementation(libs.ui.test.junit4)

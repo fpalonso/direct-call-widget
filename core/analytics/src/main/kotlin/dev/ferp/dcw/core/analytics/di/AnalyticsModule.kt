@@ -24,34 +24,44 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import dev.ferp.dcw.core.analytics.ContactConfigLogger
+import dev.ferp.dcw.core.analytics.DefaultContactConfigLogger
 import dev.ferp.dcw.core.analytics.R
 import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AnalyticsModule {
+internal abstract class AnalyticsModule {
 
-    @Singleton
-    @Provides
-    fun provideFirebaseAnalytics(
-        @ApplicationContext context: Context
-    ): FirebaseAnalytics = Firebase.analytics.apply {
-        val collectAnalytics = context.resources.getBoolean(R.bool.collect_analytics)
-        Timber.i("firebaseAnalytics: collecting analytics: $collectAnalytics")
-        setAnalyticsCollectionEnabled(collectAnalytics)
+    companion object {
+        @Singleton
+        @Provides
+        fun provideFirebaseAnalytics(
+            @ApplicationContext context: Context
+        ): FirebaseAnalytics = Firebase.analytics.apply {
+            val collectAnalytics = context.resources.getBoolean(R.bool.collect_analytics)
+            Timber.i("firebaseAnalytics: collecting analytics: $collectAnalytics")
+            setAnalyticsCollectionEnabled(collectAnalytics)
+        }
+
+        @Singleton
+        @Provides
+        fun provideFirebaseCrashlytics(
+            @ApplicationContext context: Context
+        ): FirebaseCrashlytics = Firebase.crashlytics.apply {
+            isCrashlyticsCollectionEnabled = true
+        }
     }
 
-    @Singleton
-    @Provides
-    fun provideFirebaseCrashlytics(
-        @ApplicationContext context: Context
-    ): FirebaseCrashlytics = Firebase.crashlytics.apply {
-        isCrashlyticsCollectionEnabled = true
-    }
+    @Binds
+    abstract fun bindOneContactConfigLogger(
+        impl: DefaultContactConfigLogger
+    ): ContactConfigLogger
 }
