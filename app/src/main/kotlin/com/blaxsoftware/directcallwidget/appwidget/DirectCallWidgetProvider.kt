@@ -54,10 +54,11 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import dev.ferp.dcw.core.analytics.Analytics
 import dev.ferp.dcw.core.analytics.di.FirebaseEntryPoint
-import dev.ferp.dcw.core.di.CoroutinesEntryPoint
+import dev.ferp.dcw.core.di.AppScope
 import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidget
 import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidgetRepository
 import dev.ferp.dcw.core.domain.onecontactwidget.DeleteOneContactWidgetUseCase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 // TODO have only one static setWidgetData (call it updateWidget)
@@ -71,6 +72,9 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
     interface ProviderEntryPoint {
         fun widgetRepository(): OneContactWidgetRepository
         fun deleteWidgetUseCase(): DeleteOneContactWidgetUseCase<Bitmap>
+
+        @AppScope
+        fun appScope(): CoroutineScope
     }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager,
@@ -102,9 +106,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
         // TODO launch a JobService
         val entryPoint = EntryPointAccessors.fromApplication<ProviderEntryPoint>(context)
         val widgetRepo = entryPoint.widgetRepository()
-        val coroutinesEntryPoint = EntryPointAccessors
-            .fromApplication<CoroutinesEntryPoint>(context)
-        coroutinesEntryPoint.appScope().launch {
+        entryPoint.appScope().launch {
             widgetRepo.getWidget(id)
                 .onSuccess { widget ->
                     setWidgetData(context, appWidgetManager, id, widget)
@@ -116,9 +118,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
         super.onDeleted(context, appWidgetIds)
         val entryPoint = EntryPointAccessors.fromApplication<ProviderEntryPoint>(context)
         val deleteWidgetUseCase = entryPoint.deleteWidgetUseCase()
-        val coroutinesEntryPoint = EntryPointAccessors
-            .fromApplication<CoroutinesEntryPoint>(context)
-        coroutinesEntryPoint.appScope().launch {
+        entryPoint.appScope().launch {
             appWidgetIds.forEach { appWidgetId ->
                 deleteWidgetUseCase(appWidgetId)
             }
@@ -214,9 +214,7 @@ open class DirectCallWidgetProvider : AppWidgetProvider() {
             }
             val providerEntryPoint = EntryPointAccessors
                 .fromApplication<ProviderEntryPoint>(context)
-            val coroutinesEntryPoint = EntryPointAccessors
-                .fromApplication<CoroutinesEntryPoint>(context)
-            coroutinesEntryPoint.appScope().launch {
+            providerEntryPoint.appScope().launch {
                 providerEntryPoint.widgetRepository()
                     .getWidget(appWidgetId)
                     .onSuccess { widget ->
