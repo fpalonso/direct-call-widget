@@ -23,6 +23,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import dev.ferp.dcw.data.onecontactwidget.source.OneContactWidgetDataSource
+import dev.ferp.dcw.data.onecontactwidget.source.local.LocalOneContactWidget
+import dev.ferp.dcw.data.onecontactwidget.source.local.OneContactWidgetPreferencesDataSource
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

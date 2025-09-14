@@ -44,7 +44,12 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.google.material)
-    testImplementation(libs.junit)
+
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.truth)
+    testImplementation(libs.androidx.junit)
+    testImplementation(libs.robolectric)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

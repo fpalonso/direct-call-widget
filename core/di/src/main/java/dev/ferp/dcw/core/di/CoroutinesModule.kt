@@ -24,7 +24,7 @@ annotation class IoDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object CoroutinesModule {
+object CoroutinesModule {
 
     @AppScope
     @Provides

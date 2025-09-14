@@ -22,7 +22,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
-import dev.ferp.dcw.core.di.ApplicationScope
+import dev.ferp.dcw.core.di.AppScope
 import dev.ferp.dcw.core.di.CoroutinesModule
 import dev.ferp.dcw.core.di.IoDispatcher
 import dev.ferp.dcw.core.di.MainDispatcher
@@ -47,7 +47,7 @@ object TestCoroutinesModule {
     @Provides
     fun provideIoDispatcher(): CoroutineDispatcher = TestDispatcherProvider.testDispatcher
 
-    @ApplicationScope
+    @AppScope
     @Singleton
     @Provides
     fun provideAppScope(
