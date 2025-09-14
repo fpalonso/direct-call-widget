@@ -22,6 +22,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.ferp.dcw.core.analytics.ContactConfigLogger
 import dev.ferp.dcw.core.domain.devicecontact.GetDeviceContactUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,15 +37,26 @@ internal data class InternalContactConfigUiState(
     val errorMessage: Int? = null
 )
 
+/**
+ * ViewModel for the contact configuration screen.
+ */
 @HiltViewModel
 class ContactConfigViewModel @Inject constructor(
-    private val getDeviceContactUseCase: GetDeviceContactUseCase
-): ViewModel() {
+    private val getDeviceContactUseCase: GetDeviceContactUseCase,
+    private val logger: ContactConfigLogger
+): ViewModel(), ContactConfigLogger by logger {
+
     private val _uiState = MutableStateFlow(InternalContactConfigUiState())
     internal val uiState = _uiState.asStateFlow()
 
+    init {
+        logInit()
+    }
+
     internal fun onPickedContact(contactUri: Uri?) {
-        if (contactUri == null) return
+        if (contactUri == null) {
+            return
+        }
         viewModelScope.launch {
             getDeviceContactUseCase(contactUri.toString())
                 .onSuccess { contact ->

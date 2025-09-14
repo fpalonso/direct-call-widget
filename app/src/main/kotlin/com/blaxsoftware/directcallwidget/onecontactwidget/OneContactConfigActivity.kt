@@ -62,7 +62,7 @@ class OneContactConfigActivity : ComponentActivity() {
                             pictureUri = contactConfigState.pictureUri
                         )
                         legacyWidgets.updateAll()
-                        finishWidgetConfiguration()
+                        addWidgetAndFinish()
                     },
                     onDismiss = ::finish
                 )
@@ -70,7 +70,7 @@ class OneContactConfigActivity : ComponentActivity() {
         }
     }
 
-    private fun finishWidgetConfiguration() {
+    private fun addWidgetAndFinish() {
         val resultData = Intent()
             .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         setResult(RESULT_OK, resultData)

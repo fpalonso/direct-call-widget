@@ -43,10 +43,13 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import dev.ferp.dcw.core.analytics.Analytics;
 
+// TODO Refactor this whole thing
 @AndroidEntryPoint
 public class CallActivity extends ComponentActivity {
 
     @Inject FirebaseAnalytics mFirebaseAnalytics;
+
+    private static final int REQUEST_CALL_PERMISSION = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +73,7 @@ public class CallActivity extends ComponentActivity {
             } else {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.CALL_PHONE},
-                        Constants.REQUEST_CALL_PERMISSION);
+                        REQUEST_CALL_PERMISSION);
             }
         }
     }
@@ -79,7 +82,7 @@ public class CallActivity extends ComponentActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Constants.REQUEST_CALL_PERMISSION
+        if (requestCode == REQUEST_CALL_PERMISSION
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             mFirebaseAnalytics.logEvent(Analytics.Event.GRANT_CALL_PERMISSION, null);
             call(getIntent().getData());
@@ -119,7 +122,7 @@ public class CallActivity extends ComponentActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             ActivityCompat.requestPermissions(getActivity(),
                                     new String[] {Manifest.permission.CALL_PHONE},
-                                    Constants.REQUEST_CALL_PERMISSION);
+                                    REQUEST_CALL_PERMISSION);
                         }
                     }).create();
         }

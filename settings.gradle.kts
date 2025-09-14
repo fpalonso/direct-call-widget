@@ -35,8 +35,8 @@ dependencyResolutionManagement {
 
 include(":app")
 include(":feature:onecontactwidget")
-include(":feature:contactconfig")
 include(":feature:settings")
+include(":shared:contactconfig")
 include(":data2")
 include(":data:picture")
 include(":data:devicecontact")

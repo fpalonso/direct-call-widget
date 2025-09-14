@@ -22,27 +22,41 @@ import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -55,8 +69,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,10 +82,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
 
 /**
  * State holder with information about a contact that will be added to a widget.
+ *
+ * @property pictureUri The URI of the contact picture
+ * @property displayName The display name of the contact
+ * @property selectedPhoneNumber The selected phone number of the contact
  */
 @Stable
 interface ContactConfigState {
@@ -132,6 +154,9 @@ private class SaveableContactConfigState(
     }
 }
 
+/**
+ * Remembers a [ContactConfigState] that will be saved across activity and configuration changes.
+ */
 @Composable
 fun rememberContactConfigState(): ContactConfigState {
     return rememberSaveable(saver = SaveableContactConfigState.saver) {
@@ -139,6 +164,15 @@ fun rememberContactConfigState(): ContactConfigState {
     }
 }
 
+/**
+ * Screen that allows the user to configure a contact to be added to a widget.
+ *
+ * @param modifier Optional [Modifier] for this screen
+ * @param state The [ContactConfigState] that will hold the configured contact information
+ * @param viewModel The [ContactConfigViewModel] that will hold the UI state
+ * @param onDismiss Callback invoked when the user wants to dismiss the screen
+ * @param onSave Callback invoked when the user wants to save the contact configuration
+ */
 @Composable
 fun ContactConfigScreen(
     modifier: Modifier = Modifier,
@@ -153,6 +187,11 @@ fun ContactConfigScreen(
     val contactPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.PickContact()
     ) { pickedContactUri ->
+        if (pickedContactUri != null) {
+            viewModel.logContactPicked()
+        } else {
+            viewModel.logContactPickerDismissed()
+        }
         viewModel.onPickedContact(pickedContactUri)
     }
 
@@ -162,7 +201,11 @@ fun ContactConfigScreen(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
+            viewModel.logContactPermissionGranted()
+            viewModel.logContactPickerLaunched()
             contactPicker.launch(null)
+        } else {
+            viewModel.logContactPermissionDenied()
         }
     }
 
@@ -194,6 +237,7 @@ fun ContactConfigScreen(
             ContextCompat.checkSelfPermission(
                 activity, readContactsPermission
             ) == PackageManager.PERMISSION_GRANTED -> {
+                viewModel.logContactPickerLaunched()
                 contactPicker.launch(null)
             }
 
@@ -212,20 +256,27 @@ fun ContactConfigScreen(
         modifier = modifier,
         title = "",
         state = uiState,
-        onPictureChanged = {
-            viewModel.onPictureChanged(it)
+        onPicturePickerLaunched = viewModel::logPicturePickerLaunched,
+        onPictureChanged = { pictureUri ->
+            if (pictureUri != null) {
+                viewModel.logPicturePicked()
+            } else {
+                viewModel.logPicturePickerDismissed()
+            }
+            viewModel.onPictureChanged(pictureUri)
         },
-        onDisplayNameChanged = {
-            viewModel.onDisplayNameChanged(it)
-        },
-        onPhoneNumberChanged = {
-            viewModel.onPhoneNumberChanged(it)
-        },
+        onDisplayNameChanged = viewModel::onDisplayNameChanged,
+        onPhoneNumberChanged = viewModel::onPhoneNumberChanged,
         onPickContactButtonClick = {
+            viewModel.logPickContactClick()
             launchContactPicker()
         },
-        onNavigationIconClick = onDismiss,
+        onNavigationIconClick = {
+            viewModel.logDismiss()
+            onDismiss()
+        },
         onSaveButtonClick = {
+            viewModel.logSave()
             state.pictureUri = uiState.pictureUri
             state.displayName = uiState.displayName
             state.selectedPhoneNumber = uiState.phoneNumber
@@ -240,6 +291,7 @@ private fun ContactConfigContent(
     title: String,
     modifier: Modifier = Modifier,
     state: InternalContactConfigUiState = InternalContactConfigUiState(),
+    onPicturePickerLaunched: () -> Unit = {},
     onPictureChanged: (String?) -> Unit = {},
     onDisplayNameChanged: (String) -> Unit = {},
     onPhoneNumberChanged: (String) -> Unit = {},
@@ -291,6 +343,7 @@ private fun ContactConfigContent(
                         pictureUri = state.pictureUri,
                         displayName = state.displayName,
                         phoneNumber = state.phoneNumber,
+                        onPicturePickerLaunched = onPicturePickerLaunched,
                         onPictureChanged = onPictureChanged,
                         onDisplayNameChanged = onDisplayNameChanged,
                         onPhoneNumberChanged = onPhoneNumberChanged
@@ -302,6 +355,7 @@ private fun ContactConfigContent(
                         pictureUri = state.pictureUri,
                         displayName = state.displayName,
                         phoneNumber = state.phoneNumber,
+                        onPicturePickerLaunched = onPicturePickerLaunched,
                         onPictureChanged = onPictureChanged,
                         onDisplayNameChanged = onDisplayNameChanged,
                         onPhoneNumberChanged = onPhoneNumberChanged
@@ -318,6 +372,7 @@ private fun PortraitContent(
     displayName: String,
     phoneNumber: String,
     modifier: Modifier = Modifier,
+    onPicturePickerLaunched: () -> Unit = {},
     onPictureChanged: (String?) -> Unit = {},
     onDisplayNameChanged: (String) -> Unit = {},
     onPhoneNumberChanged: (String) -> Unit = {}
@@ -331,6 +386,7 @@ private fun PortraitContent(
     ) {
         ContactPicture(
             pictureUri = pictureUri,
+            onPicturePickerLaunched = onPicturePickerLaunched,
             onPictureUriChanged = { uri ->
                 onPictureChanged(uri?.toString())
             }
@@ -338,7 +394,6 @@ private fun PortraitContent(
         Spacer(Modifier.height(32.dp))
         ContactDetails(
             displayName = displayName,
-            phoneNumbers = emptyList(),
             selectedPhoneNumber = phoneNumber,
             onDisplayNameChanged = onDisplayNameChanged,
             onPhoneNumberChanged = onPhoneNumberChanged
@@ -352,6 +407,7 @@ private fun LandscapeContent(
     displayName: String,
     phoneNumber: String,
     modifier: Modifier = Modifier,
+    onPicturePickerLaunched: () -> Unit = {},
     onPictureChanged: (String?) -> Unit = {},
     onDisplayNameChanged: (String) -> Unit = {},
     onPhoneNumberChanged: (String) -> Unit = {}
@@ -363,6 +419,7 @@ private fun LandscapeContent(
     ) {
         ContactPicture(
             pictureUri = pictureUri,
+            onPicturePickerLaunched = onPicturePickerLaunched,
             onPictureUriChanged = { uri ->
                 onPictureChanged(uri?.toString())
             }
@@ -370,12 +427,151 @@ private fun LandscapeContent(
         Spacer(Modifier.width(64.dp))
         ContactDetails(
             displayName = displayName,
-            phoneNumbers = emptyList(),
             selectedPhoneNumber = phoneNumber,
             onDisplayNameChanged = onDisplayNameChanged,
             onPhoneNumberChanged = onPhoneNumberChanged
         )
     }
+}
+
+/**
+ * Contact picture that handles the image picker.
+ *
+ * @param pictureUri The URI of the picture
+ * @param onPictureUriChanged Callback to update the picture URI. If the URI is null,
+ * it means that the user has chosen to delete the picture. That is, if the image picker
+ * is opened but no picture is selected, this callback will not be invoked.
+ */
+@Composable
+private fun ContactPicture(
+    modifier: Modifier = Modifier,
+    pictureUri: String? = null,
+    onPicturePickerLaunched: () -> Unit = {},
+    onPictureUriChanged: (Uri?) -> Unit = {},
+) {
+    val mediaPicker = rememberLauncherForActivityResult(PickVisualMedia()) { mediaUri ->
+        // If no new picture has been selected, keep the old one.
+        mediaUri?.let(onPictureUriChanged)
+    }
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        IconButton(
+            modifier = Modifier
+                .background(color = Color.LightGray, CircleShape)
+                .size(128.dp),
+            onClick = {
+                onPicturePickerLaunched()
+                mediaPicker.launch(PickVisualMediaRequest(ImageOnly))
+            }
+        ) {
+            if (pictureUri != null) {
+                AsyncImage(
+                    modifier = Modifier.fillMaxSize(),
+                    model = pictureUri,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Image(
+                    modifier = Modifier.size(32.dp),
+                    painter = painterResource(R.drawable.baseline_add_photo_alternate_24),
+                    contentDescription = null
+                )
+            }
+        }
+        if (pictureUri != null) {
+            Row {
+                TextButton(onClick = {
+                    onPicturePickerLaunched()
+                    mediaPicker.launch(PickVisualMediaRequest(ImageOnly))
+                }) {
+                    Icon(
+                        imageVector = Icons.Rounded.Edit,
+                        contentDescription = null
+                    )
+                    Text(stringResource(R.string.change_image))
+                }
+                TextButton(onClick = { onPictureUriChanged(null) }) {
+                    Icon(
+                        imageVector = Icons.Rounded.Delete,
+                        contentDescription = null
+                    )
+                    Text(stringResource(R.string.delete_image))
+                }
+            }
+        } else {
+            TextButton(onClick = {
+                onPicturePickerLaunched()
+                mediaPicker.launch(PickVisualMediaRequest(ImageOnly))
+            }) {
+                Text(stringResource(R.string.add_image))
+            }
+        }
+    }
+}
+
+@Composable
+private fun ContactDetails(
+    displayName: String,
+    selectedPhoneNumber: String,
+    modifier: Modifier = Modifier,
+    onDisplayNameChanged: (String) -> Unit = {},
+    onPhoneNumberChanged: (String) -> Unit = {},
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(R.string.display_name)) },
+            value = displayName,
+            onValueChange = onDisplayNameChanged
+        )
+        // TODO Display a list of options
+        // https://developer.android.com/reference/kotlin/androidx/compose/material/package-summary#ExposedDropdownMenuBox(kotlin.Boolean,kotlin.Function1,androidx.compose.ui.Modifier,kotlin.Function1)
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(R.string.phone_number)) },
+            value = selectedPhoneNumber,
+            onValueChange = onPhoneNumberChanged
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun EmptyContactImagePreview() {
+    DirectCallWidgetTheme {
+        Surface {
+            ContactPicture()
+        }
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun SetContactImagePreview() {
+    DirectCallWidgetTheme {
+        Surface {
+            ContactPicture(
+                pictureUri = "content://fancyimage.jpg"
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ConfigDetailsPreview() {
+    ContactDetails(
+        displayName = "Alice",
+        selectedPhoneNumber = "123"
+    )
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)

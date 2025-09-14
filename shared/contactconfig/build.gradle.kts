@@ -26,6 +26,17 @@ android {
             )
         }
     }
+    flavorDimensions += "analytics"
+    productFlavors {
+        create("collectionEnabled") {
+            dimension = "analytics"
+            resValue("bool", "collect_analytics", "true")
+        }
+        create("collectionDisabled") {
+            dimension = "analytics"
+            resValue("bool", "collect_analytics", "false")
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -39,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:analytics"))
     implementation(project(":core:domain"))
     implementation(project(":core:ui"))
 
