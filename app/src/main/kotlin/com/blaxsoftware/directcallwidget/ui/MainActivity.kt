@@ -25,34 +25,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import com.blaxsoftware.directcallwidget.DirectCallWidgetApp
 import dagger.hilt.android.AndroidEntryPoint
-import dev.ferp.dcw.core.androidutil.AndroidVersions
 import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var androidVersions: AndroidVersions
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val appVersionName = (application as DirectCallWidgetApp).appVersionName
         setContent {
-            val appVersionName = (application as DirectCallWidgetApp).appVersionName
             DirectCallWidgetTheme {
-                if (androidVersions.isAtLeastO()) {
-                    MainNavHost(
-                        modifier = Modifier.fillMaxSize(),
-                        startDestination = WidgetList,
-                        appVersionName = appVersionName
-                    )
-                } else {
-                    MainNavHost(
-                        modifier = Modifier.fillMaxSize(),
-                        startDestination = Settings(appVersionName),
-                        appVersionName = appVersionName
-                    )
-                }
+                MainNavHost(
+                    modifier = Modifier.fillMaxSize(),
+                    startDestination = Settings(appVersionName),
+                    appVersionName = appVersionName
+                )
             }
         }
     }

@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "dev.ferp.dcw.feature.onecontactwidget"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21
@@ -53,8 +53,8 @@ android {
 
 dependencies {
     implementation(project(":core:analytics"))
-    implementation(project(":core:ui"))
     implementation(project(":core:domain"))
+
     val composeBom = platform("androidx.compose:compose-bom:2025.01.01")
     implementation(composeBom)
     implementation(libs.material3)
@@ -75,11 +75,6 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-
-    // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics.ktx)
-    implementation(libs.firebase.crashlytics.ktx)
 
     // Compose UI Tests
     androidTestImplementation(libs.ui.test.junit4)

@@ -26,14 +26,13 @@ import dev.ferp.dcw.data.devicecontact.getInt
 import dev.ferp.dcw.data.devicecontact.getString
 import dev.ferp.dcw.data.devicecontact.source.DeviceContactDataSource
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
 internal class DeviceContactProviderDataSource @Inject constructor(
     private val contentResolver: ContentResolver,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : DeviceContactDataSource {
 
     override suspend fun getDeviceContactByUri(contactUri: String): Result<LocalContact> {
