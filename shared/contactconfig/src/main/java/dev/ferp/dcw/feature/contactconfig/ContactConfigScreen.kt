@@ -61,6 +61,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -178,6 +179,7 @@ fun ContactConfigScreen(
     modifier: Modifier = Modifier,
     state: ContactConfigState = rememberContactConfigState(),
     viewModel: ContactConfigViewModel = hiltViewModel(),
+    startContactPicker: Boolean = false,
     onDismiss: () -> Unit = {},
     onSave: () -> Unit = {}
 ) {
@@ -219,6 +221,7 @@ fun ContactConfigScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
+                        showRationale = false
                         permissionRequest.launch(readContactsPermission)
                     }
                 ) {
@@ -249,6 +252,16 @@ fun ContactConfigScreen(
 
             // Request permission directly
             else -> permissionRequest.launch(readContactsPermission)
+        }
+    }
+
+    var shouldLaunchContactPicker by rememberSaveable {
+        mutableStateOf(startContactPicker)
+    }
+    LaunchedEffect(shouldLaunchContactPicker) {
+        if (shouldLaunchContactPicker) {
+            shouldLaunchContactPicker = false
+            launchContactPicker()
         }
     }
 
