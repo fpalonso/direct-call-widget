@@ -13,6 +13,15 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
+      - name: Gradle cache
+        uses: actions/cache@v4.3.0
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper/
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/*.gradle.kts', 'gradle/libs.versions.toml', '**/gradle-wrapper.properties') }}
+          restore-keys: gradle-${{ runner.os }}-
+
       - name: setup Java
         uses: actions/setup-java@v4
         with:
@@ -20,7 +29,7 @@ jobs:
           distribution: temurin
 
       - name: build
-        run: ./gradlew build
+        run: ./gradlew build --no-daemon --parallel --max-workers=2
 
       - name: publish unit tests results
         uses: actions/upload-artifact@v4
