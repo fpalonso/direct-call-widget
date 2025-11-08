@@ -54,6 +54,7 @@ class OneContactConfigActivity : ComponentActivity() {
                 val contactConfigState = rememberContactConfigState()
                 ContactConfigScreen(
                     state = contactConfigState,
+                    startContactPicker = true,
                     onSave = {
                         viewModel.saveWidget(
                             appWidgetId = appWidgetId,
