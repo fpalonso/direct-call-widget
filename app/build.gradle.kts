@@ -31,11 +31,11 @@ plugins {
 android {
     namespace = "com.blaxsoftware.directcallwidget"
     compileSdk = 36
-    buildToolsVersion = "34.0.0"
+    buildToolsVersion = "36.1"
 
     defaultConfig {
         applicationId = "com.blaxsoftware.directcallwidget"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
 
         // Version code reflecting the version name
