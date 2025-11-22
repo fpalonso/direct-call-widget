@@ -30,13 +30,13 @@ plugins {
 
 android {
     namespace = "com.blaxsoftware.directcallwidget"
-    compileSdk = 35
-    buildToolsVersion = "34.0.0"
+    compileSdk = 36
+    buildToolsVersion = "36.1"
 
     defaultConfig {
         applicationId = "com.blaxsoftware.directcallwidget"
-        minSdk = 21
-        targetSdk = 34
+        minSdk = 23
+        targetSdk = 36
 
         // Version code reflecting the version name
         // because it's easier to update when switching branches
@@ -48,8 +48,8 @@ android {
         //   2: beta
         //   3: rc
         //   4: stable
-        versionCode = 10800101
-        versionName = "1.8.0-alpha1"
+        versionCode = 10800103
+        versionName = "1.8.0-alpha3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true

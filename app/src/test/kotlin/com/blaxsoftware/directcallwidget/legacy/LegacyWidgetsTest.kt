@@ -19,11 +19,14 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowApplication
 
 @HiltAndroidTest
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [36])
 class LegacyWidgetsTest {
 
     @get:Rule
