@@ -48,8 +48,8 @@ android {
         //   2: beta
         //   3: rc
         //   4: stable
-        versionCode = 10800103
-        versionName = "1.8.0-alpha3"
+        versionCode = 10800201
+        versionName = "1.8.0-beta1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
