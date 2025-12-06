@@ -48,8 +48,8 @@ import com.blaxsoftware.directcallwidget.R
 import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.ui.ContactCard
 import com.blaxsoftware.directcallwidget.ui.components.DcwVerticalPlaceholder
-import com.blaxsoftware.directcallwidget.ui.theme.DirectCallWidgetTheme
-import com.blaxsoftware.directcallwidget.ui.theme.PortraitCardStyle
+import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
+import dev.ferp.dcw.core.ui.theme.PortraitCardStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

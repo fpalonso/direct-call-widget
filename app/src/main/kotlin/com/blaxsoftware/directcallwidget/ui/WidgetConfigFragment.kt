@@ -18,24 +18,17 @@
 
 package com.blaxsoftware.directcallwidget.ui
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import com.blaxsoftware.directcallwidget.R
-import dev.ferp.dcw.core.analytics.Analytics
-import com.blaxsoftware.directcallwidget.databinding.FragmentWidgetConfigBinding
-import com.blaxsoftware.directcallwidget.viewmodel.WidgetConfigViewModel
-import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @Suppress("unused")
 @AndroidEntryPoint
-class WidgetConfigFragment : Fragment() {
+class WidgetConfigFragment : Fragment() {/*
+
+    interface Listener {
+        fun onAccept()
+        fun onCancel()
+    }
 
     private val viewModel: WidgetConfigViewModel by activityViewModels()
 
@@ -55,7 +48,7 @@ class WidgetConfigFragment : Fragment() {
 
             topAppBar.setNavigationOnClickListener {
                 firebaseAnalytics.logEvent(Analytics.Event.CANCEL_SETUP, null)
-                this@WidgetConfigFragment.viewModel.onCancel()
+                (activity as? Listener)?.onCancel()
             }
 
             topAppBar.setOnMenuItemClickListener { item ->
@@ -63,6 +56,7 @@ class WidgetConfigFragment : Fragment() {
                     R.id.ok -> {
                         firebaseAnalytics.logEvent(Analytics.Event.SAVE_WIDGET, null)
                         this@WidgetConfigFragment.viewModel.onAccept()
+                        (activity as? Listener)?.onAccept()
                         return@setOnMenuItemClickListener true
                     }
                 }
@@ -81,5 +75,5 @@ class WidgetConfigFragment : Fragment() {
 
     companion object {
         const val TAG = "WidgetConfigFragment"
-    }
+    }*/
 }

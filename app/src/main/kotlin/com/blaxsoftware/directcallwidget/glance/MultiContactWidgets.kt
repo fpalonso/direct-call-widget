@@ -23,11 +23,10 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.updateAll
 import com.blaxsoftware.directcallwidget.ui.MultiContactAppWidget
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dev.ferp.dcw.core.di.ApplicationScope
+import dev.ferp.dcw.core.di.AppScope
 import dev.ferp.dcw.core.di.MainDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,8 +34,8 @@ import javax.inject.Singleton
 @Singleton
 class MultiContactWidgets @Inject constructor(
     @ApplicationContext private val appContext: Context,
-    @ApplicationScope private val appScope: CoroutineScope,
-    @MainDispatcher private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
+    @AppScope private val appScope: CoroutineScope,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ) {
     fun updateAll(widgetInstance: GlanceAppWidget = MultiContactAppWidget()) =
         appScope.launch(mainDispatcher) {

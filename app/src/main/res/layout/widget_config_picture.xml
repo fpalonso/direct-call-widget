@@ -25,6 +25,10 @@
             type="android.net.Uri" />
     </data>
 
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" /><!--
+
     <merge>
 
         <com.blaxsoftware.directcallwidget.ui.view.RatioImageView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -37,5 +41,5 @@
             app:srcCompat="@drawable/ic_person"
             app:tint="?attr/picPlaceholderForegroundTint"
             app:uri="@{picUri}"/>
-    </merge>
+    </merge>-->
 </layout>

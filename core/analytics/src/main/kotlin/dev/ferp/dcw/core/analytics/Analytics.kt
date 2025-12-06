@@ -33,21 +33,10 @@ object Analytics {
         // Settings
         const val SETTING_ON_TAP_CLICK = "setting_on_tap_click"
         const val SETTING_ON_TAP_CHANGED = "setting_on_tap_changed"
+        const val SETTING_PRIVACY_POLICY_CLICK = "setting_privacy_policy_click"
         const val SETTING_BETA_CLICK = "setting_beta_click"
         const val SETTING_CONTRIBUTE_CLICK = "setting_contribute_click"
-
-        // Setup
-        const val PICK_CONTACT = "pick_contact"
-        const val PICK_CONTACT_CANCEL = "pick_contact_cancel"
-        const val CHANGE_PICTURE_CLICK = "change_picture_click"
-        const val TAKE_PICTURE_CLICK = "take_picture_click"
-        const val PICK_IMAGE_CLICK = "take_picture_click"
-        const val PICK_IMAGE = "pick_image"
-        const val PICK_IMAGE_CANCEL = "pick_image_cancel"
-        const val TAKE_PICTURE = "take_picture"
-        const val TAKE_PICTURE_CANCEL = "take_picture_cancel"
-        const val CANCEL_SETUP = "cancel_setup"
-        const val SAVE_WIDGET = "save_widget"
+        const val OSS_LICENSES_CLICK = "oss_licenses_click"
 
         // Widget
         const val WIDGET_RESIZE = "resize_widget"

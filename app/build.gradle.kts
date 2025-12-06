@@ -25,17 +25,18 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android {
     namespace = "com.blaxsoftware.directcallwidget"
-    compileSdk = 35
-    buildToolsVersion = "34.0.0"
+    compileSdk = 36
+    buildToolsVersion = "36.1"
 
     defaultConfig {
         applicationId = "com.blaxsoftware.directcallwidget"
-        minSdk = 21
-        targetSdk = 34
+        minSdk = 23
+        targetSdk = 36
 
         // Version code reflecting the version name
         // because it's easier to update when switching branches
@@ -47,8 +48,8 @@ android {
         //   2: beta
         //   3: rc
         //   4: stable
-        versionCode = 10602400
-        versionName = "1.6.2"
+        versionCode = 10800401
+        versionName = "1.8.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -122,15 +123,16 @@ composeCompiler {
 }
 
 dependencies {
-    implementation(project(":data:contacts:api"))
-    implementation(project(":data:phones:api"))
-    implementation(project(":data:phones:impl:device"))
-    implementation(project(":data:pictures:api"))
-    implementation(project(":data:pictures:impl:default"))
+    implementation(project(":feature:onecontactwidget"))
+    implementation(project(":feature:settings"))
+    implementation(project(":shared:contactconfig"))
+    implementation(project(":data:devicecontact"))
+    implementation(project(":data:onecontactwidget"))
+    implementation(project(":data:picture"))
     implementation(project(":core:analytics"))
     implementation(project(":core:di"))
-    implementation(project(":core:util"))
-    implementation(project(":core:androidutil"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:ui"))
 
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.appcompat)
@@ -182,6 +184,7 @@ dependencies {
     kapt(libs.androidx.room.compiler)
 
     implementation(libs.jakewharton.timber)
+    implementation(libs.play.services.oss.licenses)
 
     testImplementation(libs.mockk.android)
     testImplementation(libs.androidx.junit)

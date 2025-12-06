@@ -21,8 +21,12 @@ package com.blaxsoftware.directcallwidget.ui.multicontact.config
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.Modifier
 import com.blaxsoftware.directcallwidget.MultiContactNavGraph
 import dagger.hilt.android.AndroidEntryPoint
+import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
 
 @AndroidEntryPoint
 class MultiContactWidgetConfigActivity : ComponentActivity() {
@@ -31,12 +35,17 @@ class MultiContactWidgetConfigActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setResult(RESULT_CANCELED)
         setContent {
-            MultiContactNavGraph(
-                onSaveClick = {
-                    setResult(RESULT_OK)
-                    finish()
+            DirectCallWidgetTheme {
+                Scaffold { paddingValues ->
+                    MultiContactNavGraph(
+                        modifier = Modifier.padding(paddingValues),
+                        onSaveClick = {
+                            setResult(RESULT_OK)
+                            finish()
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 }
