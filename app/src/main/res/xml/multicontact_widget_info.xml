@@ -26,4 +26,5 @@
     android:minResizeHeight="@dimen/widget_2x2_height"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="@integer/widget_2x2_upm"
-    android:widgetCategory="home_screen" />
+    android:widgetCategory="home_screen"
+    android:widgetFeatures="reconfigurable" />

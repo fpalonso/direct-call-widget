@@ -19,18 +19,53 @@
 package dev.ferp.dcw.feature.onecontactwidget
 
 import android.graphics.Bitmap
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.ferp.dcw.core.domain.data.PhoneType
+import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidget
+import dev.ferp.dcw.core.domain.onecontactwidget.GetOneContactWidgetUseCase
 import dev.ferp.dcw.core.domain.onecontactwidget.SaveOneContactWidgetUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+sealed interface WidgetState {
+    data object Loading : WidgetState
+    data class LoadFinished(val widget: OneContactWidget) : WidgetState
+    data object LoadFailed : WidgetState
+}
+
+data class OneContactConfigUiState(
+    val widgetState: WidgetState = WidgetState.Loading
+)
+
 @HiltViewModel
 class OneContactConfigViewModel @Inject constructor(
+    private val getOneContactWidgetUseCase: GetOneContactWidgetUseCase,
     private val saveOneContactWidgetUseCase: SaveOneContactWidgetUseCase<Bitmap>
 ) : ViewModel() {
+
+    var uiState by mutableStateOf(OneContactConfigUiState())
+        private set
+
+    fun loadWidget(appWidgetId: Int) {
+        viewModelScope.launch {
+            getOneContactWidgetUseCase(appWidgetId)
+                .onSuccess { widget ->
+                    uiState = uiState.copy(
+                        widgetState = WidgetState.LoadFinished(widget)
+                    )
+                }
+                .onFailure {
+                    uiState = uiState.copy(
+                        widgetState = WidgetState.LoadFailed
+                    )
+                }
+        }
+    }
 
     fun saveWidget(
         appWidgetId: Int,

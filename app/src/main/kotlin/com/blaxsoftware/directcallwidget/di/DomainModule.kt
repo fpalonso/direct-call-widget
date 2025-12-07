@@ -28,6 +28,7 @@ import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidgetRepository
 import dev.ferp.dcw.core.domain.data.picture.PictureRepository
 import dev.ferp.dcw.core.domain.devicecontact.GetDeviceContactUseCase
 import dev.ferp.dcw.core.domain.onecontactwidget.DeleteOneContactWidgetUseCase
+import dev.ferp.dcw.core.domain.onecontactwidget.GetOneContactWidgetUseCase
 import dev.ferp.dcw.core.domain.onecontactwidget.SaveOneContactWidgetUseCase
 import dev.ferp.dcw.core.domain.picture.AddPictureUseCase
 import dev.ferp.dcw.core.domain.picture.DeletePictureUseCase
@@ -60,6 +61,11 @@ object DomainModule {
         oneContactWidgetRepository,
         deletePictureUseCase
     )
+
+    @Provides
+    fun provideGetOneContactWidgetUseCase(
+        oneContactWidgetRepository: OneContactWidgetRepository
+    ) = GetOneContactWidgetUseCase(oneContactWidgetRepository)
 
     @Provides
     fun provideSaveOneContactWidgetUseCase(

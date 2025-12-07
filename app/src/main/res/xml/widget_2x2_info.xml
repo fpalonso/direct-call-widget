@@ -24,4 +24,5 @@
     android:minResizeWidth="@dimen/widget_1x1_width"
     android:minResizeHeight="@dimen/widget_1x1_height"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="@integer/widget_2x2_upm" />
+    android:updatePeriodMillis="@integer/widget_2x2_upm"
+    android:widgetFeatures="reconfigurable" />
