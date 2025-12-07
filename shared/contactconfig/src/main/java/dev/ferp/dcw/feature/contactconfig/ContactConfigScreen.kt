@@ -62,10 +62,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -81,109 +79,45 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import dev.ferp.dcw.core.ui.theme.DirectCallWidgetTheme
 
-/**
- * State holder with information about a contact that will be added to a widget.
- *
- * @property pictureUri The URI of the contact picture
- * @property displayName The display name of the contact
- * @property selectedPhoneNumber The selected phone number of the contact
- */
-@Stable
-interface ContactConfigState {
-    var pictureUri: String?
-    var displayName: String?
-    var selectedPhoneNumber: String?
-}
-
-/**
- * Saveable implementation of [ContactConfigState].
- */
-@Stable
-private class SaveableContactConfigState(
-    initialPictureUri: String? = null,
-    initialDisplayName: String? = null,
-    initialSelectedPhoneNumber: String? = null
-) : ContactConfigState {
-
-    private var _pictureUri by mutableStateOf(initialPictureUri)
-    private var _displayName by mutableStateOf(initialDisplayName)
-    private var _selectedPhoneNumber by mutableStateOf(initialSelectedPhoneNumber)
-
-    override var pictureUri: String?
-        get() = _pictureUri
-        set(value) {
-            _pictureUri = value
-        }
-
-    override var displayName: String?
-        get() = _displayName
-        set(value) {
-            _displayName = value
-        }
-
-    override var selectedPhoneNumber: String?
-        get() = _selectedPhoneNumber
-        set(value) {
-            _selectedPhoneNumber = value
-        }
-
-    companion object {
-
-        val saver by lazy {
-            listSaver(
-                save = { state ->
-                    listOf(
-                        state.pictureUri,
-                        state.displayName,
-                        state.selectedPhoneNumber
-                    )
-                },
-                restore = { list ->
-                    SaveableContactConfigState(
-                        initialPictureUri = list[0],
-                        initialDisplayName = list[1],
-                        initialSelectedPhoneNumber = list[2]
-                    )
-                }
-            )
-        }
-    }
-}
-
-/**
- * Remembers a [ContactConfigState] that will be saved across activity and configuration changes.
- */
-@Composable
-fun rememberContactConfigState(): ContactConfigState {
-    return rememberSaveable(saver = SaveableContactConfigState.saver) {
-        SaveableContactConfigState()
-    }
-}
+data class FieldValues(
+    val pictureUri: String? = null,
+    val displayName: String? = null,
+    val phoneNumber: String? = null
+)
 
 /**
  * Screen that allows the user to configure a contact to be added to a widget.
  *
  * @param modifier Optional [Modifier] for this screen
- * @param state The [ContactConfigState] that will hold the configured contact information
  * @param viewModel The [ContactConfigViewModel] that will hold the UI state
+ * @param initialFieldValues initial values for the screen fields
+ * @param shouldLaunchContactPicker true to launch the contact picker immediately
  * @param onDismiss Callback invoked when the user wants to dismiss the screen
  * @param onSave Callback invoked when the user wants to save the contact configuration
  */
+@Suppress("AssignedValueIsNeverRead")
 @Composable
 fun ContactConfigScreen(
     modifier: Modifier = Modifier,
-    state: ContactConfigState = rememberContactConfigState(),
     viewModel: ContactConfigViewModel = hiltViewModel(),
-    startContactPicker: Boolean = false,
+    initialFieldValues: FieldValues = FieldValues(),
+    shouldLaunchContactPicker: Boolean = false,
     onDismiss: () -> Unit = {},
-    onSave: () -> Unit = {}
+    onSave: (FieldValues) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Set initial values
+    LaunchedEffect(Unit) {
+        viewModel.onPictureChanged(initialFieldValues.pictureUri)
+        viewModel.onDisplayNameChanged(initialFieldValues.displayName.orEmpty())
+        viewModel.onPhoneNumberChanged(initialFieldValues.phoneNumber.orEmpty())
+    }
 
     // Contact picker
     val contactPicker = rememberLauncherForActivityResult(
@@ -255,12 +189,8 @@ fun ContactConfigScreen(
         }
     }
 
-    var shouldLaunchContactPicker by rememberSaveable {
-        mutableStateOf(startContactPicker)
-    }
     LaunchedEffect(shouldLaunchContactPicker) {
         if (shouldLaunchContactPicker) {
-            shouldLaunchContactPicker = false
             launchContactPicker()
         }
     }
@@ -290,10 +220,13 @@ fun ContactConfigScreen(
         },
         onSaveButtonClick = {
             viewModel.logSave()
-            state.pictureUri = uiState.pictureUri
-            state.displayName = uiState.displayName
-            state.selectedPhoneNumber = uiState.phoneNumber
-            onSave()
+            onSave(
+                FieldValues(
+                    pictureUri = uiState.pictureUri,
+                    displayName = uiState.displayName,
+                    phoneNumber = uiState.phoneNumber
+                )
+            )
         }
     )
 }

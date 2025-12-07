@@ -94,10 +94,4 @@ class ContactConfigViewModel @Inject constructor(
             currentState.copy(phoneNumber = phoneNumber)
         }
     }
-
-    internal fun errorShown() {
-        _uiState.update { currentState ->
-            currentState.copy(errorMessage = null)
-        }
-    }
 }

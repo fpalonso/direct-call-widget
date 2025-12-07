@@ -28,8 +28,9 @@ import androidx.compose.material3.MaterialTheme
 import com.blaxsoftware.directcallwidget.legacy.LegacyWidgets
 import dagger.hilt.android.AndroidEntryPoint
 import dev.ferp.dcw.feature.contactconfig.ContactConfigScreen
-import dev.ferp.dcw.feature.contactconfig.rememberContactConfigState
+import dev.ferp.dcw.feature.contactconfig.FieldValues
 import dev.ferp.dcw.feature.onecontactwidget.OneContactConfigViewModel
+import dev.ferp.dcw.feature.onecontactwidget.WidgetState
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -49,18 +50,37 @@ class OneContactConfigActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setResult(RESULT_CANCELED)
+        viewModel.loadWidget(appWidgetId)
+
+        val widgetState = viewModel.uiState.widgetState
+
+        val initialFieldValues = when (widgetState) {
+            is WidgetState.LoadFinished -> FieldValues(
+                pictureUri = widgetState.widget.pictureUri,
+                displayName = widgetState.widget.displayName,
+                phoneNumber = widgetState.widget.phoneNumber
+            )
+
+            else -> FieldValues()
+        }
+
+        val shouldLaunchContactPicker = widgetState is WidgetState.LoadFailed
+
         setContent {
             MaterialTheme {
-                val contactConfigState = rememberContactConfigState()
                 ContactConfigScreen(
-                    state = contactConfigState,
-                    startContactPicker = true,
-                    onSave = {
+                    initialFieldValues = FieldValues(
+                        pictureUri = initialFieldValues.pictureUri,
+                        displayName = initialFieldValues.displayName,
+                        phoneNumber = initialFieldValues.phoneNumber
+                    ),
+                    shouldLaunchContactPicker = shouldLaunchContactPicker,
+                    onSave = { fieldValues ->
                         viewModel.saveWidget(
                             appWidgetId = appWidgetId,
-                            displayName = contactConfigState.displayName,
-                            phoneNumber = contactConfigState.selectedPhoneNumber.orEmpty(),
-                            pictureUri = contactConfigState.pictureUri
+                            pictureUri = fieldValues.pictureUri,
+                            displayName = fieldValues.displayName,
+                            phoneNumber = fieldValues.phoneNumber.orEmpty()
                         )
                         legacyWidgets.updateAll()
                         addWidgetAndFinish()

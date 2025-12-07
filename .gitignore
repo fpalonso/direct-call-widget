@@ -50,6 +50,7 @@ captures/
 .cxx/
 
 # Google Services (e.g. APIs or Firebase)
+
 # google-services.json
 
 # Freeline
@@ -82,3 +83,4 @@ keystore.properties
 kotlin-compiler-*
 app/collection*
 studiobot.xml
+**/.DS_Store
