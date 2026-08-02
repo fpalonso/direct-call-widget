@@ -81,6 +81,8 @@ keystore.properties
 # Other files
 .attach_pid*
 kotlin-compiler-*
+.kotlin/
 app/collection*
 studiobot.xml
 **/.DS_Store
+
