@@ -18,15 +18,18 @@
 
 package com.blaxsoftware.directcallwidget.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Information provided for a contact, which can be used both for a single-contact widget
  * or as part of a multi-contact widget.
  */
+@Parcelize
 @Serializable
 data class ContactConfig(
     val pictureUri: String = "",
     val displayName: String = "",
     val phoneNumber: String = ""
-)
+) : Parcelable

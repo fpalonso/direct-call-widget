@@ -26,6 +26,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
     id("com.google.android.gms.oss-licenses-plugin")
+    id("kotlin-parcelize")
 }
 
 android {
