@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.ui.MultiContactAppWidget
 import com.blaxsoftware.directcallwidget.ui.MultiContactStateDefinition
 import com.blaxsoftware.directcallwidget.ui.multicontact.config.MultiContactConfigViewModel
@@ -62,7 +63,22 @@ fun MultiContactNavGraph(
         }
 
         composable<SingleContactConfig> {
-            ContactConfigScreen()
+            ContactConfigScreen(
+                shouldLaunchContactPicker = true,
+                onSave = { fieldValues ->
+                    multiContactConfigViewModel.addContact(
+                        ContactConfig(
+                            pictureUri = fieldValues.pictureUri.orEmpty(),
+                            displayName = fieldValues.displayName.orEmpty(),
+                            phoneNumber = fieldValues.phoneNumber.orEmpty()
+                        )
+                    )
+                    navController.popBackStack()
+                },
+                onDismiss = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
