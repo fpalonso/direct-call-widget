@@ -3,7 +3,6 @@ package com.blaxsoftware.directcallwidget.legacy
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider
 import com.blaxsoftware.directcallwidget.appwidget.DirectCallWidgetProvider1x1
 import com.blaxsoftware.directcallwidget.findByComponent
@@ -26,7 +25,7 @@ import org.robolectric.shadows.ShadowApplication
 
 @HiltAndroidTest
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [36])
+@Config(sdk = [35])
 class LegacyWidgetsTest {
 
     @get:Rule
