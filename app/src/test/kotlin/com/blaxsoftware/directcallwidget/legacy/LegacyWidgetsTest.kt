@@ -26,7 +26,7 @@ import org.robolectric.shadows.ShadowApplication
 
 @HiltAndroidTest
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [36])
+@Config(sdk = [35])
 class LegacyWidgetsTest {
 
     @get:Rule
