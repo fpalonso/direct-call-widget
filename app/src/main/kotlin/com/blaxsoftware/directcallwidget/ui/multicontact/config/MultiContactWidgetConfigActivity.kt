@@ -18,8 +18,6 @@
 
 package com.blaxsoftware.directcallwidget.ui.multicontact.config
 
-import android.appwidget.AppWidgetManager
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -35,29 +33,14 @@ class MultiContactWidgetConfigActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val appWidgetId = intent?.extras?.getInt(
-            AppWidgetManager.EXTRA_APPWIDGET_ID,
-            AppWidgetManager.INVALID_APPWIDGET_ID
-        ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
-
-        val resultValue = Intent().apply {
-            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-        }
-        setResult(RESULT_CANCELED, resultValue)
-
-        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            finish()
-            return
-        }
-
+        setResult(RESULT_CANCELED)
         setContent {
             DirectCallWidgetTheme {
                 Scaffold { paddingValues ->
                     MultiContactNavGraph(
                         modifier = Modifier.padding(paddingValues),
                         onSaveClick = {
-                            setResult(RESULT_OK, resultValue)
+                            setResult(RESULT_OK)
                             finish()
                         }
                     )
