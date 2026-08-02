@@ -70,7 +70,7 @@
 
         <receiver
             android:name=".glance.MultiContactWidgetReceiver"
-            android:enabled="true"
+            android:enabled="false"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
