@@ -31,6 +31,10 @@ The app requires access to contacts to select recipients and permission to place
 
 Direct Call Widget is free and contains no ads. It is available on [Google Play](https://play.google.com/store/apps/details?id=com.blaxsoftware.directcallwidget).
 
+<a href="https://play.google.com/store/apps/details?id=com.blaxsoftware.directcallwidget">
+  <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" width="200" />
+</a>
+
 ## Requirements
 
 - Android Studio with an Android SDK that includes API 36.
