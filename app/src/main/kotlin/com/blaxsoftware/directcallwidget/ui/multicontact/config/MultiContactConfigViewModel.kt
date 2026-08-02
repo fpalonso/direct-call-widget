@@ -22,13 +22,12 @@ import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blaxsoftware.directcallwidget.data.ContactConfig
 import com.blaxsoftware.directcallwidget.data.MultiContactInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.ferp.dcw.core.domain.picture.AddPictureUseCase
+import dev.ferp.dcw.core.domain.data.picture.PictureRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,36 +37,24 @@ data class MultiContactConfigUiState(
 
 @HiltViewModel
 class MultiContactConfigViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
-    private val addPictureUseCase: AddPictureUseCase<Bitmap>
+    private val widgetPictureRepo: PictureRepository<Bitmap>
 ) : ViewModel() {
 
-    private var contacts: List<ContactConfig>
-        get() = savedStateHandle.get<List<ContactConfig>>(KEY_CONTACTS) ?: emptyList()
-        set(value) {
-            savedStateHandle[KEY_CONTACTS] = value
-            uiState = uiState.copy(contacts = value)
-        }
-
-    var uiState by mutableStateOf(MultiContactConfigUiState(contacts = contacts))
+    var uiState by mutableStateOf(MultiContactConfigUiState())
         private set
 
     fun addContact(contactConfig: ContactConfig) {
         viewModelScope.launch {
-            val internalPictureUri = addPictureUseCase(contactConfig.pictureUri)
-                .getOrNull() ?: contactConfig.pictureUri
-
-            contacts = contacts + contactConfig.copy(
-                pictureUri = internalPictureUri
+            val internalPictureUri = widgetPictureRepo
+                .addPicture(contactConfig.pictureUri)
+            val contacts = uiState.contacts + contactConfig.copy(
+                pictureUri = internalPictureUri.toString()
             )
+            uiState = uiState.copy(contacts = contacts)
         }
     }
 
     fun buildWidgetInfo() = MultiContactInfo.Available(
         contactList = uiState.contacts
     )
-
-    companion object {
-        private const val KEY_CONTACTS = "contacts"
-    }
 }
