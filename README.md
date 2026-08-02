@@ -1,31 +1,86 @@
-> [!IMPORTANT]
-> This is a very legacy project from 2014 and is currently undergoing a major refactor. If you are a contributor, please wait for the next version (probably 2.0) before pushing any PR.
-
 # Direct Call Widget
-An Android widget that makes it easier for people with vision problems to call their contacts.
 
-# Why is it useful?
-Direct Call Widget is an Android app intended to let users call their favorite contacts by clicking their pictures on the home screen. This is particuparly useful for people with vision issues or who cannot read (though they will need help for setting up the widgets).
+Direct Call Widget is an Android app that makes calling favourite contacts quicker and more accessible. It adds contact widgets to the home screen so a call can be started by tapping a contact's picture instead of navigating a phonebook.
 
-The widgets may be scaled up or down, depending on the user's needs.
+It is especially intended for people with visual impairments or limited reading ability. Widgets can be resized to make contacts easier to recognize and select.
 
-Here is what the app looks like:
+> [!IMPORTANT]
+> This project began in 2014 and is currently undergoing a major refactor. Contributors should wait for the next major version, likely 2.0, before opening a pull request.
 
-<img src="https://github.com/fpalonso/direct-call-widget/blob/develop/gplay/img/home1.png" width=200 /> <img src="https://github.com/fpalonso/direct-call-widget/blob/develop/gplay/img/home2.png" width=200 /> <img src="https://github.com/fpalonso/direct-call-widget/blob/develop/gplay/img/en/setup-devan.jpg" width=200 /> <img src="https://github.com/fpalonso/direct-call-widget/blob/develop/gplay/img/en/setup-lim.jpg" width=200 />
+## Features
 
-# Is it profitable?
-No, it is not at all, and it is not aimed to be. It is available for free on Google Play for anyone who may need it. Also it has no ads, so it will never pay my rent -hopefully it will make somebody's life a bit easier, though.
+- Create home-screen widgets for individual contacts.
+- Choose a contact picture from the device photo picker.
+- Resize widgets to suit the user's needs.
+- Place several contact widgets on the same home screen.
+- Start a phone call directly from a widget.
+- Available in English and Spanish.
 
-# I find this useful. May I contribute?
-Certainly! I will be more than happy to get some help here. There are always things to improve or bugs to fix. Either you come up with something that needs to be enhanced or you want to solve any of the open issues, I will be very grateful for your contribution(s).
+The app requires access to contacts to select recipients and permission to place calls when a widget is tapped.
 
-Feel free to open new issues if you think you need to, or pick any of the existing ones.
+## Screenshots
 
-First time on this repository? You might want to pick any issue labeled as "good first issue". I look forward to your pull requests!
+<p>
+  <img src="gplay/img/home1.png" alt="Two contact widgets on an Android home screen" width="200" />
+  <img src="gplay/img/home2.png" alt="Two more contact widgets on an Android home screen" width="200" />
+  <img src="gplay/img/home3.png" alt="Several contact widgets in different sizes" width="200" />
+  <img src="gplay/img/en/setup-devan.png" alt="Contact widget setup screen" width="200" />
+</p>
 
-# Download Direct Call Widget
-Do you want to give it a try? Direct Call Widget is available on Google Play:
+## Download
 
-<a href='https://play.google.com/store/apps/details?id=com.blaxsoftware.directcallwidget&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width=200/></a>
+Direct Call Widget is free and contains no ads. It is available on [Google Play](https://play.google.com/store/apps/details?id=com.blaxsoftware.directcallwidget).
+
+<a href="https://play.google.com/store/apps/details?id=com.blaxsoftware.directcallwidget">
+  <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" width="200" />
+</a>
+
+## Requirements
+
+- Android Studio with an Android SDK that includes API 36.
+- JDK 17 or newer.
+- A device or emulator running Android 6.0 (API 23) or newer.
+
+## Build and test
+
+The project uses the Gradle wrapper, so a separate Gradle installation is not required.
+
+```sh
+./gradlew assembleCollectionDisabledDebug
+./gradlew build
+```
+
+The generated debug APK is located under `app/build/outputs/apk/collectionDisabled/debug/`. `build` compiles the project and runs its checks. The `collectionDisabled` variant disables analytics collection; use `assembleCollectionEnabledDebug` to build the analytics-enabled variant.
+
+## Project structure
+
+The project is organized as a modular Android application:
+
+| Area | Modules | Responsibility |
+| --- | --- | --- |
+| Application | `:app` | Application entry point, widget providers, navigation and legacy UI. |
+| Features | `:feature:onecontactwidget`, `:feature:settings` | Contact-widget configuration and app settings. |
+| Shared UI | `:shared:contactconfig`, `:core:ui` | Reusable contact configuration and UI/theme components. |
+| Domain | `:core:domain` | Domain models, repository contracts and use cases. |
+| Data | `:data:devicecontact`, `:data:onecontactwidget`, `:data:picture` | Contacts provider, widget preferences and picture storage. |
+| Platform services | `:core:di`, `:core:preferences-user`, `:core:analytics` | Dependency injection, user preferences and optional analytics. |
+
+The newer modules follow a layered design: features use domain use cases, domain depends on repository contracts, and data modules provide their implementations. Hilt supplies dependencies between modules. The app module also contains legacy widget implementations that are being migrated as part of the refactor.
+
+## Useful references
+
+- [Android developer documentation](https://developer.android.com/)
+- [Android Architecture Samples](https://github.com/android/architecture-samples)
+- [Now in Android](https://github.com/android/nowinandroid)
+
+## Contributing
+
+Please open an issue to report a bug or propose an improvement. New contributors can look for issues labelled [`good first issue`](https://github.com/fpalonso/direct-call-widget/labels/good%20first%20issue).
+
+Because of the ongoing refactor, please coordinate before starting a pull request.
+
+## License
+
+Direct Call Widget is distributed under the [GNU General Public License v3.0](COPYING).
 
 Google Play and the Google Play logo are trademarks of Google LLC.
