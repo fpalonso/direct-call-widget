@@ -62,7 +62,7 @@ class DefaultDeviceContactRepositoryTest {
         )
 
         // When
-        val result = repository.getDeviceContactByUri("content://contacts/1")
+        val result = repository.getContactByUri("content://contacts/1")
         val contact = result.getOrNull()
 
         // Then
@@ -82,7 +82,7 @@ class DefaultDeviceContactRepositoryTest {
         } returns Result.failure(Throwable("Contact not found"))
 
         // When
-        val result = repository.getDeviceContactByUri("content://contacts/1")
+        val result = repository.getContactByUri("content://contacts/1")
         val contact = result.getOrNull()
 
         // Then

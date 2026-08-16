@@ -19,5 +19,5 @@
 package dev.ferp.dcw.core.domain.data.devicecontact
 
 interface DeviceContactRepository {
-    suspend fun getDeviceContactByUri(contactUri: String): Result<DeviceContact>
+    suspend fun getContactByUri(contactUri: String): Result<DeviceContact>
 }

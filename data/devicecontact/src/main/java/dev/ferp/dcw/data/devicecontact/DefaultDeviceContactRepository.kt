@@ -27,8 +27,8 @@ internal class DefaultDeviceContactRepository @Inject constructor(
     private val localDataSource: DeviceContactDataSource,
 ) : DeviceContactRepository {
 
-    override suspend fun getDeviceContactByUri(contactUri: String): Result<DeviceContact> {
-        return localDataSource.getDeviceContactByUri(contactUri).fold(
+    override suspend fun getContactByUri(contactUri: String): Result<DeviceContact> {
+        return localDataSource.getContactByUri(contactUri).fold(
             onSuccess = { localContact -> Result.success(localContact.toDomain()) },
             onFailure = { throwable -> Result.failure(throwable) }
         )
