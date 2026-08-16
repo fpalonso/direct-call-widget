@@ -57,29 +57,6 @@
             android:name="google_analytics_automatic_screen_reporting_enabled"
             android:value="false" />
 
-        <activity
-            android:name=".ui.multicontact.config.MultiContactWidgetConfigActivity"
-            android:exported="false"
-            android:label="@string/title_activity_multi_contact_widget_config"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <receiver
-            android:name=".glance.MultiContactWidgetReceiver"
-            android:enabled="false"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/multicontact_widget_info" />
-        </receiver>
-
         <receiver
             android:name=".appwidget.DirectCallWidgetProvider"
             android:exported="false">

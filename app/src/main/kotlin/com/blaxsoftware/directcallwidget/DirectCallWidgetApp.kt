@@ -19,7 +19,6 @@
 package com.blaxsoftware.directcallwidget
 
 import androidx.multidex.MultiDexApplication
-import com.blaxsoftware.directcallwidget.glance.MultiContactWidgets
 import com.blaxsoftware.directcallwidget.legacy.LegacyWidgets
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
@@ -30,7 +29,6 @@ import javax.inject.Inject
 class DirectCallWidgetApp : MultiDexApplication() {
 
     @Inject lateinit var legacyWidgets: LegacyWidgets
-    @Inject lateinit var multiContactWidgets: MultiContactWidgets
 
     val appVersionName: String by lazy {
         StringBuilder(BuildConfig.VERSION_NAME).apply {
@@ -43,7 +41,6 @@ class DirectCallWidgetApp : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         legacyWidgets.updateAll()
-        multiContactWidgets.updateAll()
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
         }
