@@ -23,7 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.ferp.dcw.core.analytics.ContactConfigLogger
-import dev.ferp.dcw.core.domain.devicecontact.GetDeviceContactUseCase
+import dev.ferp.dcw.core.domain.data.devicecontact.ContactRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -42,7 +42,7 @@ internal data class InternalContactConfigUiState(
  */
 @HiltViewModel
 class ContactConfigViewModel @Inject constructor(
-    private val getDeviceContactUseCase: GetDeviceContactUseCase,
+    private val contactRepository: ContactRepository,
     private val logger: ContactConfigLogger
 ): ViewModel(), ContactConfigLogger by logger {
 
@@ -58,22 +58,22 @@ class ContactConfigViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-            getDeviceContactUseCase(contactUri.toString())
-                .onSuccess { contact ->
+            contactRepository.getContactByUri(contactUri.toString()).fold(
+                onSuccess = { contact ->
                     _uiState.update { currentState ->
                         currentState.copy(
                             pictureUri = contact.pictureUri,
                             displayName = contact.displayName,
-                            phoneNumber = contact.phones
-                                .map { it.number }.firstOrNull() ?: ""
+                            phoneNumber = contact.phones.map { it.number }.firstOrNull().orEmpty()
                         )
                     }
-                }
-                .onFailure {
+                },
+                onFailure = {
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = R.string.error_loading_contact)
                     }
                 }
+            )
         }
     }
 

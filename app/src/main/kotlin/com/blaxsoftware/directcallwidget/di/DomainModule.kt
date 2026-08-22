@@ -23,10 +23,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.ferp.dcw.core.domain.data.devicecontact.DeviceContactRepository
 import dev.ferp.dcw.core.domain.data.onecontactwidget.OneContactWidgetRepository
 import dev.ferp.dcw.core.domain.data.picture.PictureRepository
-import dev.ferp.dcw.core.domain.devicecontact.GetDeviceContactUseCase
 import dev.ferp.dcw.core.domain.onecontactwidget.DeleteOneContactWidgetUseCase
 import dev.ferp.dcw.core.domain.onecontactwidget.GetOneContactWidgetUseCase
 import dev.ferp.dcw.core.domain.onecontactwidget.SaveOneContactWidgetUseCase
@@ -37,11 +35,6 @@ import dev.ferp.dcw.core.domain.picture.DeletePictureUseCase
 @Module
 @InstallIn(SingletonComponent::class)
 object DomainModule {
-
-    @Provides
-    fun provideGetDeviceContactUseCase(
-        deviceContactRepository: DeviceContactRepository
-    ) = GetDeviceContactUseCase(deviceContactRepository)
 
     @Provides
     fun provideAddPictureUseCase(

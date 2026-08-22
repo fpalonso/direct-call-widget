@@ -16,18 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.ferp.dcw.data.devicecontact
+package dev.ferp.dcw.core.domain.data.devicecontact
 
-import android.database.Cursor
-
-fun Cursor.getString(columnName: String): String? {
-    val colIndex = getColumnIndex(columnName)
-    if (colIndex !in 0 until columnCount) return null
-    return getString(colIndex)
-}
-
-fun Cursor.getInt(columnName: String): Int? {
-    val colIndex = getColumnIndex(columnName)
-    if (colIndex !in 0 until columnCount) return null
-    return getInt(colIndex)
+interface ContactRepository {
+    suspend fun getContactByUri(contactUri: String): Result<Contact>
+    suspend fun getFavoriteContacts(): Result<List<Contact>>
 }
