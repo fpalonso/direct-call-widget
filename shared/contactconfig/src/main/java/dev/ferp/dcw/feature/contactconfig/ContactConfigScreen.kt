@@ -100,7 +100,6 @@ data class FieldValues(
  * @param onDismiss Callback invoked when the user wants to dismiss the screen
  * @param onSave Callback invoked when the user wants to save the contact configuration
  */
-@Suppress("AssignedValueIsNeverRead")
 @Composable
 fun ContactConfigScreen(
     modifier: Modifier = Modifier,

@@ -22,24 +22,15 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.ferp.dcw.core.domain.data.devicecontact.DeviceContactRepository
-import dev.ferp.dcw.data.devicecontact.DefaultDeviceContactRepository
-import dev.ferp.dcw.data.devicecontact.source.DeviceContactDataSource
-import dev.ferp.dcw.data.devicecontact.source.local.DeviceContactProviderDataSource
-import javax.inject.Singleton
+import dev.ferp.dcw.core.domain.data.devicecontact.ContactRepository
+import dev.ferp.dcw.data.devicecontact.DefaultContactRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class DataModule {
 
-    @Singleton
     @Binds
-    abstract fun bindDeviceContactDataSource(
-        impl: DeviceContactProviderDataSource
-    ): DeviceContactDataSource
-
-    @Binds
-    abstract fun bindDeviceContactRepository(
-        impl: DefaultDeviceContactRepository
-    ): DeviceContactRepository
+    abstract fun bindContactRepository(
+        impl: DefaultContactRepository
+    ): ContactRepository
 }

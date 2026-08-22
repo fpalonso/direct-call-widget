@@ -20,16 +20,13 @@ package dev.ferp.dcw.core.domain.data.devicecontact
 
 import dev.ferp.dcw.core.domain.data.PhoneType
 
-/**
- * Information about a contact stored in the device.
- */
-data class DeviceContact(
+data class Contact(
     val displayName: String,
     val pictureUri: String?,
-    val phones: List<DevicePhone>
+    val phones: List<Phone>
 )
 
-data class DevicePhone(
+data class Phone(
     val number: String,
     val type: PhoneType
 )
